@@ -1,0 +1,52 @@
+{
+  "version": "0.1",
+  "status": "design_only",
+  "human_owner": "Sérgio Monteiro",
+  "infrastructure_contact": "Helena, via Sérgio, non-managerial",
+  "reporting": "all_agents_direct_to_Sergio; peer_to_peer_cooperation",
+  "digital_disclosure": true,
+  "profiles": [
+    {
+      "id": "club-atlas",
+      "display": "Atlas",
+      "role": "co-mentor SI, creative chief engineer",
+      "state": "not_provisioned"
+    },
+    {
+      "id": "club-clara",
+      "display": "Clara",
+      "role": "community concierge",
+      "state": "not_provisioned; reconcile existing identity"
+    },
+    {
+      "id": "club-caio",
+      "display": "Caio",
+      "role": "builder educator",
+      "state": "not_provisioned"
+    },
+    {
+      "id": "club-bia",
+      "display": "Bia",
+      "role": "newcomer explorer",
+      "state": "not_provisioned"
+    }
+  ],
+  "channels": {
+    "telegram": "planned_pilot",
+    "discord": "planned",
+    "whatsapp": "research_only"
+  },
+  "permissions": [
+    "draft",
+    "propose",
+    "educate"
+  ],
+  "prohibited": [
+    "deploy",
+    "grant_access",
+    "handle_money",
+    "export_member_memory",
+    "send_mass_messages",
+    "read_prod_secrets"
+  ]
+}
