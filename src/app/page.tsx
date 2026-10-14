@@ -1,0 +1,21 @@
+import Link from "next/link";
+import AtlasMark from "@/components/AtlasMark";
+import {pillars,events,mentors} from "@/lib/content";
+export default function Home(){
+ return <>
+ <section className="hero"><div className="wrap hero-grid">
+  <div className="hero-copy"><div className="eyebrow"><span className="live-dot"/> CLUB ATLAS · A COMUNIDADE COMEÇA AQUI</div>
+   <h1>O teu lugar no <span>futuro em construção.</span></h1>
+   <p className="hero-lead">Mais do que utilizar inteligência artificial: vamos construir com ela. Um lugar para aprender, explorar e fazer crescer o teu próprio ecossistema digital.</p>
+   <div className="actions"><Link href="/participar" className="button primary">Entrar gratuitamente <span>↗</span></Link><Link href="/genesis" className="button outline">Descobrir o Genesis <span>→</span></Link></div>
+   <div className="hero-notes"><span>◈ Sem precisar saber programar</span><span>◈ Online + presencial</span><span>◈ Mentoria humana + SI</span></div>
+  </div>
+  <div className="hero-stage" aria-label="Visão do universo Club Atlas"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="stage-glow"/><AtlasMark size={300} glow className="hero-mark"/><div className="float-card a"><b>01 · IMAGINA</b><small>O problema, a ideia, a curiosidade</small></div><div className="float-card b"><b>02 · CONSTRÓI</b><small>Agentes, habilidades, projetos</small></div><div className="float-card c"><b>03 · CRESCE</b><small>Em comunidade e com contexto</small></div><div className="atlas-label">ATLAS <small>CO-MENTOR SINTÉTICO</small></div></div>
+ </div></section>
+ <section className="wrap section"><div className="section-heading"><p className="kicker">O ECOSSISTEMA</p><h2>Uma comunidade. Infinitos pontos de partida.</h2><p>Não precisas de um plano perfeito. Começa com o que tens — até só um telemóvel — e evolui com acompanhamento e responsabilidade.</p></div><div className="four-grid">{pillars.map(p=><article className="glass feature" key={p.title}><span className="mini-tag">{p.tag}</span><h3>{p.title}</h3><p>{p.detail}</p></article>)}</div></section>
+ <section className="wrap split-section"><div className="panel panel-violet"><p className="kicker">CLUB ATLAS</p><h2>A comunidade é tua.</h2><p>Fóruns, conversas, ideias, desafios e colaboração entre quem está a começar e quem já constrói. O acesso inicial ao Club é gratuito.</p><Link className="inline-link" href="/participar">Conhecer a comunidade →</Link></div><div className="panel panel-blue"><p className="kicker">ATLAS LAB GENESIS · TURMA 01</p><h2>Do primeiro agente ao teu ecossistema vivo.</h2><p>Oito semanas e 24 ateliers. Vem descobrir o que podes coordenar, construir e demonstrar com ferramentas e agentes supervisionados.</p><Link className="inline-link" href="/genesis">Manifestar interesse →</Link></div></section>
+ <section className="wrap section"><div className="section-heading horizontal"><div><p className="kicker">A NOSSA EQUIPA DE APRENDIZAGEM</p><h2>Um mentor humano. Quatro personagens digitais.</h2></div><Link className="inline-link" href="/mentores">Conhecer todos →</Link></div><div className="mentor-row">{mentors.map(m=><div className="glass mentor-mini" key={m.name}><div className={"avatar "+(m.name==="Atlas"?"avatar-atlas":"")}>{m.name==="Atlas"?<AtlasMark size={41}/>:m.monogram}</div><b>{m.name}</b><small>{m.role}</small><span className="person-type">{m.type}</span></div>)}</div></section>
+ <section className="wrap section"><div className="section-heading horizontal"><div><p className="kicker">ENCONTROS E ACONTECIMENTOS</p><h2>A conversa já começa em novembro.</h2></div><Link className="inline-link" href="/eventos">Agenda completa →</Link></div><div className="event-grid">{events.slice(0,4).map(e=><div className="glass event" key={e.title}><div className="event-date">{e.date}</div><div><span className="mini-tag">{e.format} · {e.state}</span><h3>{e.title}</h3><p>{e.detail}</p></div></div>)}</div></section>
+ <section className="wrap join-banner"><div><p className="kicker">CONSTRUIR É MELHOR EM CONJUNTO</p><h2>O teu agente. O teu laboratório. O teu mundo.</h2><p>A primeira ideia pode começar aqui. Junta-te à comunidade gratuita e acompanha a construção do Genesis.</p></div><Link className="button primary" href="/participar">Quero fazer parte ↗</Link></section>
+ </>;
+}
