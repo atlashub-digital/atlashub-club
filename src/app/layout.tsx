@@ -16,7 +16,7 @@ const siteUrl = process.env.CLUB_SITE_ORIGIN || "https://club.atlashub.si";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: "Club Atlas — O seu agente. O seu laboratório. O seu mundo.", template: "%s | Club Atlas" },
+  title: { default: "Club Atlas — Pessoas reais. Agentes próprios. Projetos vivos.", template: "%s | Club Atlas" },
   description:
     "Comunidade para aprender, construir e crescer com agentes de IA. Para estudantes de todas as áreas, iniciantes, criadores e empreendedores. Entrada gratuita, mentoria humana + IA e o programa Genesis.",
   // Preview: manter noindex até homologação de SEO/conteúdo (docs/11_DEPLOYMENT.md).
