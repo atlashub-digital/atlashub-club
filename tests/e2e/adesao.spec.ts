@@ -69,15 +69,60 @@ test.describe("Formulário de adesão (prévia)", () => {
     expect(apiCalls).toEqual([]);
   });
 
-  test("menores de 18 anos não avançam", async ({ page }) => {
+  test("menor de 18 avança sem bloqueio e termina em pending_guardian_review", async ({ page }) => {
+    const apiCalls: string[] = [];
+    page.on("request", (r) => {
+      if (r.url().includes("/api/")) apiCalls.push(r.url());
+    });
     await page.goto("/participar?plan=genesis");
+    await page.getByLabel(/Sou estudante/).check();
     await page.getByRole("button", { name: "Continuar" }).click();
-    await page.getByLabel("Nome", { exact: true }).fill("Pessoa Teste");
-    await page.getByLabel("E-mail", { exact: true }).fill("pessoa@example.com");
-    await page.getByLabel("Menos de 18 anos").check();
-    await expect(page.getByText(/autorização de responsável, que ainda não existe/)).toBeVisible();
+    await page.getByLabel("Entre 12 e 17 anos").check();
+    // Mensagem positiva, sem bloqueio e sem consentimento simulado
+    const note = page.getByRole("note").filter({ hasText: "Que bom ter você aqui!" });
+    await expect(note).toContainText("autorização de um responsável");
+    await expect(page.getByText(/só para maiores de 18 anos/)).toHaveCount(0);
+    await expect(page.getByLabel(/autoriza|autorização do responsável/i)).toHaveCount(0);
+    // Minimização: sem WhatsApp para menores
+    await expect(page.getByLabel("WhatsApp (opcional)")).toHaveCount(0);
+    await page.getByLabel("Nome ou apelido").fill("Pessoa Jovem");
+    await page.getByLabel("E-mail", { exact: true }).fill("jovem@example.com");
     await page.getByRole("button", { name: "Continuar" }).click();
-    await expect(page.locator(".ca-adesao__errors")).toContainText("só para maiores de 18 anos");
+    await expect(page.locator(".ca-adesao__errors")).toHaveCount(0);
+    await page.getByLabel(/primeira missão/).fill("Organizar os meus estudos");
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await expect(page.locator(".ca-adesao__review")).toContainText("pending_guardian_review");
+    await page.getByLabel(/Li e aceito/).check();
+    await page.getByRole("button", { name: /Concluir prévia/ }).click();
+    const outcome = page.locator(".ca-adesao__outcome");
+    await expect(outcome).toContainText("Revisão do responsável pendente");
+    await expect(outcome).toContainText("Revisão do responsável:");
+    await expect(outcome).toContainText("Validação de estudante:");
+    await expect(outcome).toContainText(/Pré-candidatura Genesis, matrícula e qualquer cobrança/);
+    expect(apiCalls).toEqual([]);
+  });
+
+  test("menor de 12 anos vê a nota de participação do responsável desde o início", async ({ page }) => {
+    await page.goto("/participar");
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await page.getByLabel("Menos de 12 anos").check();
+    await expect(page.getByRole("note").filter({ hasText: "Que bom ter você aqui!" })).toContainText(
+      "o responsável participa desde o início",
+    );
+  });
+
+  test("adulto no Club grátis não precisa de revisão manual", async ({ page }) => {
+    await page.goto("/participar");
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await fillData(page);
+    await expect(page.getByRole("note").filter({ hasText: "Que bom ter você aqui!" })).toHaveCount(0);
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await page.getByLabel(/primeira missão/).fill("Organizar o meu semestre");
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await page.getByLabel(/Li e aceito/).check();
+    await page.getByRole("button", { name: /Concluir prévia/ }).click();
+    await expect(page.locator(".ca-adesao__outcome")).toContainText("club_free");
+    await expect(page.locator(".ca-adesao__outcome")).toContainText("Sem revisão manual");
   });
 });
 

@@ -43,6 +43,9 @@ export default function Home() {
         </ul>
       </section>
 
+      {/* v3: o Laboratório Experimental vem logo a seguir ao hero (diretiva de 14/10: grande destaque). */}
+      <LabSection />
+
       {/* Para quem */}
       <section className="ca-section ca-container" aria-labelledby="para-quem">
         <SectionHeading
@@ -98,7 +101,6 @@ export default function Home() {
         </ul>
       </section>
 
-      <LabSection />
 
       <OffersSection />
 
