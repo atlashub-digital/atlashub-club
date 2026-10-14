@@ -11,6 +11,7 @@ import { LinkButton, StatusTag } from "../ui/primitives";
  * Revisão PR #11 §B: equipa + Atlas dentro da primeira dobra em desktop e mobile.
  * Diretiva 2026-10-14 (referência Premium v3): H1 "Pessoas reais. Agentes próprios. Projetos vivos.";
  * "O futuro se constrói por pessoas como você." mantém-se como linha de apoio emocional.
+ * Eyebrow, lead e faixa de pilares seguem design/handoff/premium-v3/index.html (fonte editável do Sérgio).
  * Mobile: a fotografia sobe para o topo (ordem visual via CSS; o H1 continua primeiro no DOM)
  * e os cinco rostos aparecem em retratos legíveis logo abaixo.
  */
@@ -19,7 +20,7 @@ export default function HeroCollage() {
     <section className="ca-hero" aria-labelledby="hero-title">
       <div className="ca-container ca-hero__intro">
         <div className="ca-hero__headline">
-          <p className="ca-hero__tagline">Aprender · Construir · Crescer · Realizar</p>
+          <p className="ca-hero__tagline">Club Atlas · comunidade aberta e laboratório experimental</p>
           <h1 id="hero-title" className="ca-hero__title">
             <span className="ca-hero__line">Pessoas reais.</span>{" "}
             <span className="ca-hero__line ca-hl">Agentes próprios.</span>{" "}
@@ -29,8 +30,9 @@ export default function HeroCollage() {
         </div>
         <div className="ca-hero__copy">
           <p className="ca-hero__lead">
-            Não precisa começar sabendo programar. <strong>Comece por uma ideia.</strong> Conheça pessoas, construa seu
-            primeiro agente e aprenda a evoluir para a sua própria equipe de IA.
+            Para quem acredita que o futuro não se espera: constrói-se. <strong>Comece gratuitamente</strong>, conheça
+            pessoas, desenvolva seu primeiro agente e descubra como criar um ecossistema de inteligência que cresce com
+            você.
           </p>
           <div className="ca-hero__actions">
             <LinkButton href="/participar" variant={primaryCta}>
@@ -80,6 +82,20 @@ export default function HeroCollage() {
           ))}
         </ul>
       </div>
+      <ul className="ca-container ca-hero__foot" aria-label="Como funciona o Club">
+        <li>
+          <strong>Uma comunidade</strong> para todas as áreas
+        </li>
+        <li>
+          <strong>Sem programação</strong> como pré-requisito
+        </li>
+        <li>
+          <strong>Online e presencial</strong> conforme agenda
+        </li>
+        <li>
+          <strong>Aprender construindo</strong>
+        </li>
+      </ul>
     </section>
   );
 }
