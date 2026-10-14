@@ -3,6 +3,8 @@
  * Espelha os campos de src/components/adesao/AdesaoForm.tsx. O cliente nunca envia preços:
  * o plano é só uma intenção; ofertas e cotações são resolvidas no servidor (PR2C).
  */
+import type { AgeBand } from "@/lib/adesao/status";
+
 export const TERMS_VERSION = "club-terms-draft-2026-10";
 export const PRIVACY_VERSION = "club-privacy-draft-2026-10";
 
@@ -26,7 +28,8 @@ export const INTERESTS = [
   "Comunidade e projetos em equipe",
 ] as const;
 
-export const DEVICES = ["Só celular", "Computador", "Equipamento partilhado"] as const;
+export const DEVICES = ["Só celular", "Computador", "Equipamento compartilhado"] as const;
+export const AGE_BANDS = ["adult", "teen", "child"] as const satisfies readonly AgeBand[];
 
 export type SignupInput = {
   plan: "club" | "genesis";
@@ -34,7 +37,8 @@ export type SignupInput = {
   studentIntent: boolean;
   displayName: string;
   email: string;
-  ageBand: "adult";
+  /** Menores não são bloqueados: seguem para `pending_guardian_review` (decisão de 14/10/2026). */
+  ageBand: AgeBand;
   area?: (typeof AREAS)[number];
   interests: (typeof INTERESTS)[number][];
   firstMission?: string;
@@ -64,9 +68,8 @@ export function validateSignup(raw: unknown): SignupResult {
   const email = str(b.email).toLowerCase();
   if (email.length > 190 || !EMAIL.test(email)) errors.email = "invalid";
 
-  // Menores: bloqueados até existir fluxo com autorização de responsável.
-  if (b.ageBand === "minor") errors.ageBand = "minor_blocked";
-  else if (b.ageBand !== "adult") errors.ageBand = "invalid";
+  const ageBand = str(b.ageBand);
+  if (!has(AGE_BANDS, ageBand)) errors.ageBand = "invalid";
 
   const area = str(b.area);
   if (area && !has(AREAS, area)) errors.area = "invalid";
@@ -96,14 +99,15 @@ export function validateSignup(raw: unknown): SignupResult {
       studentIntent: plan === "genesis" && b.studentIntent === true,
       displayName,
       email,
-      ageBand: "adult",
+      ageBand: ageBand as AgeBand,
       area: area ? (area as SignupInput["area"]) : undefined,
       interests: [...new Set(interests)] as SignupInput["interests"],
       firstMission: firstMission || undefined,
       device: device ? (device as SignupInput["device"]) : undefined,
       termsVersion: TERMS_VERSION,
       privacyVersion: PRIVACY_VERSION,
-      marketingOptIn: b.marketingOptIn === true,
+      // Nenhuma comunicação de marketing a menores antes da revisão do responsável.
+      marketingOptIn: ageBand === "adult" && b.marketingOptIn === true,
     },
   };
 }

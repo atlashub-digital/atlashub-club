@@ -48,11 +48,14 @@ test.describe("PR2B · validação de dados mínimos", () => {
     }
   });
 
-  test("bloqueia menores, termos em falta e campos proibidos", () => {
+  test("menores são aceites (sem bloqueio) e sem marketing; recusa termos em falta e campos proibidos", () => {
+    const teen = validateSignup({ ...valid, ageBand: "teen", marketingOptIn: true });
+    expect(teen.ok && teen.value.ageBand).toBe("teen");
+    expect(teen.ok && teen.value.marketingOptIn).toBe(false);
     const r = validateSignup({ ...valid, ageBand: "minor", termsVersion: undefined, price: 1, cpf: "x", whatsapp: "x" });
     expect(r.ok).toBe(false);
     if (!r.ok) {
-      expect(r.errors.ageBand).toBe("minor_blocked");
+      expect(r.errors.ageBand).toBe("invalid");
       expect(r.errors.termsVersion).toBe("terms_required");
       expect(r.errors.price).toBe("not_allowed");
       expect(r.errors.cpf).toBe("not_allowed");
@@ -100,6 +103,23 @@ test.describe("PR2B · handler em dry-run", () => {
     const blocked = await handleSignup(req(valid), dryEnv, l);
     expect(blocked.status).toBe(429);
     expect(blocked.headers?.["retry-after"]).toBeTruthy();
+  });
+
+  test("adolescente: só pedido de revisão do responsável, sem conta, perfil, consentimentos ou CRM", async () => {
+    const r = await handleSignup(req({ ...valid, plan: "genesis", studentIntent: true, ageBand: "teen", marketingOptIn: true }), dryEnv, limiters());
+    expect(r.status).toBe(202);
+    expect(r.body.status).toBe("pending_guardian_review");
+    expect(r.body.reviews).toEqual({ guardian: true, student: true });
+    const tables = (r.body.wouldWrite as { table: string }[]).map((w) => w.table);
+    expect(tables).toEqual(["club.club_guardian_reviews"]);
+    expect(r.body.withheld).toEqual(expect.arrayContaining(["auth.users", "club.club_crm_outbox", "club.club_genesis_applications"]));
+  });
+
+  test("criança: o e-mail é descartado (nem hash) e pede-se o contacto do responsável", async () => {
+    const r = await handleSignup(req({ ...valid, ageBand: "child" }), dryEnv, limiters());
+    expect(r.body.status).toBe("pending_guardian_review");
+    expect(r.body.emailHash).toBeUndefined();
+    expect(JSON.stringify(r.body)).toContain("contact_email=null");
   });
 
   test("honeypot recebe resposta neutra", async () => {

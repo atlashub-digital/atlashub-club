@@ -7,13 +7,13 @@
 ## 1. O que este PR entrega
 | Peça | Ficheiro | Estado |
 |---|---|---|
-| Rascunho de schema + RLS | `docs/sql/drafts/002_club_auth_onboarding.sql` | **não aplicado**; testado em Postgres local/CI efémero |
-| Testes RLS (14 verificações) | `docs/sql/drafts/tests/*.sql`, `scripts/test-sql-draft.sh`, job `sql-draft` no CI | recusa hosts remotos |
+| Rascunho de schema + RLS | `docs/sql/drafts/002_club_auth_onboarding.sql` | **não aplicado**; testado em Postgres local/CI efémero; inclui `club_guardian_reviews` |
+| Testes RLS (22 verificações, incl. revisão do responsável) | `docs/sql/drafts/tests/*.sql`, `scripts/test-sql-draft.sh`, job `sql-draft` no CI | recusa hosts remotos |
 | Validação de dados mínimos | `src/lib/club/signup-schema.ts` | espelha o formulário PR2A; sem CPF/RG/telefone/preço |
 | Rate limit | `src/lib/club/rate-limit.ts` (memória, preview) + `club.hit_rate_limit` (SQL, produção) | |
 | Endpoint | `POST /api/club/signup` → `src/lib/club/signup-handler.ts` | **503** por defeito; `dry-run` só fora de produção; nunca persiste |
 | Modo | `src/lib/club/mode.ts` | não há modo "live" neste PR |
-| Testes TS | `tests/e2e/club-signup.spec.ts` | 10 testes |
+| Testes TS | `tests/e2e/club-signup.spec.ts` | 12 testes (inclui menores: adolescente e criança) |
 
 O formulário `/participar` **não foi ligado** ao endpoint: continua "Prévia concluída — nada foi enviado."
 
@@ -52,12 +52,33 @@ O formulário `/participar` **não foi ligado** ao endpoint: continua "Prévia c
 | Anti-fraude / rate limit | Origin, tamanho, honeypot, Turnstile, limite por IP (5/10 min) e por email (3/h) com resposta neutra (sem enumeração); `club.hit_rate_limit` partilhado em produção |
 | Dados mínimos | nome de apresentação, email, faixa etária; opcionais validados por lista; campos de preço/CPF/RG/telefone recusados |
 | Opt-in marketing separado e desmarcado | `marketingOptIn` só `true` se explícito; evento próprio; CRM só com opt-in |
-| Menores | `age_band = 'adult'` por `CHECK`; endpoint devolve `minor_blocked`; fluxo com responsável é tarefa futura |
+| Menores (decisão de 14/10) | **Sem bloqueio**: `pending_guardian_review` em `club.club_guardian_reviews` (só servidor). Até aprovação: sem conta/perfil, consentimentos, CRM ou Genesis. Criança (<12): e-mail da criança nunca guardado (`CHECK`). Aprovação exige decisor + data + `evidence_ref`; decisões finais (trigger). Perfil de menor e avanço Genesis bloqueados sem aprovação (triggers). Marketing forçado a `false` para menores |
 | Acesso / apagamento / opt-out | `club_data_requests`; `ON DELETE CASCADE` desde `auth.users`; consentimento de marketing revogável pelo membro |
 | Não misturar pedagógico × B2B | perfis em `club.*`; outbox com `CHECK` que rejeita chaves pedagógicas |
 | Sem segredos no browser | `service_role` só no servidor; nenhum `NEXT_PUBLIC_*` novo |
 | Promoções de estado | membro não pode `UPDATE` candidatura; estados seguintes só pelo servidor (PR2C) |
 | Consentimento auditável | `club_consent_events` append-only (sem `UPDATE`/`DELETE` para membros + trigger) |
+
+## 4-A. Plano de execução em staging com a Helena (autorizado pelo Sérgio a 14/10/2026)
+O Sérgio autorizou o desenvolvimento técnico **em staging**, em coordenação com a Helena. A Helena valida infraestrutura, permissões, a relação com o Supabase existente e os procedimentos de segurança. **Nada em bases produtivas sem aprovação.** O Claude Code não cria projetos, chaves ou utilizadores por iniciativa própria.
+
+| Fase | O quê | Responsável | Entregável / prova | Bloqueia |
+|---|---|---|---|---|
+| S0 | Decisão Supabase A (projeto Club) ou B (schema `club` em projeto existente) + quem detém `service_role` | Helena → Sérgio aprova | Registo em `docs/DECISIONS.md` | tudo |
+| S1 | Criar projeto/branch **staging** (sem dados reais), SMTP de teste, Turnstile de teste; envs só no ambiente *Preview* da Vercel | Helena | Lista de envs (nomes, sem valores), screenshot do painel sem segredos | S2 |
+| S2 | Aplicar `002_club_auth_onboarding.sql` **em staging** e repetir os 22 testes RLS contra staging (`scripts/test-sql-draft.sh` adaptado, só leitura de resultados) + advisor de segurança Supabase | Claude Code prepara; Helena executa ou autoriza | Log dos testes + output do advisor | S3 |
+| S3 | Implementar modo `live` **só para staging**: `signUp` com verificação de e-mail, callback que grava perfil/consentimentos, `club_guardian_reviews` para menores, rate limit SQL | Claude Code (PR próprio) | Testes e2e contra staging com contas `@example.test` | S4 |
+| S4 | Área de membros protegida (sessão Supabase, middleware), perfil, onboarding de interesses/objetivos, escolha Club/Genesis, pré-candidatura | Claude Code | Preview com login de teste; nenhum dado real | S5 |
+| S5 | Ponte CRM: contrato de escrita aprovado (RPC/Edge Function/fila), `source='club'`, só opt-in, `crm_suppression` no opt-out | Helena define interface; Claude Code implementa o worker | Teste com CRM de staging; amostra de payload sem dados pedagógicos | S6 |
+| S6 | Procedimento manual de revisão (responsável e estudante): quem revê, canal verificado, prazos, registo de evidência, contestação | Sérgio + jurídico; Helena para acessos | Runbook aprovado | ativação |
+| S7 | Ativação controlada (produção) | Sérgio | Aprovação explícita por escrito | — |
+
+**Pedidos concretos à Helena (S0–S1):**
+1. Opção A ou B? Se B, qual projeto, e confirmação de que `auth.users` do Club não se mistura com utilizadores da Holding.
+2. Interface aprovada para escrita no CRM (`crm_contact`, `crm_lead`, `crm_consent`, `crm_activity`, `concierge_session`, `crm_suppression`) e âmbito `source='club'`.
+3. Remetente de e-mail (domínio, SPF/DKIM) para verificação; Turnstile para `club.atlashub.si`.
+4. Quem pode aplicar migrações em staging e em produção, e por que via.
+5. Política de backups/retenção e contacto DPO para pedidos de titular.
 
 ## 5. Gates de ativação (todos necessários, por esta ordem)
 1. Decisão A/B com a Helena registada em `docs/DECISIONS.md` e aprovada pelo Sérgio.

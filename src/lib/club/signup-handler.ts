@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { clubAuthMode } from "./mode";
 import { createMemoryRateLimiter, type RateLimiter } from "./rate-limit";
 import { validateSignup } from "./signup-schema";
+import { deriveSignupOutcome } from "@/lib/adesao/status";
 
 /**
  * Lógica do POST /api/club/signup, separada da rota para ser testável sem servidor.
@@ -53,11 +54,46 @@ export async function handleSignup(
   // Resposta neutra por email para não permitir enumeração de contas.
   if (!emailHit.allowed) return { status: 202, body: { dryRun: true } };
 
+  const outcome = deriveSignupOutcome({ plan: v.plan, student: v.studentIntent, age: v.ageBand });
+
+  // Menores: nenhuma conta, perfil, consentimento ou CRM antes da revisão manual do responsável.
+  // Adolescente (12–17): só um pedido de revisão com contacto mínimo e prazo de expiração.
+  // Criança (<12): o e-mail da criança é descartado; a equipa pede o contacto do responsável.
+  if (outcome.reviews.guardian) {
+    const child = v.ageBand === "child";
+    return {
+      status: 202,
+      body: {
+        dryRun: true,
+        message: "Simulação: nada foi gravado nem enviado.",
+        status: outcome.status,
+        reviews: outcome.reviews,
+        wouldWrite: [
+          {
+            table: "club.club_guardian_reviews",
+            fields: [
+              "status=pending_guardian_review",
+              `age_band=${v.ageBand}`,
+              "plan",
+              "student_intent",
+              child ? "contact_email=null (descartado; pedir contacto do responsável)" : "contact_email",
+              "expires_at=+30d",
+            ],
+          },
+        ],
+        withheld: ["auth.users", "club.club_profiles", "club.club_consent_events", "club.club_crm_outbox", "club.club_genesis_applications"],
+        ...(child ? {} : { emailHash: sha(v.email) }),
+      },
+    };
+  }
+
   return {
     status: 202,
     body: {
       dryRun: true,
       message: "Simulação: nada foi gravado nem enviado.",
+      status: outcome.status,
+      reviews: outcome.reviews,
       wouldWrite: [
         { table: "auth.users", note: "convite por email com verificação obrigatória (Supabase Auth)" },
         { table: "club.club_profiles", fields: ["display_name", "age_band", "area", "device"] },

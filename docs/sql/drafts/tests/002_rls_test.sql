@@ -50,7 +50,7 @@ reset role;
 
 -- Menores e payload CRM com dados pedagógicos são recusados mesmo pelo servidor
 set role service_role;
-select pg_temp.expect_fail($q$insert into club.club_profiles(user_id, display_name, age_band) values ('00000000-0000-0000-0000-00000000000b','Menor','minor')$q$, 'perfil de menor');
+select pg_temp.expect_fail($q$insert into club.club_profiles(user_id, display_name, age_band) values ('00000000-0000-0000-0000-00000000000b','Menor','minor')$q$, 'faixa etária inválida');
 select pg_temp.expect_fail($q$insert into club.club_crm_outbox(user_id, event, payload) values ('00000000-0000-0000-0000-00000000000a','contact_opt_in','{"email":"a@example.test","display_name":"A","source":"club","interests":["x"]}')$q$, 'outbox com dados pedagógicos');
 insert into club.club_crm_outbox(user_id, event, payload) values ('00000000-0000-0000-0000-00000000000a','contact_opt_in','{"email":"a@example.test","display_name":"A","source":"club"}');
 do $$ begin
@@ -60,11 +60,44 @@ do $$ begin
 end $$;
 reset role;
 
+-- Menores: revisão do responsável (decisão de 14/10/2026)
+insert into auth.users values ('00000000-0000-0000-0000-00000000000d', 'teen@example.test', now());
+set role authenticated; set request.jwt.claim.sub = '00000000-0000-0000-0000-00000000000d';
+select pg_temp.expect_fail($q$insert into club.club_profiles(user_id, display_name, age_band) values (auth.uid(), 'Teen', 'teen')$q$, 'menor cria o próprio perfil');
+select pg_temp.expect_fail($q$select * from club.club_guardian_reviews$q$, 'membro lê revisões de responsável');
+reset role;
+set role service_role;
+select pg_temp.expect_fail($q$insert into club.club_guardian_reviews(age_band, plan, contact_email) values ('child', 'club', 'kid@example.test')$q$, 'guardar e-mail de criança');
+select pg_temp.expect_fail($q$insert into club.club_profiles(user_id, display_name, age_band) values ('00000000-0000-0000-0000-00000000000d', 'Teen', 'teen')$q$, 'perfil de menor sem aprovação');
+insert into club.club_guardian_reviews(id, user_id, age_band, plan, student_intent, contact_email)
+  values ('00000000-0000-0000-0000-0000000000f1', '00000000-0000-0000-0000-00000000000d', 'teen', 'genesis', true, 'teen@example.test');
+select pg_temp.expect_fail($q$update club.club_guardian_reviews set status = 'guardian_approved' where id = '00000000-0000-0000-0000-0000000000f1'$q$, 'aprovar sem decisor/evidência');
+update club.club_guardian_reviews set status = 'guardian_approved', decided_by = gen_random_uuid(), decided_at = now(), evidence_ref = 'case-001'
+  where id = '00000000-0000-0000-0000-0000000000f1';
+select pg_temp.expect_fail($q$update club.club_guardian_reviews set status = 'guardian_rejected' where id = '00000000-0000-0000-0000-0000000000f1'$q$, 'reverter decisão final');
+insert into club.club_profiles(user_id, display_name, age_band) values ('00000000-0000-0000-0000-00000000000d', 'Teen', 'teen');
+insert into club.club_genesis_applications(user_id, student_intent) values ('00000000-0000-0000-0000-00000000000d', true);
+update club.club_genesis_applications set status = 'student_pending' where user_id = '00000000-0000-0000-0000-00000000000d';
+reset role;
+do $$ begin raise notice 'OK: menor com aprovação do responsável tem perfil e avança no Genesis'; end $$;
+
+-- Menor sem aprovação não avança no Genesis (perfil criado diretamente como superuser só para o teste)
+insert into auth.users values ('00000000-0000-0000-0000-00000000000e', 'teen2@example.test', now());
+alter table club.club_profiles disable trigger club_profiles_minor_gate;
+insert into club.club_profiles(user_id, display_name, age_band) values ('00000000-0000-0000-0000-00000000000e', 'Teen2', 'teen');
+alter table club.club_profiles enable trigger club_profiles_minor_gate;
+insert into club.club_genesis_applications(user_id) values ('00000000-0000-0000-0000-00000000000e');
+set role service_role;
+select pg_temp.expect_fail($q$update club.club_genesis_applications set status = 'awaiting_payment' where user_id = '00000000-0000-0000-0000-00000000000e'$q$, 'Genesis de menor sem aprovação');
+reset role;
+
 -- Apagamento de conta remove tudo em cascata
 delete from auth.users where id = '00000000-0000-0000-0000-00000000000a';
 do $$ begin
-  if exists (select 1 from club.club_consent_events) or exists (select 1 from club.club_profiles)
-     or exists (select 1 from club.club_crm_outbox) then raise exception 'FALHA: cascade'; end if;
+  if exists (select 1 from club.club_consent_events where user_id = '00000000-0000-0000-0000-00000000000a')
+     or exists (select 1 from club.club_profiles where user_id = '00000000-0000-0000-0000-00000000000a')
+     or exists (select 1 from club.club_crm_outbox where user_id = '00000000-0000-0000-0000-00000000000a')
+     then raise exception 'FALHA: cascade'; end if;
   raise notice 'OK: apagamento em cascata';
 end $$;
 \echo TODOS OS TESTES RLS PASSARAM
