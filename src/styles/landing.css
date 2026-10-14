@@ -64,12 +64,23 @@
   align-items: end;
 }
 .ca-hero__tagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-size: var(--ca-fs-xs);
-  font-weight: 600;
-  letter-spacing: 0.42em;
+  font-weight: 800;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ca-gold);
   margin-bottom: var(--ca-space-2);
+}
+/* v3 .stamp: traço dourado antes do eyebrow */
+.ca-hero__tagline::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  flex: none;
 }
 .ca-hero h1 {
   font-size: clamp(2rem, 1.3rem + 2.6vw, 3.5rem);
@@ -77,7 +88,12 @@
   letter-spacing: -0.03em;
   line-height: 1.04;
 }
-/* v3: três linhas (branco frio · ciano · dourado), uma por linha em todas as larguras */
+/* v3 .hero-title: maiúsculas editoriais, três linhas (branco frio · ciano · dourado).
+   O texto no DOM fica em caixa mista para leitores de ecrã; a caixa alta é só visual. */
+.ca-hero__title {
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
+}
 .ca-hero__line {
   display: block;
 }
@@ -87,6 +103,27 @@
   font-size: clamp(1.25rem, 1rem + 0.8vw, 1.6rem);
   line-height: 1.15;
   color: var(--ca-text);
+}
+.ca-hero__foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px var(--ca-space-4);
+  list-style: none;
+  padding: var(--ca-space-3) 0 0;
+  margin-block: 0;
+  color: var(--ca-text-2);
+  font-size: var(--ca-fs-xs);
+  letter-spacing: 0.04em;
+}
+.ca-hero__foot li::before {
+  content: "◈";
+  margin-right: 8px;
+  color: var(--ca-cyan);
+}
+.ca-hero__foot strong {
+  color: var(--ca-text);
+  font-weight: 650;
 }
 .ca-hero__copy {
   display: grid;
@@ -324,10 +361,18 @@
     gap: var(--ca-space-3);
   }
   .ca-hero h1 {
-    font-size: 1.9rem;
+    font-size: 1.8rem;
   }
   .ca-hero__tagline {
-    letter-spacing: 0.24em;
+    letter-spacing: 0.14em;
+  }
+  .ca-hero__foot {
+    justify-content: center;
+    text-align: center;
+    padding-top: var(--ca-space-4);
+  }
+  .ca-hero__tagline::before {
+    display: none;
   }
   .ca-hero__lead {
     font-size: 0.95rem;
