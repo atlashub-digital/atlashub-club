@@ -48,7 +48,7 @@ const faq = [
   },
   {
     q: "Tenho menos de 18 anos. Posso participar?",
-    a: "Por enquanto o Genesis é para maiores de 18 anos. Um fluxo com autorização de responsável ainda está em preparação.",
+    a: "Pode manifestar interesse. Para menores de 18 anos, a pré-candidatura fica em revisão do responsável: a equipe do Club valida a autorização do responsável legal antes de qualquer matrícula ou pagamento. Se também for estudante, essa validação é feita à parte.",
   },
   {
     q: "O Genesis garante emprego, empresa ou investimento?",

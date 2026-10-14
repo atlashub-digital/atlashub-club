@@ -76,6 +76,24 @@
 .ca-atlas > * {
   pointer-events: auto;
 }
+/* Recolhido (mobile/tablet) quando um CTA ou campo está por baixo: desliza para fora do caminho.
+   Continua acessível por teclado — ao receber foco volta a aparecer. */
+.ca-atlas .ca-atlas__launcher {
+  transition:
+    transform 220ms var(--ca-ease),
+    opacity 220ms var(--ca-ease),
+    box-shadow var(--ca-dur) var(--ca-ease);
+}
+.ca-atlas[data-ducked] .ca-atlas__launcher {
+  transform: translateX(calc(100% + 16px));
+  opacity: 0;
+  pointer-events: none;
+}
+.ca-atlas[data-ducked] .ca-atlas__launcher:focus-visible {
+  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+}
 .ca-atlas__launcher {
   display: grid;
   place-items: center;
