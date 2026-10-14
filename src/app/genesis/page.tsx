@@ -76,7 +76,7 @@ export default function Genesis() {
                 Falar com a equipe sobre Genesis
               </LinkButton>
               <LinkButton href="/participar?plan=genesis" variant="outline">
-                Simular pré-inscrição
+                Pré-inscrição (prévia)
               </LinkButton>
               <LinkButton href="#programa" variant="outline">
                 Ver o programa
