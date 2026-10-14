@@ -1,0 +1,77 @@
+# PR2B — Auth, onboarding e CRM consentido (planeamento + implementação auditável)
+
+**Autorização:** diretiva do Sérgio no PR #11 (14/10/2026): "Avançar com planeamento + implementação auditável em branch/PR isolado de Auth, onboarding e CRM, em coordenação técnica com Helena; não ativar captação real."
+**Estado:** draft. **Nada aplicado, nada ativado.** Sem utilizadores reais, sem escrita em produção, sem DDL em nenhum Supabase.
+**Fora de âmbito:** Clara Corporate, Evolution/Chatwoot, Hermes de produção, pagamentos (PR2C).
+
+## 1. O que este PR entrega
+| Peça | Ficheiro | Estado |
+|---|---|---|
+| Rascunho de schema + RLS | `docs/sql/drafts/002_club_auth_onboarding.sql` | **não aplicado**; testado em Postgres local/CI efémero |
+| Testes RLS (14 verificações) | `docs/sql/drafts/tests/*.sql`, `scripts/test-sql-draft.sh`, job `sql-draft` no CI | recusa hosts remotos |
+| Validação de dados mínimos | `src/lib/club/signup-schema.ts` | espelha o formulário PR2A; sem CPF/RG/telefone/preço |
+| Rate limit | `src/lib/club/rate-limit.ts` (memória, preview) + `club.hit_rate_limit` (SQL, produção) | |
+| Endpoint | `POST /api/club/signup` → `src/lib/club/signup-handler.ts` | **503** por defeito; `dry-run` só fora de produção; nunca persiste |
+| Modo | `src/lib/club/mode.ts` | não há modo "live" neste PR |
+| Testes TS | `tests/e2e/club-signup.spec.ts` | 10 testes |
+
+O formulário `/participar` **não foi ligado** ao endpoint: continua "Prévia concluída — nada foi enviado."
+
+## 2. Decisão a tomar com a Helena antes de qualquer DDL
+| | **Opção A — projeto Supabase só do Club (recomendada)** | Opção B — reutilização governada |
+|---|---|---|
+| Isolamento | total: Auth, chaves, backups, logs separados da Holding | schema `club` num projeto existente; depende de disciplina de grants |
+| Risco de mistura pedagógico × B2B | nulo por construção | mitigado por RLS/grants; erro humano possível |
+| CRM | ponte servidor→CRM via outbox, só com opt-in | mesma ponte; tentação de joins diretos |
+| Custo | +1 projeto | sem custo adicional |
+| Auth | utilizadores do Club não partilham `auth.users` com a Holding | `auth.users` partilhado — exige revisão de quem pode ler o quê |
+| Reversão | apagar projeto | `drop schema club cascade` + limpeza de `auth.users` |
+
+**Perguntas para a Helena:**
+1. Opção A ou B? Se B, qual projeto e quem detém `service_role`?
+2. Onde vive o CRM (`crm_contact`, `crm_lead`, `crm_consent`, `crm_activity`, `concierge_session`, `crm_suppression`) e qual a interface aprovada para escrita externa (RPC, Edge Function, fila)? Âmbito por `source = 'club'`?
+3. Fornecedor SMTP para emails de verificação (domínio remetente, SPF/DKIM) — sem usar contas pessoais.
+4. Turnstile: chave para `club.atlashub.si` (o `/api/interesse` já a exige).
+5. Política de retenção/backup e DPO/contacto para pedidos de titular.
+6. Quem pode executar migrações (pessoa e via) e janela de manutenção.
+
+## 3. Fluxo proposto (SPEC 01)
+`VISITOR → FREE_ACCOUNT → GENESIS_INTEREST → (STUDENT_PENDING → QUOTE_READY → AWAITING_PAYMENT → PAID_CONFIRMED → GENESIS_MEMBER)`; os estados entre parênteses pertencem ao PR2C.
+
+1. Formulário (4 etapas) → `POST /api/club/signup` (Origin, JSON ≤ 4 KB, honeypot, Turnstile, rate limit por IP e por email com resposta neutra).
+2. Servidor chama Supabase Auth `signUp`/magic link → **email de verificação obrigatório**. Nenhum perfil existe antes da verificação.
+3. No callback verificado, o servidor grava `club_profiles`, `club_signup_intents`, `club_consent_events` (termos + privacidade com versão; marketing separado, **desmarcado por defeito**) e, se plano Genesis, `club_genesis_applications(status='interested')`.
+4. Só se `marketing = true`: linha em `club_crm_outbox` com `{email, display_name, source:'club'}`; um worker servidor envia ao CRM. **Interesses, missão, área, equipamento e progresso nunca saem do Club** (restrição `CHECK` no SQL).
+5. Opt-out → evento `marketing=false` + `contact_opt_out` no outbox → `crm_suppression`.
+
+## 4. Requisitos da diretiva → controlo
+| Requisito | Controlo |
+|---|---|
+| RLS | RLS em todas as tabelas; `revoke all` de anon/authenticated; políticas por `auth.uid()`; outbox e rate limit sem políticas |
+| Verificação de email | `club.is_verified()` em todas as escritas do membro; perfis só após callback verificado |
+| Anti-fraude / rate limit | Origin, tamanho, honeypot, Turnstile, limite por IP (5/10 min) e por email (3/h) com resposta neutra (sem enumeração); `club.hit_rate_limit` partilhado em produção |
+| Dados mínimos | nome de apresentação, email, faixa etária; opcionais validados por lista; campos de preço/CPF/RG/telefone recusados |
+| Opt-in marketing separado e desmarcado | `marketingOptIn` só `true` se explícito; evento próprio; CRM só com opt-in |
+| Menores | `age_band = 'adult'` por `CHECK`; endpoint devolve `minor_blocked`; fluxo com responsável é tarefa futura |
+| Acesso / apagamento / opt-out | `club_data_requests`; `ON DELETE CASCADE` desde `auth.users`; consentimento de marketing revogável pelo membro |
+| Não misturar pedagógico × B2B | perfis em `club.*`; outbox com `CHECK` que rejeita chaves pedagógicas |
+| Sem segredos no browser | `service_role` só no servidor; nenhum `NEXT_PUBLIC_*` novo |
+| Promoções de estado | membro não pode `UPDATE` candidatura; estados seguintes só pelo servidor (PR2C) |
+| Consentimento auditável | `club_consent_events` append-only (sem `UPDATE`/`DELETE` para membros + trigger) |
+
+## 5. Gates de ativação (todos necessários, por esta ordem)
+1. Decisão A/B com a Helena registada em `docs/DECISIONS.md` e aprovada pelo Sérgio.
+2. Textos de termos/privacidade revistos (versões `club-terms-*`, `club-privacy-*`).
+3. Migração aplicada **primeiro num projeto/branch de staging**, testes RLS repetidos lá.
+4. Variáveis no ambiente Preview apenas; teste com contas de teste `@example.test`, nunca dados reais.
+5. Implementação do modo "live" (Supabase Auth + gravação no callback) num PR próprio, revisto.
+6. Ligar o formulário só após 1–5 e aprovação explícita do Sérgio. Sem anúncio de "inscrições abertas".
+
+## 6. Riscos
+- Rate limit em memória não protege em serverless multi-instância → só para dry-run; produção usa a função SQL.
+- `ON DELETE CASCADE` apaga também prova de consentimento — validar com jurídico se há prazo de retenção.
+- Opção B partilha `auth.users` com a Holding — exige revisão de acessos pela Helena.
+- `security definer` em `is_verified`/`hit_rate_limit` com `search_path = ''` e grants restritos; rever no advisor do Supabase ao aplicar.
+
+## 7. Reversão
+Fechar/reverter este PR. Nada foi aplicado em base de dados, nenhum env criado, nenhum utilizador criado. O endpoint novo responde 503 em qualquer ambiente sem `CLUB_AUTH_MODE=dry-run`, e sempre em produção.
