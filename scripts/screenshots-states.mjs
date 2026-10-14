@@ -3,32 +3,59 @@
 import { chromium } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 
-const out = process.argv[2] || "design/screenshots/v2";
+const out = process.argv[2] || "design/screenshots/v3";
 const base = process.env.BASE_URL || "http://localhost:3000";
 mkdirSync(out, { recursive: true });
-const browser = await chromium.launch();
+// Capturas de página inteira começam no topo (senão o cabeçalho fixo aparece a meio da imagem).
+const full = async (page, path) => {
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.screenshot({ path, fullPage: true });
+};
+const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
+
+async function fillAndReview(page, { age, name }) {
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await page.getByLabel(age).check();
+  await page.getByLabel(name, { exact: true }).fill("Pessoa Exemplo");
+  await page.getByLabel("E-mail", { exact: true }).fill("pessoa@example.com");
+  return page;
+}
+
 for (const vp of [
   { name: "desktop-1440", width: 1440, height: 900 },
+  { name: "tablet-768", width: 768, height: 1024 },
   { name: "mobile-390", width: 390, height: 844 },
 ]) {
   const page = await browser.newPage({ viewport: vp, reducedMotion: "reduce" });
   await page.addInitScript(() => sessionStorage.setItem("ca-atlas-bubble", "1"));
 
+  // Adulto · Genesis · estudante (validação de estudante pendente)
   await page.goto(base + "/participar?plan=genesis", { waitUntil: "networkidle" });
   await page.getByLabel(/Sou estudante/).check();
-  await page.screenshot({ path: `${out}/participar-genesis-estudante-${vp.name}.png`, fullPage: true });
-
-  await page.getByRole("button", { name: "Continuar" }).click();
-  await page.getByLabel("Nome", { exact: true }).fill("Pessoa Exemplo");
-  await page.getByLabel("E-mail", { exact: true }).fill("pessoa@example.com");
-  await page.getByLabel("18 anos ou mais").check();
+  await full(page, `${out}/participar-genesis-estudante-${vp.name}.png`);
+  await fillAndReview(page, { age: "18 anos ou mais", name: "Nome" });
   await page.getByRole("button", { name: "Continuar" }).click();
   await page.getByLabel(/primeira missão/).fill("Organizar o meu semestre e lembrar das entregas");
   await page.getByRole("button", { name: "Continuar" }).click();
-  await page.screenshot({ path: `${out}/participar-revisao-${vp.name}.png`, fullPage: true });
+  await full(page, `${out}/participar-revisao-${vp.name}.png`);
 
+  // Menor (12–17) · Genesis · estudante → pending_guardian_review
+  await page.goto(base + "/participar?plan=genesis", { waitUntil: "networkidle" });
+  await page.getByLabel(/Sou estudante/).check();
+  await fillAndReview(page, { age: "Entre 12 e 17 anos", name: "Nome ou apelido" });
+  await full(page, `${out}/participar-menor-dados-${vp.name}.png`);
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await page.getByLabel(/primeira missão/).fill("Criar um agente que me ajude a estudar para as provas");
+  await page.getByRole("button", { name: "Continuar" }).click();
+  await page.getByLabel(/Li e aceito/).check();
+  await page.getByRole("button", { name: /Concluir prévia/ }).click();
+  await full(page, `${out}/participar-menor-concluido-${vp.name}.png`);
+
+  // Atlas: painel aberto (por teclado, pois em mobile o lançador recolhe-se sobre CTAs)
   await page.goto(base + "/", { waitUntil: "networkidle" });
-  await page.getByRole("button", { name: "Abrir conversa com o Atlas" }).click();
+  await page.screenshot({ path: `${out}/atlas-recolhido-hero-${vp.name}.png` });
+  await page.getByRole("button", { name: "Abrir conversa com o Atlas" }).focus();
+  await page.keyboard.press("Enter");
   await page.getByRole("button", { name: "Como funciona o Genesis?" }).click();
   await page.waitForTimeout(1500);
   await page.screenshot({ path: `${out}/atlas-painel-${vp.name}.png` });

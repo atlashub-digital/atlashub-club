@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import Icon from "../ui/Icon";
 import { StatusTag } from "../ui/primitives";
 import { genesisFacts, price, priceNotes } from "@/lib/offers";
+import { ageBandLabels, deriveSignupOutcome, isMinor, statusLabels, type AgeBand } from "@/lib/adesao/status";
 
 /**
  * Formulário de adesão em 4 etapas — MODO PRÉVIA (issue #14, PR2A).
@@ -11,10 +12,12 @@ import { genesisFacts, price, priceNotes } from "@/lib/offers";
  * Auth, CRM, validação de estudante e checkout entram em PRs próprios (PR2B/PR2C).
  * Regras: Club grátis por defeito; Genesis só por escolha explícita (ou ?plan=genesis);
  * marcar "estudante" NÃO autoriza R$ 190 — fica "pendente de validação"; marketing desmarcado.
+ * Menores de 18 (decisão de 14/10/2026): avançam sem bloqueio; o percurso fica em `pending_guardian_review`
+ * (revisão manual do responsável pela equipa). Não há consentimento simulado nem campo "tenho autorização".
  */
 
 export type Plan = "club" | "genesis";
-type Age = "" | "adult" | "minor";
+type Age = "" | AgeBand;
 
 type Draft = {
   plan: Plan;
@@ -90,16 +93,16 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
     if (Object.keys(errors).length) summaryRef.current?.focus();
   }, [errors]);
 
-  const genesisBlocked = d.plan === "genesis" && d.age === "minor";
+  const minor = d.age !== "" && isMinor(d.age);
+  const outcome = d.age ? deriveSignupOutcome({ plan: d.plan, student: d.student, age: d.age }) : null;
 
   function validate(s: number): Record<string, string> {
     const e: Record<string, string> = {};
     if (s === 1) {
       if (d.name.trim().length < 2) e.name = "Informe o seu nome (mínimo 2 letras).";
       if (!emailOk(d.email)) e.email = "Informe um e-mail válido, por exemplo nome@exemplo.com.";
-      if (d.whatsapp && d.whatsapp.replace(/\D/g, "").length < 10) e.whatsapp = "WhatsApp é opcional; se preencher, use DDD + número.";
+      if (!minor && d.whatsapp && d.whatsapp.replace(/\D/g, "").length < 10) e.whatsapp = "WhatsApp é opcional; se preencher, use DDD + número.";
       if (!d.age) e.age = "Indique a sua faixa de idade.";
-      if (d.age === "minor") e.age = "Por enquanto, o cadastro é só para maiores de 18 anos. Estamos preparando um fluxo com autorização de responsável.";
     }
     if (s === 2) {
       if (d.firstMission.trim().length < 5) e.firstMission = "Conte em poucas palavras qual seria a primeira missão do seu agente.";
@@ -147,7 +150,7 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
             Prévia concluída — nada foi enviado.
           </h2>
           <p>
-            Este é o fluxo de adesão em <strong>modo demonstração</strong>. Nenhum dado foi enviado, guardado ou partilhado, e
+            Este é o fluxo de adesão em <strong>modo demonstração</strong>. Nenhum dado foi enviado, guardado ou compartilhado, e
             nenhuma conta foi criada. O cadastro real abre quando a autenticação e os consentimentos forem aprovados.
           </p>
           <dl className="ca-adesao__review">
@@ -161,6 +164,7 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
             </div>
           </dl>
           {d.plan === "genesis" && <p className="ca-adesao__hint">{priceNotes.noCharge}</p>}
+          {outcome && <OutcomePanel outcome={outcome} />}
           <div className="ca-hero__actions">
             <Link className="ca-btn ca-btn--primary" href={`/area-membro${d.plan === "genesis" ? "?plan=genesis" : ""}`}>
               Ver a prévia do dashboard <Icon name="arrow" className="ca-btn__icon" />
@@ -269,9 +273,28 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
 
         {step === 1 && (
           <div className="ca-adesao__grid">
+            <fieldset className="ca-field ca-adesao__wide" id={f("age")}>
+              <legend>Faixa de idade</legend>
+              <div className="ca-adesao__inline">
+                {(Object.keys(ageBandLabels) as AgeBand[]).map((band) => (
+                  <label key={band} className="check-inline">
+                    <input
+                      type="radio"
+                      name="age"
+                      checked={d.age === band}
+                      onChange={() => setD((prev) => ({ ...prev, age: band, whatsapp: isMinor(band) ? "" : prev.whatsapp }))}
+                      {...(errors.age ? { "aria-describedby": f("age-err") } : {})}
+                    />{" "}
+                    <span>{ageBandLabels[band]}</span>
+                  </label>
+                ))}
+              </div>
+              {err("age")}
+            </fieldset>
+            {minor && <GuardianNote child={d.age === "child"} genesis={d.plan === "genesis"} />}
             <div className="ca-field">
-              <label htmlFor={f("name")}>Nome</label>
-              <input id={f("name")} className="ca-input" value={d.name} onChange={(e) => set("name", e.target.value)} autoComplete="name" maxLength={90} {...errProps("name")} />
+              <label htmlFor={f("name")}>{minor ? "Nome ou apelido" : "Nome"}</label>
+              <input id={f("name")} className="ca-input" value={d.name} onChange={(e) => set("name", e.target.value)} autoComplete={minor ? "nickname" : "name"} maxLength={90} {...errProps("name")} />
               {err("name")}
             </div>
             <div className="ca-field">
@@ -279,27 +302,12 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
               <input id={f("email")} type="email" className="ca-input" value={d.email} onChange={(e) => set("email", e.target.value)} autoComplete="email" maxLength={190} {...errProps("email")} />
               {err("email")}
             </div>
-            <div className="ca-field">
-              <label htmlFor={f("whatsapp")}>WhatsApp (opcional)</label>
-              <input id={f("whatsapp")} type="tel" inputMode="tel" className="ca-input" value={d.whatsapp} onChange={(e) => set("whatsapp", e.target.value)} autoComplete="tel" maxLength={20} {...errProps("whatsapp")} />
-              {err("whatsapp")}
-            </div>
-            <fieldset className="ca-field" id={f("age")}>
-              <legend>Faixa de idade</legend>
-              <div className="ca-adesao__inline">
-                <label className="check-inline">
-                  <input type="radio" name="age" checked={d.age === "adult"} onChange={() => set("age", "adult")} /> <span>18 anos ou mais</span>
-                </label>
-                <label className="check-inline">
-                  <input type="radio" name="age" checked={d.age === "minor"} onChange={() => set("age", "minor")} /> <span>Menos de 18 anos</span>
-                </label>
+            {!minor && (
+              <div className="ca-field">
+                <label htmlFor={f("whatsapp")}>WhatsApp (opcional)</label>
+                <input id={f("whatsapp")} type="tel" inputMode="tel" className="ca-input" value={d.whatsapp} onChange={(e) => set("whatsapp", e.target.value)} autoComplete="tel" maxLength={20} {...errProps("whatsapp")} />
+                {err("whatsapp")}
               </div>
-              {err("age")}
-            </fieldset>
-            {genesisBlocked && (
-              <p className="ca-notice ca-adesao__wide" role="note">
-                <span>O Genesis exige um fluxo com autorização de responsável, que ainda não existe. Nenhuma contratação é possível para menores de 18 anos.</span>
-              </p>
             )}
           </div>
         )}
@@ -341,7 +349,7 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
                 <option value="">Selecione</option>
                 <option>Só celular</option>
                 <option>Computador</option>
-                <option>Equipamento partilhado</option>
+                <option>Equipamento compartilhado</option>
               </select>
             </div>
           </div>
@@ -370,6 +378,14 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
                 <dt>Primeira missão</dt>
                 <dd>{d.firstMission}</dd>
               </div>
+              {outcome && (
+                <div className="ca-adesao__wide">
+                  <dt>Estado previsto</dt>
+                  <dd>
+                    {statusLabels[outcome.status]} <code className="ca-adesao__code">{outcome.status}</code>
+                  </dd>
+                </div>
+              )}
             </dl>
             <label className="check-inline ca-adesao__wide" htmlFor={f("terms")}>
               <input id={f("terms")} type="checkbox" checked={d.terms} onChange={(e) => set("terms", e.target.checked)} {...errProps("terms")} />
@@ -419,10 +435,61 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
             </button>
           </p>
         )}
+        {minor && (
+          <p className="ca-adesao__hint">
+            Percurso sujeito a <strong>revisão do responsável</strong>. Nada é ativado nem cobrado antes dessa revisão.
+          </p>
+        )}
         <p className="ca-adesao__demo">
           <Icon name="shield" size={16} /> Prévia: nada é enviado nem guardado.
         </p>
       </aside>
+    </div>
+  );
+}
+
+/** Mensagem positiva para menores: informa, não bloqueia e não simula autorização. */
+function GuardianNote({ child, genesis }: { child: boolean; genesis: boolean }) {
+  return (
+    <div className="ca-notice ca-notice--welcome ca-adesao__wide" role="note">
+      <Icon name="sparkle" size={18} />
+      <span>
+        <strong>Que bom ter você aqui!</strong> O Club Atlas é para quem está aprendendo, em qualquer idade. Você pode
+        continuar a explorar e terminar esta pré-inscrição. Alguns passos — como criar a conta, usar dados pessoais
+        {genesis ? ", entrar no Genesis ou qualquer pagamento" : " ou participar de atividades com inscrição"} — vão
+        precisar da autorização de um responsável. A nossa equipe revisa cada caso com cuidado antes de ativar algo.
+        {child && " Para menores de 12 anos, o responsável participa desde o início do registro."}
+      </span>
+    </div>
+  );
+}
+
+function OutcomePanel({ outcome }: { outcome: ReturnType<typeof deriveSignupOutcome> }) {
+  return (
+    <div className="ca-adesao__outcome" aria-labelledby="adesao-outcome">
+      <h3 id="adesao-outcome">
+        Estado previsto no sistema real: {statusLabels[outcome.status]} <code className="ca-adesao__code">{outcome.status}</code>
+      </h3>
+      <ul>
+        {outcome.reviews.guardian && (
+          <li>
+            <strong>Revisão do responsável:</strong> a equipe do Club entra em contato e valida a autorização do responsável legal,
+            caso a caso. Até lá não é criada conta com dados pessoais.
+          </li>
+        )}
+        {outcome.reviews.student && (
+          <li>
+            <strong>Validação de estudante:</strong> verificação independente da elegibilidade antes de qualquer valor de
+            estudante.
+          </li>
+        )}
+        {!outcome.reviews.guardian && !outcome.reviews.student && <li>Sem revisão manual necessária para este percurso.</li>}
+      </ul>
+      {outcome.onHold.length > 0 && (
+        <p className="ca-adesao__hint">
+          Fica em espera até a revisão: {outcome.onHold.join(" · ")}. As páginas públicas do Club continuam abertas.
+        </p>
+      )}
     </div>
   );
 }

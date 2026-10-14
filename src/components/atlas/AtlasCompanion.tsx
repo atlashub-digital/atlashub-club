@@ -48,6 +48,8 @@ export default function AtlasCompanion() {
   const [state, setState] = useState<AtlasState>("idle");
   const [messages, setMessages] = useState<Msg[]>([{ id: 0, from: "atlas", kind: "guide", text: atlasCopy.intro }]);
   const [draft, setDraft] = useState("");
+  const [ducked, setDucked] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
@@ -74,6 +76,75 @@ export default function AtlasCompanion() {
       clearTimeout(hide);
     };
   }, [mounted, hidden, muted, open, pathname]);
+
+  // Mobile/tablet: o Atlas recolhe-se quando há um CTA, campo ou link por baixo do lançador,
+  // ou enquanto a pessoa preenche um campo (teclado aberto). Volta quando a zona fica livre.
+  useEffect(() => {
+    if (!mounted || hidden || open) {
+      setDucked(false);
+      return;
+    }
+    const narrow = window.matchMedia("(max-width: 900px)");
+    const INTERACTIVE = "a, button, input, textarea, select, label, summary, [role='button']";
+    let typing = false;
+    let frame = 0;
+    const check = () => {
+      frame = 0;
+      const btn = launcherRef.current;
+      const root = rootRef.current;
+      if (!narrow.matches || !btn || !root) return setDucked(false);
+      if (typing) return setDucked(true);
+      // Zona fixa do lançador (canto inferior direito), independente da animação de recolha.
+      const box = root.getBoundingClientRect();
+      const right = box.right;
+      const bottom = box.bottom;
+      const left = right - btn.offsetWidth;
+      const top = bottom - btn.offsetHeight;
+      const pts: [number, number][] = [
+        [(left + right) / 2, (top + bottom) / 2],
+        [left + 6, top + 6],
+        [right - 6, top + 6],
+        [left + 6, bottom - 6],
+        [right - 6, bottom - 6],
+      ];
+      const covered = pts.some(([x, y]) =>
+        document.elementsFromPoint(x, y).some((el) => !rootRef.current?.contains(el) && el.closest(INTERACTIVE)),
+      );
+      setDucked(covered);
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(check);
+    };
+    const isField = (t: EventTarget | null) => t instanceof HTMLElement && t.matches("input, textarea, select") && !rootRef.current?.contains(t);
+    const onFocusIn = (e: FocusEvent) => {
+      if (isField(e.target)) {
+        typing = true;
+        schedule();
+      }
+    };
+    const onFocusOut = (e: FocusEvent) => {
+      if (isField(e.target)) {
+        typing = false;
+        schedule();
+      }
+    };
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    narrow.addEventListener("change", schedule);
+    document.addEventListener("focusin", onFocusIn);
+    document.addEventListener("focusout", onFocusOut);
+    const late = window.setTimeout(schedule, 400); // depois de imagens/fontes assentarem
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(late);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      narrow.removeEventListener("change", schedule);
+      document.removeEventListener("focusin", onFocusIn);
+      document.removeEventListener("focusout", onFocusOut);
+    };
+  }, [mounted, hidden, open, pathname]);
 
   useEffect(() => {
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight });
@@ -179,8 +250,8 @@ export default function AtlasCompanion() {
   }
 
   return (
-    <div className="ca-atlas" data-open={open || undefined}>
-      {bubble && !open && (
+    <div ref={rootRef} className="ca-atlas" data-open={open || undefined} data-ducked={(ducked && !open) || undefined}>
+      {bubble && !open && !ducked && (
         <div className="ca-atlas__bubble" role="status">
           <button type="button" className="ca-atlas__bubble-text" onClick={openPanel}>
             {bubble}
