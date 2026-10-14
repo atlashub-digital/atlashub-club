@@ -6,6 +6,9 @@ test.describe("Landing pública", () => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Pessoas reais. Agentes próprios. Projetos vivos.");
     await expect(page.getByText("O futuro se constrói por pessoas como você.")).toBeVisible();
+    // Fonte v3 (design/handoff/premium-v3/index.html): eyebrow e faixa de pilares
+    await expect(page.getByText("Club Atlas · comunidade aberta e laboratório experimental")).toBeVisible();
+    await expect(page.getByRole("list", { name: "Como funciona o Club" }).getByRole("listitem")).toHaveCount(4);
     const hero = page.locator(".ca-hero");
     await expect(hero.getByRole("link", { name: /Entrar no Club gratuitamente/ })).toHaveAttribute("href", "/participar");
     await expect(hero.getByRole("link", { name: /Conhecer o Genesis/ })).toHaveAttribute("href", "/genesis");
