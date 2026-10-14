@@ -11,6 +11,7 @@
 3. **O acesso Genesis só é concedido por confirmação autenticada e idempotente do provedor** (webhook assinado + reconciliação), nunca por redirect do browser.
 4. **Nenhuma chave nem dado de pagamento** chega ao frontend nem ao CRM.
 5. Preço R$ 190 só com `club_student_eligibility.status = 'APPROVED'` e não expirado; caso contrário, R$ 490.
+7. **Estudante e responsável são verificações independentes** (decisão de 14/10/2026). Menor (`club_guardian_reviews`, PR2B) só recebe cotação, ordem ou entitlement com `guardian_approved`; um menor estudante precisa das duas aprovações. Nenhuma cobrança a menor sem a validação legal exigida.
 6. Valor final, encargos, cancelamento e política de reembolso mostrados **antes** da confirmação.
 
 ## 2. Estados (continuação do PR2B)
@@ -24,6 +25,16 @@ AWAITING_PAYMENT ──expira/cancela──▶ QUOTE_READY (nova cotação)
 GENESIS_MEMBER ──reembolso/chargeback──▶ REFUNDED (entitlement revogado)
 ```
 Todas as transições a partir de `STUDENT_PENDING` são **só servidor** (o PR2B já impede `UPDATE` pelo membro).
+
+### Matriz de verificações antes da cotação
+| Perfil | Revisão do responsável | Validação de estudante | Preço cotável |
+|---|---|---|---|
+| Adulto | — | não pedida | R$ 490 |
+| Adulto estudante | — | `APPROVED` | R$ 190 (senão R$ 490) |
+| Menor (12–17 / <12) | `guardian_approved` obrigatório | não pedida | R$ 490 só após aprovação |
+| Menor estudante | `guardian_approved` obrigatório | `APPROVED` | R$ 190 só após as **duas** |
+
+A `POST /api/genesis/quote` recusa (`409 guardian_review_required`) se o perfil não for adulto e não houver `guardian_approved`; o trigger `club.genesis_minor_gate` (PR2B) garante o mesmo na base.
 
 ## 3. Entidades (rascunho lógico — DDL só num PR futuro aprovado)
 | Tabela | Campos-chave | Notas |
@@ -73,7 +84,7 @@ Todas as transições a partir de `STUDENT_PENDING` são **só servidor** (o PR2
 - Alertas: assinatura inválida, montante divergente, pico de falhas.
 
 ## 10. Testes obrigatórios (para o PR de implementação)
-Estudante rejeitado não obtém R$ 190 · cotação adulterada/expirada/reutilizada recusada · replay de webhook não duplica entitlement · webhook com assinatura inválida recusado · montante divergente não concede acesso · menor bloqueado · reembolso revoga acesso · pagamento tardio após expiração tratado · nenhum segredo no bundle do cliente.
+Menor sem `guardian_approved` não obtém cotação nem ordem · menor estudante com só uma das aprovações fica bloqueado · Estudante rejeitado não obtém R$ 190 · cotação adulterada/expirada/reutilizada recusada · replay de webhook não duplica entitlement · webhook com assinatura inválida recusado · montante divergente não concede acesso · menor bloqueado · reembolso revoga acesso · pagamento tardio após expiração tratado · nenhum segredo no bundle do cliente.
 
 ## 11. Gates
 1. PR2B ativo em staging. 2. Auditoria e escolha de provedor (Helena + Sérgio). 3. Política de cancelamento/reembolso e termos de venda aprovados pelo jurídico. 4. Sandbox do provedor apenas, contas de teste. 5. Aprovação explícita do Sérgio para checkout real. Nenhuma comunicação de "matrículas abertas" antes do gate 5.
