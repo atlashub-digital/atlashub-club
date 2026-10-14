@@ -77,6 +77,17 @@
   letter-spacing: -0.03em;
   line-height: 1.04;
 }
+/* v3: três linhas (branco frio · ciano · dourado), uma por linha em todas as larguras */
+.ca-hero__line {
+  display: block;
+}
+.ca-hero__support {
+  margin-top: var(--ca-space-2);
+  font-family: var(--ca-font-hand);
+  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.6rem);
+  line-height: 1.15;
+  color: var(--ca-text);
+}
 .ca-hero__copy {
   display: grid;
   gap: var(--ca-space-3);

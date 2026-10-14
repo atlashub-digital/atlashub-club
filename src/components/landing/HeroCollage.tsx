@@ -9,6 +9,8 @@ import { LinkButton, StatusTag } from "../ui/primitives";
  * Hero da landing — fiel à composição aprovada CLUB_ATLAS_TEAM_VALIDADO.png.
  * Elenco recortado da arte original (sem redesenhar rostos); copy, CTA, nomes e papéis em DOM.
  * Revisão PR #11 §B: equipa + Atlas dentro da primeira dobra em desktop e mobile.
+ * Diretiva 2026-10-14 (referência Premium v3): H1 "Pessoas reais. Agentes próprios. Projetos vivos.";
+ * "O futuro se constrói por pessoas como você." mantém-se como linha de apoio emocional.
  * Mobile: a fotografia sobe para o topo (ordem visual via CSS; o H1 continua primeiro no DOM)
  * e os cinco rostos aparecem em retratos legíveis logo abaixo.
  */
@@ -18,9 +20,12 @@ export default function HeroCollage() {
       <div className="ca-container ca-hero__intro">
         <div className="ca-hero__headline">
           <p className="ca-hero__tagline">Aprender · Construir · Crescer · Realizar</p>
-          <h1 id="hero-title">
-            O futuro se constrói por <span className="ca-hl">pessoas como você.</span>
+          <h1 id="hero-title" className="ca-hero__title">
+            <span className="ca-hero__line">Pessoas reais.</span>{" "}
+            <span className="ca-hero__line ca-hl">Agentes próprios.</span>{" "}
+            <span className="ca-hero__line ca-hl-gold">Projetos vivos.</span>
           </h1>
+          <p className="ca-hero__support">O futuro se constrói por pessoas como você.</p>
         </div>
         <div className="ca-hero__copy">
           <p className="ca-hero__lead">

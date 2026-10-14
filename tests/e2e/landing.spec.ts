@@ -4,7 +4,8 @@ import AxeBuilder from "@axe-core/playwright";
 test.describe("Landing pública", () => {
   test("hero com h1, CTA honesto e elenco aprovado", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("O futuro se constrói");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Pessoas reais. Agentes próprios. Projetos vivos.");
+    await expect(page.getByText("O futuro se constrói por pessoas como você.")).toBeVisible();
     const hero = page.locator(".ca-hero");
     await expect(hero.getByRole("link", { name: /Entrar no Club gratuitamente/ })).toHaveAttribute("href", "/participar");
     await expect(hero.getByRole("link", { name: /Conhecer o Genesis/ })).toHaveAttribute("href", "/genesis");

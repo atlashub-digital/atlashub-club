@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     siteName: "Club Atlas",
-    title: "Club Atlas — O futuro se constrói por pessoas como você",
+    title: "Club Atlas — Pessoas reais. Agentes próprios. Projetos vivos.",
     description: "Pessoas reais + inteligência viva. Aprender · Construir · Crescer · Realizar.",
     images: [{ url: "/assets/club/og-club-atlas.jpg", width: 1200, height: 630, alt: "Elenco do Club Atlas: Sérgio Monteiro, Lucas, Atlas, Marta e Bia" }],
   },
