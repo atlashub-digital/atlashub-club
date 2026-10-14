@@ -360,7 +360,8 @@ p {
   display: grid;
   gap: 6px;
 }
-.ca-field > span {
+.ca-field > span,
+.ca-field > label {
   font-size: var(--ca-fs-sm);
   font-weight: 600;
   color: var(--ca-text-2);

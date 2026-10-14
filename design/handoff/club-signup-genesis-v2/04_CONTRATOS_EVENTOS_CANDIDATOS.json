@@ -1,0 +1,13 @@
+{
+  "schema_version":"0.1-design-only",
+  "warning":"Contract candidate; no DB or payment migration deployed",
+  "offers":[
+    {"offer_id":"club-free-v1","currency":"BRL","price_minor":0,"availability":"pending_launch","entitlement":"community_free"},
+    {"offer_id":"genesis-01-standard","currency":"BRL","price_minor":49000,"availability":"pending_launch","duration_weeks":8,"included_community":"free"},
+    {"offer_id":"genesis-01-student","currency":"BRL","price_minor":19000,"eligibility_required":"student_approved","availability":"pending_launch","duration_weeks":8,"included_community":"free"}
+  ],
+  "application_status":["draft","interested","pending_student_review","student_approved","student_rejected","quote_ready","awaiting_payment","payment_confirmed","cancelled","refunded"],
+  "required_events":["signup_started","club_account_created","genesis_interest_recorded","student_eligibility_requested","student_eligibility_approved","student_eligibility_rejected","price_quote_created","payment_session_created","payment_confirmed","enrollment_granted","opt_out_recorded"],
+  "payment_guards":["signed_server_quote","provider_webhook_verified","idempotent_settlement","no_client_amount_trust","separate_terms_consent"],
+  "data_policy":["minimal_signup","optional_whatsapp","separate_marketing_optin","private_student_evidence","retention_policy_to_be_approved","no_shared_b2b_member_memory"]
+}

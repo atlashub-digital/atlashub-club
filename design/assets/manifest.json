@@ -139,6 +139,30 @@
       "bytes": 769032,
       "sha256": "40bd0ca85627d12da834d198640e4f003573c8403fb9c6f357dece51f8567af0",
       "status": "LEGADO_REFERENCIA"
+    },
+    {
+      "path": "design/reference/approved/ATLAS_MASCOTE_TRANSPARENTE.png",
+      "width": 1373,
+      "height": 1145,
+      "bytes": 1509235,
+      "sha256": "bc49b88f5a70b8df364f97fa9c7e4ff7b3c824d0772e59ca052c33a0e0e6f2a3",
+      "status": "APROVADO_OWNER (enviado no chat 14/10)"
+    },
+    {
+      "path": "design/reference/v2/LANDING_V2_CANDIDATA_LONGA.png",
+      "width": 811,
+      "height": 2000,
+      "bytes": 815251,
+      "sha256": "40333514cc50b78a8c1d704bb831bd319ffdf62b62c0cd3b9edac7b64592e577",
+      "status": "REFERENCIA_UX v2 (candidata)"
+    },
+    {
+      "path": "design/reference/v2/LANDING_V3_CONCEITO_DESKTOP.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1666118,
+      "sha256": "0bcd1ffcb34c0cdfdd999595151a11910b88576fe84b69260225b5351bf2e569",
+      "status": "REFERENCIA_UX v3 (conceito)"
     }
   ],
   "derived": [
@@ -254,6 +278,17 @@
       "use": "OpenGraph 1200x630",
       "retouched": false,
       "note": "Regenerado na revisão PR #11: o OG anterior mostrava 'CLARA' e 'LIA' gravados na arte"
+    },
+    {
+      "path": "public/assets/club/atlas-mascote.webp",
+      "width": 720,
+      "height": 681,
+      "bytes": 124464,
+      "sha256": "da3945f5d16cf928e93249eeeba882913d94b70242713d07456b148dc70b9640",
+      "source": "design/reference/approved/ATLAS_MASCOTE_TRANSPARENTE.png",
+      "use": "AtlasAvatar + Atlas companion",
+      "retouched": false,
+      "note": "recorte ao bbox alfa + redimensionado 720px; sem alteração de pixels"
     }
   ],
   "vectors": [
@@ -266,7 +301,7 @@
   "pending_assets": [
     "SVG de origem do símbolo Atlas e do wordmark CLUB ATLAS",
     "Retratos individuais em alta resolução (Sérgio, Lucas, Clara, Lia) com fundo neutro",
-    "Mascote Atlas isolada (PNG transparente ou GLB) para animação",
-    "Licenças/direitos de imagem de cada retrato"
+    "Licenças/direitos de imagem de cada retrato",
+    "Modelo GLB animável do Atlas (evolução 3D)"
   ]
 }

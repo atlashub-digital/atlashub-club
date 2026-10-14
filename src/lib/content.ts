@@ -1,5 +1,6 @@
 import type { IconName } from "@/components/ui/Icon";
 import type { Status } from "@/components/ui/primitives";
+import { price } from "./offers";
 
 /**
  * Conteúdo público do Club Atlas.
@@ -69,11 +70,11 @@ export const labStages: { icon: IconName; title: string; detail: string; line: s
 export const accessLevels: { name: string; what: string; status: Status; statusLabel: string }[] = [
   { name: "Club", what: "Comunidade e aprendizagem gratuitas de entrada: fóruns, guias e a Missão 001.", status: "prep", statusLabel: "Em preparação" },
   { name: "Atlas Lab", what: "Ambiente experimental progressivo, com quotas, isolamento e supervisão humana. Liberado por etapas.", status: "prep", statusLabel: "Em preparação" },
-  { name: "Genesis", what: "Programa guiado de 8 semanas e 24 ateliers, com mentoria e projeto real.", status: "planned", statusLabel: "Previsto 09/01/2027" },
+  { name: "Genesis", what: `Programa guiado de 8 semanas e 24 ateliers previstos, com mentoria e projeto real. ${price.genesisStandard} padrão · ${price.genesisStudent} estudante elegível.`, status: "planned", statusLabel: "Previsto 09/01/2027" },
 ];
 
 export const startSteps: { n: string; title: string; detail: string; status: Status; statusLabel: string }[] = [
-  { n: "01", title: "Entre gratuitamente", detail: "Crie sua conta no Club. O registro abre quando privacidade e segurança estiverem validadas.", status: "prep", statusLabel: "Em preparação" },
+  { n: "01", title: "Entre gratuitamente", detail: "Escolha o Club grátis no formulário de adesão. As contas abrem quando privacidade e segurança estiverem validadas.", status: "prep", statusLabel: "Prévia do formulário" },
   { n: "02", title: "Conte seus objetivos", detail: "Um onboarding curto: área de estudo, interesses e equipamento disponível (até só um celular).", status: "prep", statusLabel: "Em preparação" },
   { n: "03", title: "Missão 001 — O meu primeiro agente", detail: "Quatro etapas guiadas para criar, ensinar e testar seu primeiro agente, com evidências reais.", status: "prep", statusLabel: "Em preparação" },
   { n: "04", title: "Participe e construa", detail: "Fóruns abertos, desafios, Build Nights e, em janeiro, a pré-candidatura ao Genesis.", status: "planned", statusLabel: "A partir de nov/2026" },
@@ -130,11 +131,11 @@ export const universes = [
 ];
 
 export const faq = [
-  { q: "O Club Atlas é pago?", a: "A entrada no Club será gratuita: comunidade, fóruns abertos, guias livres e a Missão 001. Percursos avançados e recursos de laboratório poderão ter condições próprias, que só serão anunciadas depois de aprovadas — nenhum valor está definido hoje." },
+  { q: "O Club Atlas é pago?", a: "Não. A entrada no Club é gratuita e não depende de comprar nada: comunidade, fóruns abertos, guias livres e a Missão 001. O Genesis é um programa opcional, à parte." },
   { q: "Preciso saber programar?", a: "Não. Você não precisa saber programar; precisa começar. As missões partem do zero e explicam cada passo. Quem já programa encontra desafios para ir mais longe." },
   { q: "Só tenho celular. Consigo participar?", a: "Sim. Comunidade, conteúdos e a primeira missão funcionam no celular. Algumas atividades avançadas de laboratório podem exigir computador ou recursos remotos — avisaremos sempre antes." },
   { q: "Quando começa?", a: "Sessões introdutórias a partir de novembro de 2026 e estreia formal em dezembro. A Turma 01 do Genesis tem abertura prevista para 09/01/2027." },
-  { q: "O Genesis tem vagas ou preço definidos?", a: "Ainda não. A pré-candidatura será aberta em breve, sem cobrança e sem reserva automática de vaga. O programa prevê bolsas, e ninguém fica fora da comunidade por falta de dinheiro." },
+  { q: "Quanto custa o Genesis?", a: `Valor padrão ${price.genesisStandard}. Para estudantes elegíveis, ${price.genesisStudent}, depois de validada a condição de estudante. Nenhuma cobrança acontece nesta fase: as condições finais são confirmadas antes da abertura, sem vagas, parcelamentos ou taxas anunciados. Ninguém fica fora da comunidade por falta de dinheiro.` },
   { q: "Os mentores são pessoas reais?", a: "Sérgio Monteiro é uma pessoa real. Atlas, Lucas, Marta e Bia são personagens digitais, sempre identificados como tais, e não tomam decisões sobre você sem supervisão humana." },
   { q: "Como meus dados serão tratados?", a: "Coletamos o mínimo necessário, com consentimento explícito, em conformidade com a LGPD. Você poderá pedir acesso, correção ou exclusão a qualquer momento. Veja o aviso de privacidade." },
 ];

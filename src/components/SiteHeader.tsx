@@ -17,7 +17,7 @@ export default function SiteHeader() {
         </nav>
         <div className="ca-header__actions">
           <LinkButton href="/participar" size="sm" icon={null} variant={primaryCta} className="ca-header__cta">
-            Como participar
+            Entrar no Club
           </LinkButton>
           <MobileNav />
         </div>

@@ -61,7 +61,7 @@ Divergência: Vercel usa Node 24.x, `package.json` declara `>=22`, CI usa 22. Co
 | C3 | Logo sem rosto vs mascote expressiva | Dois componentes: `AtlasMark` (sem rosto) e `AtlasAvatar` (mascote animada, reduced-motion) | Fornecer SVG de origem e mascote isolada |
 | C4 | Botão primário: azul (`WEB_ECOSISTEMA`) vs dourado (`DESIGN_SYSTEM_BOARD §05`) | **Revisto:** duas variantes comparadas (`06_cta-variantes.jpg`); padrão = dourado; azul com `NEXT_PUBLIC_HERO_CTA=blue` | Escolher a variante |
 | C5 | Datas antigas nas maquetes: Genesis "09 JAN **2026**" (`GENESIS.png`, `BOARD_*`), "Vagas limitadas", "Inscrições abertas" | Só **09/01/2027 (previsto)**, sem vagas/inscrições; guarda automática `content:check` | — |
-| C6 | Preços R$49/99/199 e planos Explorer/Builder/Founder nas maquetes | **Não publicados**; sem planos na UI | Homologação comercial futura |
+| C6 | Preços R$49/99/199 e planos Explorer/Builder/Founder nas maquetes antigas | **Não publicados.** Decisão de 14/10 (issue #14): Club grátis + Genesis R$ 490 padrão / R$ 190 estudante elegível — exibidos via `src/lib/offers.ts`, sem cobrança | Homologar checkout (PR2C) |
 | C7 | Métricas fictícias (12.4K membros, 127 participantes, XP, "60%") | Não publicadas; Missão 001 sem progresso falso | — |
 | C8 | Copy PT-PT ("por pessoas como **tu**") vs exigência PT-BR | "por pessoas como **você**" | — |
 | C9 | "Comunidade ativa" (arte) antes do lançamento | "Comunidade acolhedora" | — |
@@ -130,6 +130,7 @@ Legenda: ✅ feito · 🟡 parcial/placeholder honesto · ⛔ não existe · �
 |---|---|---|---|---|
 | **PR0+PR1 (este)** | Auditoria, `IDENTITY_DECISION`, `design/` + manifesto, design system, landing, `/mentores`, testes, CI | M | Baixo | — |
 | PR2 | UI de produto com dados demo rotulados: `/home` (com camada **Meus agentes / Meu ecossistema**), comunidade, biblioteca, Genesis, eventos, projetos, onboarding, empty states; migrar páginas v0.1 para PT-BR; ESLint | L | Baixo | PR1 |
+| **PR2A (feito, issue #14)** | Adesão Club em 4 etapas (prévia), `/genesis` comercial R$ 490 / R$ 190 estudante, ofertas na landing, prévia do dashboard, Atlas companion MVP — ver `docs/15_PR2A_ADESAO_GENESIS.md` e `docs/14_ATLAS_COMPANION.md` | M | Médio (comercial) | PR1 |
 | PR2b | `/lab` aprofundado: tela vazia → agente → memória/ferramentas → equipa → projeto; níveis de acesso realistas; sem claims de VPS/SDK | M | Baixo | PR1 |
 | PR3 | Supabase Auth + schema `club` + RLS + consentimentos + rate limit + `/participar` ativo | L | **Alto** (dados pessoais) | 🔒 projeto Supabase, Turnstile, textos LGPD, decisão Vercel prod |
 | PR4 | Mission engine + Missão 001 (4 etapas, evidência, XP idempotente, retomar/editar/apagar contexto, modo demo `not_provisioned`) | L | Médio | PR3 |

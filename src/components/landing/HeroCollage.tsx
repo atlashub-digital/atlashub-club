@@ -2,6 +2,7 @@ import Image from "next/image";
 import heroTeam from "../../../public/assets/club/hero-team.webp";
 import { cast } from "@/lib/cast";
 import { primaryCta } from "@/lib/flags";
+import { price } from "@/lib/offers";
 import { LinkButton, StatusTag } from "../ui/primitives";
 
 /**
@@ -23,22 +24,22 @@ export default function HeroCollage() {
         </div>
         <div className="ca-hero__copy">
           <p className="ca-hero__lead">
-            Comunidade e laboratório para estudantes de todas as áreas, iniciantes e criadores aprenderem a construir com
-            agentes de IA. <strong>Você não precisa saber programar. Precisa começar.</strong>
+            Não precisa começar sabendo programar. <strong>Comece por uma ideia.</strong> Conheça pessoas, construa seu
+            primeiro agente e aprenda a evoluir para a sua própria equipe de IA.
           </p>
           <div className="ca-hero__actions">
-            <LinkButton href="#laboratorio-atlas" variant={primaryCta}>
-              Conhecer o laboratório
+            <LinkButton href="/participar" variant={primaryCta}>
+              Entrar no Club gratuitamente
             </LinkButton>
-            <LinkButton href="/genesis" variant="outline" icon="play">
-              Ver o Genesis
+            <LinkButton href="/genesis" variant="outline">
+              Conhecer o Genesis
             </LinkButton>
           </div>
           <p className="ca-hero__status">
             <StatusTag status="prep" dot>
               Inscrições em preparação
             </StatusTag>
-            <span>Club gratuito · sessões introdutórias em nov/2026</span>
+            <span>Club grátis · Genesis opcional a partir de {price.genesisStudent} (estudante elegível)</span>
           </p>
         </div>
       </div>

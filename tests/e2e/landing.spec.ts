@@ -6,8 +6,8 @@ test.describe("Landing pública", () => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("O futuro se constrói");
     const hero = page.locator(".ca-hero");
-    await expect(hero.getByRole("link", { name: /Conhecer o laboratório/ })).toHaveAttribute("href", "#laboratorio-atlas");
-    await expect(hero.getByRole("link", { name: /Ver o Genesis/ })).toHaveAttribute("href", "/genesis");
+    await expect(hero.getByRole("link", { name: /Entrar no Club gratuitamente/ })).toHaveAttribute("href", "/participar");
+    await expect(hero.getByRole("link", { name: /Conhecer o Genesis/ })).toHaveAttribute("href", "/genesis");
     await expect(page.getByText("Inscrições em preparação").first()).toBeVisible();
     const cast = page.getByRole("list", { name: "Quem constrói com você" });
     for (const name of ["Sérgio Monteiro", "Lucas", "Atlas", "Marta", "Bia"]) {
@@ -21,7 +21,10 @@ test.describe("Landing pública", () => {
   test("não publica preços, métricas ou datas não homologadas", async ({ page }) => {
     await page.goto("/");
     const text = await page.locator("body").innerText();
-    expect(text).not.toMatch(/R\$\s?\d|€\s?\d|\/m[eê]s/);
+    // Só os preços aprovados na issue #14 podem aparecer.
+    const prices = [...text.matchAll(/R\$\s?\d[\d.,]*/g)].map((m) => m[0].replace(/\s/, " "));
+    expect(new Set(prices)).toEqual(new Set(["R$ 490", "R$ 190"]));
+    expect(text).not.toMatch(/€\s?\d|\/m[eê]s|parcel(a|e)s? de/i);
     expect(text).not.toMatch(/inscri[cç][oõ]es abertas|vagas abertas/i);
     expect(text).not.toMatch(/12\/01\/2027|21\/11/);
     expect(text).toContain("09/01/2027");
@@ -84,7 +87,7 @@ test.describe("Landing pública", () => {
     const summary = page.locator("summary", { hasText: "O Club Atlas é pago?" });
     await summary.focus();
     await page.keyboard.press("Enter");
-    await expect(page.getByText(/nenhum valor está definido hoje/)).toBeVisible();
+    await expect(page.getByText(/não depende de comprar nada/)).toBeVisible();
   });
 });
 

@@ -4,11 +4,13 @@ import MentorCard from "@/components/landing/MentorCard";
 import EventCard from "@/components/landing/EventCard";
 import Faq from "@/components/landing/Faq";
 import LabSection from "@/components/landing/LabSection";
+import OffersSection from "@/components/landing/OffersSection";
 import AtlasAvatar from "@/components/brand/AtlasAvatar";
 import Icon from "@/components/ui/Icon";
 import { IconBox, LinkButton, SectionHeading, StatusTag } from "@/components/ui/primitives";
 import { cast } from "@/lib/cast";
 import { primaryCta } from "@/lib/flags";
+import { price } from "@/lib/offers";
 import {
   audiences,
   channels,
@@ -98,6 +100,8 @@ export default function Home() {
 
       <LabSection />
 
+      <OffersSection />
+
       {/* Como começar + Missão 001 */}
       <section className="ca-section ca-container" aria-labelledby="comecar">
         <SectionHeading id="comecar" eyebrow="Como começar" title="Quatro passos até o seu primeiro agente." />
@@ -178,7 +182,7 @@ export default function Home() {
               8 semanas para construir o seu <span className="ca-hl-gold">ecossistema vivo.</span>
             </h2>
             <p>
-              24 ateliers práticos para criar agentes, fluxos e um projeto real com a comunidade e os mentores do Club.
+              24 ateliers práticos previstos para criar agentes, fluxos e um projeto real com a comunidade e os mentores do Club.
               Formato híbrido: Anápolis + online. Sem promessa de emprego, startup ou investimento — o compromisso é com
               o que você aprende e constrói.
             </p>
@@ -194,16 +198,18 @@ export default function Home() {
                 <dd>Híbrido · Anápolis + online</dd>
               </div>
               <div>
-                <dt>Acesso</dt>
-                <dd>Pré-candidatura sem cobrança · bolsas previstas</dd>
+                <dt>Investimento</dt>
+                <dd>
+                  {price.genesisStandard} padrão · {price.genesisStudent} estudante elegível
+                </dd>
               </div>
             </dl>
             <div className="ca-hero__actions">
               <LinkButton href="/genesis" variant="gold">
                 Ver o programa
               </LinkButton>
-              <LinkButton href="/participar" variant="outline" icon={null}>
-                Como participar
+              <LinkButton href="/participar?plan=genesis" variant="outline" icon={null}>
+                Pré-inscrição (prévia)
               </LinkButton>
             </div>
           </div>
@@ -313,13 +319,14 @@ export default function Home() {
         <div className="ca-cta">
           <AtlasAvatar size={140} className="ca-cta__avatar" />
           <div>
+            <p className="ca-eyebrow">O futuro começa com uma pergunta</p>
             <h2 id="cta-final">
-              O seu agente. O seu laboratório. <span className="ca-hl">O seu mundo.</span>
+              Se você pudesse criar uma equipe de agentes só sua, <span className="ca-hl">o que construiria?</span>
             </h2>
-            <p>A entrada no Club será gratuita. O registro abre quando privacidade e segurança estiverem validadas — até lá, veja como participar.</p>
+            <p>Essa é a primeira conversa do Club Atlas. Comece gratuitamente e leve a sua ideia para a Missão 001.</p>
           </div>
           <LinkButton href="/participar" variant={primaryCta}>
-            Como participar
+            Começar agora
           </LinkButton>
         </div>
       </section>

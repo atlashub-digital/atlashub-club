@@ -5,7 +5,7 @@ import { join } from "node:path";
 
 const roots = ["src"];
 const rules = [
-  { re: /R\$\s?\d/, why: "preço em reais (não homologado)" },
+  { re: /R\$\s?(?!490\b|190\b)\d/, why: "preço em reais fora das ofertas aprovadas (R$ 490 / R$ 190, issue #14)" },
   { re: /€\s?\d|\d\s?€/, why: "preço em euros (não homologado)" },
   { re: /\/m[eê]s\b/i, why: "plano mensal (não homologado)" },
   { re: /12\/01\/2027|12 JAN 2027/i, why: "data antiga do Genesis (correto: 09/01/2027)" },
