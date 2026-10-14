@@ -56,10 +56,10 @@ Divergência: Vercel usa Node 24.x, `package.json` declara `>=22`, CI usa 22. Co
 
 | # | Conflito | Decisão aplicada no PR1 | Pedido ao Sérgio |
 |---|---|---|---|
-| C1 | **Lucas/Lia** (arte aprovada) vs **Caio/Bia** (SOULs, manifesto) | UI mostra Lucas/Lia; `profileId` inalterado (`club-caio`, `club-bia`) | Escolher opção em `IDENTITY_DECISION.md §4` |
-| C2 | "LIA" também é nome no LeveLab | Mantido na UI (arte aprovada) com flag `identityPending` | Confirmar se há conflito real |
+| C1 | **Lucas/Lia** (arte aprovada) vs **Caio/Bia** (SOULs, manifesto) | **Revisto:** UI = Sérgio · Lucas · Atlas · Marta · Bia (preferência do Sérgio); `profileId` inalterado | Homologar migração (`IDENTITY_DECISION.md §5`) |
+| C2 | "LIA" (LeveLab) e "Clara" (Clara Corporate) colidem com outras unidades | **Revisto:** UI usa Bia e Marta; teste e2e impede Clara/Lia na landing | Confirmar que não há instância "Marta" ativa |
 | C3 | Logo sem rosto vs mascote expressiva | Dois componentes: `AtlasMark` (sem rosto) e `AtlasAvatar` (mascote animada, reduced-motion) | Fornecer SVG de origem e mascote isolada |
-| C4 | Botão primário: azul (`WEB_ECOSISTEMA`) vs dourado (`DESIGN_SYSTEM_BOARD §05`) | Azul elétrico = ação principal (entrar); dourado = destaque/Genesis | — (reversível por token) |
+| C4 | Botão primário: azul (`WEB_ECOSISTEMA`) vs dourado (`DESIGN_SYSTEM_BOARD §05`) | **Revisto:** duas variantes comparadas (`06_cta-variantes.jpg`); padrão = dourado; azul com `NEXT_PUBLIC_HERO_CTA=blue` | Escolher a variante |
 | C5 | Datas antigas nas maquetes: Genesis "09 JAN **2026**" (`GENESIS.png`, `BOARD_*`), "Vagas limitadas", "Inscrições abertas" | Só **09/01/2027 (previsto)**, sem vagas/inscrições; guarda automática `content:check` | — |
 | C6 | Preços R$49/99/199 e planos Explorer/Builder/Founder nas maquetes | **Não publicados**; sem planos na UI | Homologação comercial futura |
 | C7 | Métricas fictícias (12.4K membros, 127 participantes, XP, "60%") | Não publicadas; Missão 001 sem progresso falso | — |
@@ -83,7 +83,7 @@ club.atlashub.si (Vercel, projeto isolado)
    ├─ route handlers / server actions  → validação + RBAC + RLS (nunca autorização só no browser)
    └─ adapters (server-only, feature-flagged, desligados por defeito)
         ├─ EditionsCatalogProvider   (metadata + entitlement; master fica na Editions)
-        ├─ HermesAgentGateway        (Atlas/Clara/…; fora do frontend; staging primeiro)
+        ├─ HermesAgentGateway        (Atlas/Marta/…; fora do frontend; staging primeiro)
         ├─ LabProvisioner            (stub até isolamento homologado)
         └─ PaymentsProvider          (PixGo/MisticPay/cartão/boleto — desligado até G6)
 Supabase "club" (NOVO projeto ou schema isolado — decisão do owner, sem DDL na Workforce)
@@ -129,7 +129,8 @@ Legenda: ✅ feito · 🟡 parcial/placeholder honesto · ⛔ não existe · �
 | PR | Âmbito | Complexidade | Risco | Depende de |
 |---|---|---|---|---|
 | **PR0+PR1 (este)** | Auditoria, `IDENTITY_DECISION`, `design/` + manifesto, design system, landing, `/mentores`, testes, CI | M | Baixo | — |
-| PR2 | UI de produto com dados demo rotulados: `/home`, comunidade, biblioteca, Genesis, eventos, projetos, Atlas Lab, onboarding, empty states; migrar páginas v0.1 para PT-BR; ESLint | L | Baixo | PR1 |
+| PR2 | UI de produto com dados demo rotulados: `/home` (com camada **Meus agentes / Meu ecossistema**), comunidade, biblioteca, Genesis, eventos, projetos, onboarding, empty states; migrar páginas v0.1 para PT-BR; ESLint | L | Baixo | PR1 |
+| PR2b | `/lab` aprofundado: tela vazia → agente → memória/ferramentas → equipa → projeto; níveis de acesso realistas; sem claims de VPS/SDK | M | Baixo | PR1 |
 | PR3 | Supabase Auth + schema `club` + RLS + consentimentos + rate limit + `/participar` ativo | L | **Alto** (dados pessoais) | 🔒 projeto Supabase, Turnstile, textos LGPD, decisão Vercel prod |
 | PR4 | Mission engine + Missão 001 (4 etapas, evidência, XP idempotente, retomar/editar/apagar contexto, modo demo `not_provisioned`) | L | Médio | PR3 |
 | PR5 | Biblioteca/Editions (adapter + entitlements), turmas Genesis, candidaturas, admin básico | L | Médio | PR3 · 🔒 contrato Editions |
@@ -153,7 +154,7 @@ O lançamento gratuito (nov/dez 2026) depende de PR1–PR4; PR5 parcial; PR6/PR7
 
 ## 7. RELATÓRIO GO/NO-GO (estado após este PR)
 
-**Funciona de verdade:** landing e mentores responsivos e acessíveis (axe sem violações sérias), navegação desktop/móvel por teclado, `noindex`, API de interesse fail-closed, guarda de conteúdo no CI.
+**Funciona de verdade:** landing (com destaque do laboratório e equipa na primeira dobra) e mentores responsivos e acessíveis (axe sem violações sérias), navegação desktop/móvel por teclado, `noindex`, API de interesse fail-closed, guarda de conteúdo no CI.
 
 **Continua conceito/placeholder (rotulado como tal):** registo, contas, dashboard, Missão 001 executável, biblioteca com direitos, comunidade/canais, agentes, Lab, pagamentos.
 

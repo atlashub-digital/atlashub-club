@@ -2,20 +2,22 @@ import type { StaticImageData } from "next/image";
 import sergio from "../../public/assets/club/portrait-sergio.webp";
 import lucas from "../../public/assets/club/portrait-lucas.webp";
 import atlas from "../../public/assets/club/portrait-atlas.webp";
-import clara from "../../public/assets/club/portrait-clara.webp";
-import lia from "../../public/assets/club/portrait-lia.webp";
+import marta from "../../public/assets/club/portrait-marta.webp";
+import bia from "../../public/assets/club/portrait-bia.webp";
 
 /**
  * Elenco do Club Atlas para a INTERFACE.
  *
- * `displayName` segue a composição aprovada (CLUB_ATLAS_TEAM_VALIDADO.png).
+ * Nomes de UI segundo a preferência editorial do Sérgio (revisão PR #11, 14/10/2026):
+ * Sérgio · Lucas · Atlas · Marta · Bia. Rostos = composição aprovada, imutável.
  * `profileId` é o ID persistente em agents/TEAM_MANIFEST.json e NÃO foi alterado:
- * Lucas ↔ club-caio e Lia ↔ club-bia são um mapeamento PROVISÓRIO de UI,
- * pendente de decisão do Sérgio (ver docs/IDENTITY_DECISION.md).
+ * Lucas ↔ club-caio, Marta ↔ club-clara e Bia ↔ club-bia são mapeamentos de UI
+ * até à migração homologada (mapa em docs/IDENTITY_DECISION.md §5).
+ * A "Clara" corporativa da Holding é OUTRA identidade e não se mistura com a Marta do Club.
  * Nenhuma integração de agente deve usar `displayName` como chave.
  */
 export type CastMember = {
-  key: "sergio" | "lucas" | "atlas" | "clara" | "lia";
+  key: "sergio" | "lucas" | "atlas" | "marta" | "bia";
   profileId: string | null;
   displayName: string;
   role: string;
@@ -70,30 +72,31 @@ export const cast: CastMember[] = [
     portraitAlt: "Atlas, mascote digital: um triângulo azul e prateado com rosto sorridente sobre um pedestal luminoso",
   },
   {
-    key: "clara",
+    key: "marta",
     profileId: "club-clara",
-    displayName: "Clara",
+    displayName: "Marta",
     role: "Mentora de comunidade",
     keywords: "Acolhimento · Organização · Evolução",
     quote: "Juntos tudo é mais simples e mais possível.",
     summary:
       "Comunicativa e organizada, é o elo entre os membros: cuida da comunidade, facilita a jornada e garante que ninguém fique para trás.",
     kind: "digital",
-    portrait: clara,
-    portraitAlt: "Clara, personagem digital mentora de comunidade, sorrindo com o rosto apoiado na mão",
+    portrait: marta,
+    portraitAlt: "Marta, personagem digital mentora de comunidade, sorrindo com o rosto apoiado na mão",
+    identityPending: true,
   },
   {
-    key: "lia",
+    key: "bia",
     profileId: "club-bia",
-    displayName: "Lia",
+    displayName: "Bia",
     role: "A exploradora",
     keywords: "Curiosidade · Criatividade · Novos horizontes",
     quote: "Se eu consigo, você também consegue.",
     summary:
       "Aprendiz inquieta e apaixonada por inovação. Representa quem está começando e faz as perguntas que todos temos.",
     kind: "digital",
-    portrait: lia,
-    portraitAlt: "Lia, personagem digital exploradora, de óculos e moletom claro, sorrindo",
+    portrait: bia,
+    portraitAlt: "Bia, personagem digital exploradora, de óculos e moletom claro, sorrindo",
     identityPending: true,
   },
 ];

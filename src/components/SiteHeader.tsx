@@ -3,6 +3,7 @@ import ClubLogo from "./brand/ClubLogo";
 import MobileNav from "./layout/MobileNav";
 import NavLinks from "./layout/NavLinks";
 import { LinkButton } from "./ui/primitives";
+import { primaryCta } from "@/lib/flags";
 
 export default function SiteHeader() {
   return (
@@ -15,10 +16,8 @@ export default function SiteHeader() {
           <NavLinks />
         </nav>
         <div className="ca-header__actions">
-          <LinkButton href="/participar" size="sm" icon={null} className="ca-header__cta">
-            <span>
-              Entrar no Club<span className="ca-header__cta-free"> (gratuito)</span>
-            </span>
+          <LinkButton href="/participar" size="sm" icon={null} variant={primaryCta} className="ca-header__cta">
+            Como participar
           </LinkButton>
           <MobileNav />
         </div>

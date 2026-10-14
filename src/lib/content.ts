@@ -36,11 +36,40 @@ export const audiences: { icon: IconName; title: string; detail: string }[] = [
   { icon: "rocket", title: "Pequenos empreendedores", detail: "Catálogo, atendimento e operação com apoio — e sempre com supervisão." },
 ];
 
-export const scenarios: { icon: IconName; title: string; detail: string; tone: "cyan" | "gold" | "violet" }[] = [
-  { icon: "book", title: "Tutor para estudar", detail: "Organiza matérias, simula exercícios e acompanha suas metas de estudo.", tone: "cyan" },
-  { icon: "folder", title: "Agente de projetos", detail: "Pesquisa, planeja e ajuda você a construir algo que é seu.", tone: "violet" },
-  { icon: "chart", title: "Negócio online", detail: "Catálogo, ideias de venda e fluxos — com exemplos fictícios e supervisão.", tone: "gold" },
-  { icon: "bulb", title: "Uma ideia nova", detail: "Não sabe por onde começar? Vamos descobrir juntos.", tone: "cyan" },
+/**
+ * Exemplos próximos do público (revisão Sérgio, PR #11 §C). Cenários pedagógicos:
+ * marketplaces citados são contexto, NÃO integrações existentes.
+ */
+export const buildExamples: {
+  icon: IconName;
+  title: string;
+  task: string;
+  evidence: string;
+  limit: string;
+  tone: "cyan" | "gold" | "violet";
+}[] = [
+  { icon: "cap", title: "Tutor de faculdade", task: "Organiza a matéria da semana e cria exercícios no seu nível.", evidence: "Plano de estudos e 10 questões revisadas por você.", limit: "Não faz provas nem trabalhos por você.", tone: "cyan" },
+  { icon: "book", title: "Pesquisa + escrita", task: "Um agente levanta fontes; outro organiza um rascunho com citações.", evidence: "Sumário com fontes verificáveis e a sua versão final.", limit: "Você confere cada fonte e assina o texto.", tone: "violet" },
+  { icon: "sparkle", title: "Estúdio criativo de conteúdo", task: "Pauta, roteiro e variações de post para um tema seu.", evidence: "Calendário editorial e três peças aprovadas.", limit: "Nada é publicado sem a sua aprovação.", tone: "gold" },
+  { icon: "chart", title: "Operação de loja online", task: "Catálogo, descrições e respostas-modelo para um cenário fictício (Mercado Livre, Shopee ou loja própria).", evidence: "Catálogo de exemplo com 10 produtos e um guia de atendimento.", limit: "Sem integração real com marketplaces; preços e envios ficam com você.", tone: "cyan" },
+  { icon: "folder", title: "Acompanhamento de projetos", task: "Quebra um objetivo em etapas, prazos e lembretes.", evidence: "Quadro do projeto e revisão semanal registrada.", limit: "Prioridades e decisões continuam suas.", tone: "violet" },
+  { icon: "nodes", title: "Equipe para um micro-negócio", task: "Pesquisa, oferta e protótipo de página coordenados por vários agentes.", evidence: "Protótipo demonstrável e um diário de decisões.", limit: "Sem vendas, pagamentos ou contato com clientes reais.", tone: "gold" },
+];
+
+/** Narrativa visual do laboratório — simulação ilustrativa, não um terminal real. */
+export const labStages: { icon: IconName; title: string; detail: string; line: string }[] = [
+  { icon: "sparkle", title: "Tela vazia", detail: "Uma ideia, um objetivo, uma pergunta.", line: "objetivo: \"organizar meu semestre\"" },
+  { icon: "seed", title: "Primeiro agente", detail: "Nome, função, tom e limites.", line: "agente: tutor · tom: paciente · limite: não faz provas" },
+  { icon: "brain", title: "Memória e ferramentas", detail: "Contexto que você controla — editar, apagar, testar.", line: "memória: 3 notas · ferramenta: calendário (sandbox)" },
+  { icon: "nodes", title: "Uma equipe de agentes", detail: "Pesquisa, planeja, constrói e revisa — coordenados por você.", line: "equipe: pesquisa → plano → revisão · aprovação: você" },
+  { icon: "rocket", title: "Primeiro projeto demonstrável", detail: "Um resultado que você mostra, explica e melhora.", line: "entrega: plano v2 · revisado · pronto para apresentar" },
+];
+
+/** Níveis de acesso descritos de forma realista (nenhum está ativo hoje). */
+export const accessLevels: { name: string; what: string; status: Status; statusLabel: string }[] = [
+  { name: "Club", what: "Comunidade e aprendizagem gratuitas de entrada: fóruns, guias e a Missão 001.", status: "prep", statusLabel: "Em preparação" },
+  { name: "Atlas Lab", what: "Ambiente experimental progressivo, com quotas, isolamento e supervisão humana. Liberado por etapas.", status: "prep", statusLabel: "Em preparação" },
+  { name: "Genesis", what: "Programa guiado de 8 semanas e 24 ateliers, com mentoria e projeto real.", status: "planned", statusLabel: "Previsto 09/01/2027" },
 ];
 
 export const startSteps: { n: string; title: string; detail: string; status: Status; statusLabel: string }[] = [
@@ -106,7 +135,7 @@ export const faq = [
   { q: "Só tenho celular. Consigo participar?", a: "Sim. Comunidade, conteúdos e a primeira missão funcionam no celular. Algumas atividades avançadas de laboratório podem exigir computador ou recursos remotos — avisaremos sempre antes." },
   { q: "Quando começa?", a: "Sessões introdutórias a partir de novembro de 2026 e estreia formal em dezembro. A Turma 01 do Genesis tem abertura prevista para 09/01/2027." },
   { q: "O Genesis tem vagas ou preço definidos?", a: "Ainda não. A pré-candidatura será aberta em breve, sem cobrança e sem reserva automática de vaga. O programa prevê bolsas, e ninguém fica fora da comunidade por falta de dinheiro." },
-  { q: "Os mentores são pessoas reais?", a: "Sérgio Monteiro é uma pessoa real. Atlas, Lucas, Clara e Lia são personagens digitais, sempre identificados como tais, e não tomam decisões sobre você sem supervisão humana." },
+  { q: "Os mentores são pessoas reais?", a: "Sérgio Monteiro é uma pessoa real. Atlas, Lucas, Marta e Bia são personagens digitais, sempre identificados como tais, e não tomam decisões sobre você sem supervisão humana." },
   { q: "Como meus dados serão tratados?", a: "Coletamos o mínimo necessário, com consentimento explícito, em conformidade com a LGPD. Você poderá pedir acesso, correção ou exclusão a qualquer momento. Veja o aviso de privacidade." },
 ];
 

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.1",
   "date": "2026-10-14",
-  "note": "Originais preservados em design/reference (não servidos pela web). Derivados em public/assets/club são recortes diretos da composição aprovada — sem redesenho de rostos, sem IA generativa, sem retoque. next/image serve AVIF/WebP redimensionados.",
+  "note": "Originais preservados em design/reference (não servidos pela web). Derivados em public/assets/club são recortes diretos da composição aprovada — sem redesenho de rostos, sem IA generativa, sem retoque. next/image serve AVIF/WebP redimensionados. Revisão PR #11: retratos renomeados para os nomes de UI (marta, bia); rostos inalterados.",
   "handoff_manifest": "design/handoff/02_ASSET_MANIFEST.json",
   "originals": [
     {
@@ -211,7 +211,7 @@
       "retouched": false
     },
     {
-      "path": "public/assets/club/portrait-clara.webp",
+      "path": "public/assets/club/portrait-marta.webp",
       "width": 300,
       "height": 300,
       "bytes": 17716,
@@ -228,7 +228,7 @@
       "retouched": false
     },
     {
-      "path": "public/assets/club/portrait-lia.webp",
+      "path": "public/assets/club/portrait-bia.webp",
       "width": 300,
       "height": 300,
       "bytes": 19342,
@@ -248,11 +248,12 @@
       "path": "public/assets/club/og-club-atlas.jpg",
       "width": 1200,
       "height": 630,
-      "bytes": 217386,
-      "sha256": "89187e43040a57c4a070312dfe32c409d9352b9c3bbce4ed3a2279ea9243ec7f",
-      "source": "design/reference/approved/CLUB_ATLAS_TEAM_VALIDADO.png",
+      "bytes": 117423,
+      "sha256": "18923a28eec607b83157d9cca8a55931e29510aea0730e79ed9c4d5a871f7730",
+      "source": "public/assets/club/hero-team.webp (recorte sem nomes gravados) + texto Inter",
       "use": "OpenGraph 1200x630",
-      "retouched": false
+      "retouched": false,
+      "note": "Regenerado na revisão PR #11: o OG anterior mostrava 'CLARA' e 'LIA' gravados na arte"
     }
   ],
   "vectors": [

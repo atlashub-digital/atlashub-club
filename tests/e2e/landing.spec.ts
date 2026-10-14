@@ -5,11 +5,12 @@ test.describe("Landing pública", () => {
   test("hero com h1, CTA honesto e elenco aprovado", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("O futuro se constrói");
-    const cta = page.getByRole("main").getByRole("link", { name: /Entrar no Club \(gratuito\)/ });
-    await expect(cta).toHaveAttribute("href", "/participar");
+    const hero = page.locator(".ca-hero");
+    await expect(hero.getByRole("link", { name: /Conhecer o laboratório/ })).toHaveAttribute("href", "#laboratorio-atlas");
+    await expect(hero.getByRole("link", { name: /Ver o Genesis/ })).toHaveAttribute("href", "/genesis");
     await expect(page.getByText("Inscrições em preparação").first()).toBeVisible();
     const cast = page.getByRole("list", { name: "Quem constrói com você" });
-    for (const name of ["Sérgio Monteiro", "Lucas", "Atlas", "Clara", "Lia"]) {
+    for (const name of ["Sérgio Monteiro", "Lucas", "Atlas", "Marta", "Bia"]) {
       await expect(cast.getByText(name, { exact: true })).toBeVisible();
     }
     // Declaração humano/digital explícita
@@ -42,6 +43,35 @@ test.describe("Landing pública", () => {
     const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
     const serious = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
     expect(serious.map((v) => `${v.id}: ${v.nodes.length}`)).toEqual([]);
+  });
+
+  test("equipa e Atlas visíveis na primeira dobra", async ({ page }) => {
+    await page.goto("/");
+    const vh = page.viewportSize()!.height;
+    const media = await page.locator(".ca-hero__media").boundingBox();
+    expect(media).not.toBeNull();
+    expect(media!.y).toBeLessThan(vh);
+    expect(media!.y + media!.height).toBeLessThanOrEqual(vh);
+    for (const name of ["Sérgio Monteiro", "Bia"]) {
+      const box = await page.locator(".ca-cast__name", { hasText: name }).boundingBox();
+      expect(box!.y + box!.height, name).toBeLessThanOrEqual(vh);
+    }
+  });
+
+  test("laboratório: secção destacada, simulação rotulada e sem claims de infraestrutura", async ({ page }) => {
+    await page.goto("/");
+    const lab = page.locator("#laboratorio-atlas");
+    await expect(lab.getByRole("heading", { level: 2 })).toContainText("Da tela vazia ao seu ecossistema vivo");
+    await expect(lab.getByText(/Simulação ilustrativa/)).toBeVisible();
+    const text = await lab.innerText();
+    expect(text).not.toMatch(/VPS (ativa|disponível)|SDK disponível|autonomia (total|irrestrita)/i);
+    await expect(lab.getByRole("link", { name: /Conhecer o laboratório/ })).toHaveAttribute("href", "/lab");
+  });
+
+  test("sem colisão pública de nomes: Clara/Lia não aparecem no Club", async ({ page }) => {
+    await page.goto("/");
+    const text = await page.locator("body").innerText();
+    expect(text).not.toMatch(/\bClara\b|\bLia\b|\bLIA\b/);
   });
 
   test("noindex mantido até homologação SEO", async ({ page }) => {

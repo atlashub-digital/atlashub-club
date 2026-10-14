@@ -22,7 +22,7 @@ Pasta de referência para engenharia. **Não é servida pela web** (só `public/
 Recortes diretos da composição aprovada, WebP q88; `next/image` entrega AVIF/WebP redimensionados. Caixas de recorte em `assets/manifest.json`. Regenerar: ver o script descrito no manifesto (PIL `crop` + `save`).
 
 ## Divergências entre boards (decididas no PR1)
-- Botão primário: **azul elétrico** (`WEB_ECOSISTEMA`) para a ação principal; **dourado** (`DESIGN_SYSTEM_BOARD §05`) para destaque/Genesis.
+- Botão primário: em avaliação. Variante A **dourada** (`DESIGN_SYSTEM_BOARD §05`, padrão) e variante B **azul elétrico** (`WEB_ECOSISTEMA`) via `NEXT_PUBLIC_HERO_CTA=blue`; comparação em `comparisons/pr1/06_cta-variantes.jpg`.
 - Fundo: board indica `#0A0F1A`/`#0A0F1F`; usado `#050B17` (mais profundo, mais próximo das fotos) — token `--ca-bg`.
 - Azul elétrico `#007BFF` com texto branco dá 3,98:1 (falha AA); botões usam `--ca-electric-ui #0066EE` (5,08:1) em gradiente com `#0B3BFF`.
 

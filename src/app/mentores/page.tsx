@@ -14,7 +14,7 @@ export default function Mentores() {
             Conheça quem constrói com você.
           </h1>
           <p>
-            Sérgio Monteiro é uma pessoa real. Atlas, Lucas, Clara e Lia são personagens digitais, sempre identificados
+            Sérgio Monteiro é uma pessoa real. Atlas, Lucas, Marta e Bia são personagens digitais, sempre identificados
             como tais. Cooperam lado a lado, sem hierarquia, e não decidem nada sobre você sem supervisão humana.
           </p>
         </div>

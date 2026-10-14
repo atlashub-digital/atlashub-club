@@ -3,10 +3,12 @@ import HeroCollage from "@/components/landing/HeroCollage";
 import MentorCard from "@/components/landing/MentorCard";
 import EventCard from "@/components/landing/EventCard";
 import Faq from "@/components/landing/Faq";
+import LabSection from "@/components/landing/LabSection";
 import AtlasAvatar from "@/components/brand/AtlasAvatar";
 import Icon from "@/components/ui/Icon";
 import { IconBox, LinkButton, SectionHeading, StatusTag } from "@/components/ui/primitives";
 import { cast } from "@/lib/cast";
+import { primaryCta } from "@/lib/flags";
 import {
   audiences,
   channels,
@@ -14,7 +16,7 @@ import {
   genesisPhases,
   mission001,
   pillarsBar,
-  scenarios,
+  buildExamples,
   startSteps,
   universes,
 } from "@/lib/content";
@@ -62,24 +64,39 @@ export default function Home() {
         </ul>
       </section>
 
-      {/* Cenários */}
+      {/* Exemplos concretos: tarefa, evidência e limite humano */}
       <section className="ca-section ca-container" aria-labelledby="construir">
         <SectionHeading
           id="construir"
           eyebrow="Diferentes percursos, o mesmo ecossistema"
           title="O que você gostaria de construir?"
-          lead="Quatro pontos de partida para o seu primeiro agente. Todos usam a mesma missão guiada — muda o contexto."
+          lead="Exemplos próximos do dia a dia. Cada um mostra a tarefa, a evidência de que funcionou e o que continua nas suas mãos."
         />
-        <ul className="ca-grid ca-grid--4">
-          {scenarios.map((s) => (
-            <li key={s.title} className={`ca-card ca-scenario ca-scenario--${s.tone}`}>
-              <IconBox name={s.icon} tone={s.tone} />
-              <h3>{s.title}</h3>
-              <p>{s.detail}</p>
+        <ul className="ca-grid ca-grid--3">
+          {buildExamples.map((x) => (
+            <li key={x.title} className={`ca-card ca-scenario ca-scenario--${x.tone}`}>
+              <IconBox name={x.icon} tone={x.tone} />
+              <h3>{x.title}</h3>
+              <dl className="ca-example">
+                <div>
+                  <dt>Tarefa</dt>
+                  <dd>{x.task}</dd>
+                </div>
+                <div>
+                  <dt>Evidência</dt>
+                  <dd>{x.evidence}</dd>
+                </div>
+                <div>
+                  <dt>Limite humano</dt>
+                  <dd>{x.limit}</dd>
+                </div>
+              </dl>
             </li>
           ))}
         </ul>
       </section>
+
+      <LabSection />
 
       {/* Como começar + Missão 001 */}
       <section className="ca-section ca-container" aria-labelledby="comecar">
@@ -138,7 +155,7 @@ export default function Home() {
               Um mentor humano. <span className="ca-hl">Quatro personagens digitais.</span>
             </>
           }
-          lead="Sérgio Monteiro é uma pessoa real. Atlas, Lucas, Clara e Lia são personagens digitais, sempre identificados como tais — todos trabalham lado a lado, sem hierarquia entre eles."
+          lead="Sérgio Monteiro é uma pessoa real. Atlas, Lucas, Marta e Bia são personagens digitais, sempre identificados como tais — todos trabalham lado a lado, sem hierarquia entre eles."
           action={
             <LinkButton href="/mentores" variant="ghost">
               Conhecer os mentores
@@ -186,7 +203,7 @@ export default function Home() {
                 Ver o programa
               </LinkButton>
               <LinkButton href="/participar" variant="outline" icon={null}>
-                Receber novidades
+                Como participar
               </LinkButton>
             </div>
           </div>
@@ -299,9 +316,11 @@ export default function Home() {
             <h2 id="cta-final">
               O seu agente. O seu laboratório. <span className="ca-hl">O seu mundo.</span>
             </h2>
-            <p>A entrada no Club será gratuita. Veja como participar e acompanhe a abertura das contas e do Genesis.</p>
+            <p>A entrada no Club será gratuita. O registro abre quando privacidade e segurança estiverem validadas — até lá, veja como participar.</p>
           </div>
-          <LinkButton href="/participar">Quero fazer parte</LinkButton>
+          <LinkButton href="/participar" variant={primaryCta}>
+            Como participar
+          </LinkButton>
         </div>
       </section>
     </>

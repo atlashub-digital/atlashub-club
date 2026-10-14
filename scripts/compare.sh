@@ -19,4 +19,13 @@ pair $R/screens/WEB_ECOSISTEMA.png $S/home-desktop-1440-fold.png 1440x900+0+0 02
 pair $R/screens/DESIGN_SYSTEM_BOARD.png $S/sistema-visual-desktop-1440-full.png 1440x1900+0+0 03_design-system_vs_sistema-visual.jpg "DESIGN_SYSTEM_BOARD"
 pair $R/legacy_v1.1/01_Landing_Publica_Mobile.png $S/home-mobile-390-full.png 390x1678+0+0 04_legacy-mobile_vs_mobile.jpg "Landing v1.1 mobile"
 pair $R/screens/BOARD_UX.png $S/home-desktop-1440-full.png 1440x2400+0+0 05_board-ux_vs_landing.jpg "BOARD_UX (1. Landing)"
+pair $R/screens/DASHBOARD_NEON.png $S/home-desktop-1440-fold.png 1440x900+0+0 07_dashboard-neon_vs_hero.jpg "DASHBOARD_NEON (faixa da equipa)"
+pair $R/approved/CLUB_ATLAS_TEAM_VALIDADO.png $S/home-mobile-390-fold.png 390x844+0+0 08_team-validado_vs_mobile-fold.jpg "Elenco validado"
+# Variantes do CTA principal (gold = padrão; blue = NEXT_PUBLIC_HERO_CTA=blue) — requer $S_BLUE
+if [ -n "${S_BLUE:-}" ]; then
+  convert "$S/home-desktop-1440-fold.png" -crop 1440x340+0+70 +repage -background '#050b17' -gravity north -splice 0x40 -fill '#ffc857' -pointsize 22 -annotate +0+8 "VARIANTE A — CTA DOURADO (padrão desta revisão)" /tmp/_ga.png
+  convert "$S_BLUE/home-desktop-1440-fold.png" -crop 1440x340+0+70 +repage -background '#050b17' -gravity north -splice 0x40 -fill '#00d4ff' -pointsize 22 -annotate +0+8 "VARIANTE B — CTA AZUL ELÉTRICO" /tmp/_gb.png
+  convert /tmp/_ga.png /tmp/_gb.png -background '#050b17' -splice 0x20 -append -quality 85 "$O/06_cta-variantes.jpg"
+  rm -f /tmp/_ga.png /tmp/_gb.png
+fi
 echo "Comparações em $O"

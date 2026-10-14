@@ -8,3 +8,4 @@
 2026-10-14 — PR #1 integrado na main e publicado em club.atlashub.si (Vercel, auto-deploy de produção a partir de main, noindex).
 2026-10-14 — Composição CLUB_ATLAS_TEAM_VALIDADO.png é a referência visual principal. UI usa Lucas/Lia (arte aprovada) mapeados provisoriamente para club-caio/club-bia; IDs e SOULs inalterados até decisão (docs/IDENTITY_DECISION.md).
 2026-10-14 — Logo institucional (AtlasMark, sem rosto) separado da mascote viva (AtlasAvatar, com rosto, reduced-motion).
+2026-10-14 — Revisão do Sérgio no PR #11: preferência editorial Sérgio · Lucas · Atlas · Marta · Bia (Clara Corporate mantém-se Clara; Bia evita colisão com LIA/LeveLab). UI atualizada; IDs/SOULs só após homologação (mapa em IDENTITY_DECISION §5). Landing ganha destaque do laboratório; CTAs de captação só com endpoint operativo.
