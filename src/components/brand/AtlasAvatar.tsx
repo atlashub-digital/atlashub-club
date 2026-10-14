@@ -1,5 +1,5 @@
 import Image from "next/image";
-import atlasPortrait from "../../../public/assets/club/portrait-atlas.webp";
+import atlasMascot from "../../../public/assets/club/atlas-mascote.webp";
 
 type Props = {
   size?: number;
@@ -10,8 +10,8 @@ type Props = {
 };
 
 /**
- * Mascote viva Atlas — triângulo 3D expressivo, recortado da composição aprovada
- * (CLUB_ATLAS_TEAM_VALIDADO.png). Uso distinto do logótipo institucional (AtlasMark).
+ * Mascote viva Atlas — triângulo 3D expressivo (PNG transparente aprovado,
+ * design/reference/approved/ATLAS_MASCOTE_TRANSPARENTE.png). Uso distinto do logótipo institucional (AtlasMark).
  * Não captura microfone/câmara nem inicia chat: é presença visual apenas.
  */
 export default function AtlasAvatar({ size = 160, animated = true, priority = false, className = "" }: Props) {
@@ -22,8 +22,8 @@ export default function AtlasAvatar({ size = 160, animated = true, priority = fa
     >
       <span className="ca-avatar__halo" aria-hidden="true" />
       <Image
-        src={atlasPortrait}
-        alt="Atlas, mascote digital do Club Atlas: um triângulo azul e prateado com rosto sorridente"
+        src={atlasMascot}
+        alt="Atlas, mascote digital do Club Atlas: um triângulo azul e dourado com rosto sorridente sobre um pedestal luminoso"
         width={size}
         height={size}
         sizes={`${size}px`}

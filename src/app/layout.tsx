@@ -7,8 +7,10 @@ import "@/styles/base.css";
 import "@/styles/layout.css";
 import "@/styles/landing.css";
 import "@/styles/design-system.css";
+import "@/styles/atlas.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import AtlasCompanion from "@/components/atlas/AtlasCompanion";
 
 const siteUrl = process.env.CLUB_SITE_ORIGIN || "https://club.atlashub.si";
 
@@ -46,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <SiteFooter />
+        <AtlasCompanion />
       </body>
     </html>
   );
