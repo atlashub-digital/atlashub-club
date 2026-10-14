@@ -5,3 +5,6 @@
 2026-10-13 — Todos reportam diretamente ao Sérgio, sem hierarquia; Helena apoia acessos por autorização dele.
 2026-10-13 — Club informal em novembro, formal em dezembro; Genesis 09/01/2027; Enterprise Lab E-commerce 28/11 em vez de 21/11.
 2026-10-13 — Repo inclui frontend e documentação; bots Telegram/Discord/WA permanecem não instalados até validação e autorização.
+2026-10-14 — PR #1 integrado na main e publicado em club.atlashub.si (Vercel, auto-deploy de produção a partir de main, noindex).
+2026-10-14 — Composição CLUB_ATLAS_TEAM_VALIDADO.png é a referência visual principal. UI usa Lucas/Lia (arte aprovada) mapeados provisoriamente para club-caio/club-bia; IDs e SOULs inalterados até decisão (docs/IDENTITY_DECISION.md).
+2026-10-14 — Logo institucional (AtlasMark, sem rosto) separado da mascote viva (AtlasAvatar, com rosto, reduced-motion).
