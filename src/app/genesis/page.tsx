@@ -6,6 +6,7 @@ import { IconBox, LinkButton, SectionHeading, StatusTag } from "@/components/ui/
 import { ClubOfferCard, GenesisOfferCard } from "@/components/landing/OffersSection";
 import { genesisPhases } from "@/lib/content";
 import { genesisFacts, price, priceNotes } from "@/lib/offers";
+import { genesisWhatsAppUrl } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Genesis Turma 01",
@@ -71,8 +72,11 @@ export default function Genesis() {
               previstos, mentoria e a comunidade Club ao seu lado. Não precisa saber programar.
             </p>
             <div className="ca-hero__actions">
-              <LinkButton href="/participar?plan=genesis" variant="gold">
-                Pré-inscrição (prévia)
+              <LinkButton href={genesisWhatsAppUrl} variant="gold" external>
+                Falar com a equipe sobre Genesis
+              </LinkButton>
+              <LinkButton href="/participar?plan=genesis" variant="outline">
+                Simular pré-inscrição
               </LinkButton>
               <LinkButton href="#programa" variant="outline">
                 Ver o programa
