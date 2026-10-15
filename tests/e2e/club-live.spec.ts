@@ -140,11 +140,22 @@ test.describe("PR2B live · registo", () => {
     expect(calls.reviews).toEqual([{ ageBand: "teen", plan: "genesis", studentIntent: false, contactEmail: "pessoa@example.test" }]);
   });
 
-  test("criança: o e-mail nunca é guardado", async () => {
+  test("criança: sem e-mail no pedido; nenhum link, conta, CRM ou limite por e-mail", async () => {
     const { backend, calls } = fakeBackend();
-    const r = await handleSignup(req({ ...valid, ageBand: "child" }), liveEnv, undefined, backend);
-    expect(r.body).toMatchObject({ next: "guardian_review", child: true });
+    const { email: _e, ...noEmail } = valid;
+    const r = await handleSignup(req({ ...noEmail, ageBand: "child", marketingOptIn: true }), liveEnv, undefined, backend);
+    expect(r.status).toBe(202);
+    expect(r.body).toMatchObject({ next: "guardian_review", status: "pending_guardian_review", child: true });
     expect(calls.reviews).toEqual([{ ageBand: "child", plan: "club", studentIntent: false, contactEmail: null }]);
+    expect(calls.links).toHaveLength(0);
+    expect(calls.keys.some((k) => k.startsWith("signup:email"))).toBe(false);
+  });
+
+  test("criança: e-mail enviado por engano é descartado", async () => {
+    const { backend, calls } = fakeBackend();
+    await handleSignup(req({ ...valid, ageBand: "child" }), liveEnv, undefined, backend);
+    expect(calls.reviews).toEqual([{ ageBand: "child", plan: "club", studentIntent: false, contactEmail: null }]);
+    expect(JSON.stringify(calls)).not.toContain("example.test");
   });
 });
 

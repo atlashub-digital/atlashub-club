@@ -36,7 +36,8 @@ export type SignupInput = {
   /** Intenção declarada; só vale após revisão humana (PR2C). */
   studentIntent: boolean;
   displayName: string;
-  email: string;
+  /** null só para crianças (<12): o e-mail da criança não é pedido nem aceite; o responsável trata com a equipa. */
+  email: string | null;
   /** Menores não são bloqueados: seguem para `pending_guardian_review` (decisão de 14/10/2026). */
   ageBand: AgeBand;
   area?: (typeof AREAS)[number];
@@ -65,11 +66,13 @@ export function validateSignup(raw: unknown): SignupResult {
   const displayName = str(b.displayName).replace(/\s+/g, " ");
   if (displayName.length < 2 || displayName.length > 60) errors.displayName = "invalid";
 
-  const email = str(b.email).toLowerCase();
-  if (email.length > 190 || !EMAIL.test(email)) errors.email = "invalid";
-
   const ageBand = str(b.ageBand);
   if (!has(AGE_BANDS, ageBand)) errors.ageBand = "invalid";
+
+  // Criança: o e-mail é descartado mesmo que chegue (defesa em profundidade; a UI não o pede).
+  const child = ageBand === "child";
+  const email = child ? null : str(b.email).toLowerCase();
+  if (email !== null && (email.length > 190 || !EMAIL.test(email))) errors.email = "invalid";
 
   const area = str(b.area);
   if (area && !has(AREAS, area)) errors.area = "invalid";

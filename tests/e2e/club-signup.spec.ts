@@ -63,6 +63,16 @@ test.describe("PR2B · validação de dados mínimos", () => {
     }
   });
 
+  test("criança: e-mail não é exigido nem guardado", () => {
+    const { email: _e, ...noEmail } = valid;
+    const r = validateSignup({ ...noEmail, ageBand: "child" });
+    expect(r.ok && r.value.email).toBeNull();
+    const withEmail = validateSignup({ ...valid, ageBand: "child" });
+    expect(withEmail.ok && withEmail.value.email).toBeNull();
+    const adult = validateSignup(noEmail);
+    expect(!adult.ok && adult.errors.email).toBe("invalid");
+  });
+
   test("intenção de estudante só conta no plano Genesis", () => {
     const club = validateSignup({ ...valid, studentIntent: true });
     const genesis = validateSignup({ ...valid, plan: "genesis", studentIntent: true });

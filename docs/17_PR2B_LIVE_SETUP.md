@@ -9,7 +9,7 @@
 3. O link abre `/entrar/confirmar`, que pede um clique ("Confirmar e entrar") → `POST /api/club/auth/verify` → `verifyOtp`. O clique evita que os scanners de e-mail gastem o link.
 4. Com o e-mail verificado, o servidor revalida os dados e chama `club.complete_signup` (uma transação): perfil, intenção, consentimentos de termos/privacidade com versão, marketing separado, candidatura Genesis (`interested` ou `student_pending`) e, **só com opt-in**, o evento no outbox CRM. Depois apaga os dados do convite.
 5. `/conta`: dados do membro lidos com a sessão dele (**RLS**), ligar/desligar novidades (`club.set_marketing_consent` → opt-in/opt-out no outbox), pedir cópia ou apagamento dos dados, sair. `/entrar` envia link de entrada (nunca cria conta; resposta igual exista ou não o e-mail).
-6. Menores: **sem conta**. Adolescente → linha em `club.club_guardian_reviews` com o e-mail de contacto; criança (<12) → linha sem e-mail. A equipa trata manualmente.
+6. Menores: **sem conta**. Adolescente → linha em `club.club_guardian_reviews` com o e-mail de contacto; criança (<12) → o formulário **não pede nem envia** o e-mail e o servidor descarta-o se chegar; fica uma linha sem contacto e a criança é orientada a pedir a um responsável que fale com a equipa. A equipa trata manualmente; nada de conta, CRM, matrícula ou cobrança antes da revisão.
 7. CRM: `club.club_crm_outbox` → webhook HTTPS assinado (§5). Entrega imediata após registo/alteração; o cron diário (`vercel.json` → `/api/club/crm-sync`) repete falhas e aplica a retenção (`club.purge_expired`).
 
 ## 2. Supabase (Helena — decisão A/B do doc 16 §2; recomendada A: projeto só do Club)

@@ -106,13 +106,15 @@ export default function AdesaoForm({ initialPlan = "club", live = null }: { init
   }, [errors]);
 
   const minor = d.age !== "" && isMinor(d.age);
+  // Menores de 12: o e-mail da criança não é pedido, guardado nem enviado; o responsável trata com a equipa.
+  const child = d.age === "child";
   const outcome = d.age ? deriveSignupOutcome({ plan: d.plan, student: d.student, age: d.age }) : null;
 
   function validate(s: number): Record<string, string> {
     const e: Record<string, string> = {};
     if (s === 1) {
       if (d.name.trim().length < 2) e.name = "Informe o seu nome (mínimo 2 letras).";
-      if (!emailOk(d.email)) e.email = "Informe um e-mail válido, por exemplo nome@exemplo.com.";
+      if (!child && !emailOk(d.email)) e.email = "Informe um e-mail válido, por exemplo nome@exemplo.com.";
       if (!minor && d.whatsapp && d.whatsapp.replace(/\D/g, "").length < 10) e.whatsapp = "WhatsApp é opcional; se preencher, use DDD + número.";
       if (!d.age) e.age = "Indique a sua faixa de idade.";
     }
@@ -136,7 +138,7 @@ export default function AdesaoForm({ initialPlan = "club", live = null }: { init
           plan: d.plan,
           studentIntent: d.plan === "genesis" && d.student,
           displayName: d.name,
-          email: d.email,
+          ...(child ? {} : { email: d.email }),
           ageBand: d.age,
           area: d.area || undefined,
           interests: d.interests,
@@ -338,7 +340,14 @@ export default function AdesaoForm({ initialPlan = "club", live = null }: { init
                       type="radio"
                       name="age"
                       checked={d.age === band}
-                      onChange={() => setD((prev) => ({ ...prev, age: band, whatsapp: isMinor(band) ? "" : prev.whatsapp }))}
+                      onChange={() =>
+                        setD((prev) => ({
+                          ...prev,
+                          age: band,
+                          whatsapp: isMinor(band) ? "" : prev.whatsapp,
+                          email: band === "child" ? "" : prev.email,
+                        }))
+                      }
                       {...(errors.age ? { "aria-describedby": f("age-err") } : {})}
                     />{" "}
                     <span>{ageBandLabels[band]}</span>
@@ -353,11 +362,17 @@ export default function AdesaoForm({ initialPlan = "club", live = null }: { init
               <input id={f("name")} className="ca-input" value={d.name} onChange={(e) => set("name", e.target.value)} autoComplete={minor ? "nickname" : "name"} maxLength={90} {...errProps("name")} />
               {err("name")}
             </div>
-            <div className="ca-field">
-              <label htmlFor={f("email")}>E-mail</label>
-              <input id={f("email")} type="email" className="ca-input" value={d.email} onChange={(e) => set("email", e.target.value)} autoComplete="email" maxLength={190} {...errProps("email")} />
-              {err("email")}
-            </div>
+            {child ? (
+              <p className="ca-adesao__hint ca-adesao__wide">
+                Não pedimos o seu e-mail. Para continuar depois, peça a um adulto responsável para falar com a equipe do Club.
+              </p>
+            ) : (
+              <div className="ca-field">
+                <label htmlFor={f("email")}>E-mail</label>
+                <input id={f("email")} type="email" className="ca-input" value={d.email} onChange={(e) => set("email", e.target.value)} autoComplete="email" maxLength={190} {...errProps("email")} />
+                {err("email")}
+              </div>
+            )}
             {!minor && !live && (
               <div className="ca-field">
                 <label htmlFor={f("whatsapp")}>WhatsApp (opcional)</label>
@@ -426,10 +441,12 @@ export default function AdesaoForm({ initialPlan = "club", live = null }: { init
                 <dt>Nome</dt>
                 <dd>{d.name}</dd>
               </div>
-              <div>
-                <dt>E-mail</dt>
-                <dd>{d.email}</dd>
-              </div>
+              {!child && (
+                <div>
+                  <dt>E-mail</dt>
+                  <dd>{d.email}</dd>
+                </div>
+              )}
               <div className="ca-adesao__wide">
                 <dt>Primeira missão</dt>
                 <dd>{d.firstMission}</dd>
@@ -589,7 +606,7 @@ function LiveDone({
         {guardian ? (
           <p>
             {result.child
-              ? "Para menores de 12 anos, quem faz o cadastro é o responsável. Não guardamos o seu e-mail: peça a um adulto responsável para falar com a equipe do Club."
+              ? "Para menores de 12 anos, quem faz o cadastro é o responsável. Não pedimos nem guardamos o seu e-mail: peça a um adulto responsável para falar com a equipe do Club."
               : "A equipe do Club vai entrar em contato pelo e-mail informado para validar a autorização de um responsável. Até lá, nenhuma conta é ativada."}{" "}
             Enquanto isso, as páginas públicas do Club continuam abertas para você.
           </p>

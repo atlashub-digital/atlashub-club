@@ -65,9 +65,8 @@ export async function handleSignup(
   if (!parsed.ok) return { status: 400, body: { message: "Verifique os dados.", errors: parsed.errors } };
 
   const v = parsed.value;
-  const emailHit = limiters.email.hit(sha(v.email));
-  // Resposta neutra por email para não permitir enumeração de contas.
-  if (!emailHit.allowed) return { status: 202, body: { dryRun: true } };
+  // Resposta neutra por email para não permitir enumeração de contas. Criança: não há e-mail.
+  if (v.email !== null && !limiters.email.hit(sha(v.email)).allowed) return { status: 202, body: { dryRun: true } };
 
   const outcome = deriveSignupOutcome({ plan: v.plan, student: v.studentIntent, age: v.ageBand });
 
@@ -97,7 +96,7 @@ export async function handleSignup(
           },
         ],
         withheld: ["auth.users", "club.club_profiles", "club.club_consent_events", "club.club_crm_outbox", "club.club_genesis_applications"],
-        ...(child ? {} : { emailHash: sha(v.email) }),
+        ...(v.email === null ? {} : { emailHash: sha(v.email) }),
       },
     };
   }
@@ -126,7 +125,7 @@ export async function handleSignup(
           : []),
         ...(v.marketingOptIn ? [{ table: "club.club_crm_outbox", note: "só com opt-in; sem dados pedagógicos" }] : []),
       ],
-      emailHash: sha(v.email),
+      emailHash: sha(v.email!),
     },
   };
 }
@@ -167,7 +166,7 @@ async function handleLive(
     return { status: 400, body: { message: "Não foi possível confirmar que você não é um robô. Tente de novo.", errors: { turnstile: "failed" } } };
 
   // Resposta neutra por e-mail para não permitir enumeração de contas.
-  if (!(await backend.hitRateLimit(`signup:email:${sha(v.email)}`, 3, 3600))) return checkEmail;
+  if (v.email !== null && !(await backend.hitRateLimit(`signup:email:${sha(v.email)}`, 3, 3600))) return checkEmail;
 
   const outcome = deriveSignupOutcome({ plan: v.plan, student: v.studentIntent, age: v.ageBand });
   if (outcome.reviews.guardian) {
@@ -175,12 +174,12 @@ async function handleLive(
       ageBand: v.ageBand as "teen" | "child",
       plan: v.plan,
       studentIntent: v.studentIntent,
-      contactEmail: v.ageBand === "child" ? null : v.email,
+      contactEmail: v.email, // null para criança
     });
     return { status: 202, body: { ok: true, next: "guardian_review", status: outcome.status, child: v.ageBand === "child" } };
   }
 
-  if ((await backend.sendLink(v.email, v)) === "rate_limited")
+  if ((await backend.sendLink(v.email!, v)) === "rate_limited")
     return { status: 429, body: { message: "Muitos e-mails enviados agora. Tente de novo em alguns minutos." } };
   return { status: 202, body: { ok: true, next: "check_email", status: outcome.status } };
 }

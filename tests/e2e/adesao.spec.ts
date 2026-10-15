@@ -111,6 +111,23 @@ test.describe("Formulário de adesão (prévia)", () => {
     );
   });
 
+  test("menor de 12 anos: o e-mail não é pedido e o percurso segue para revisão do responsável", async ({ page }) => {
+    await page.goto("/participar");
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await page.getByLabel("Menos de 12 anos").check();
+    await expect(page.getByLabel("E-mail", { exact: true })).toHaveCount(0);
+    await expect(page.getByText("Não pedimos o seu e-mail.")).toBeVisible();
+    await page.getByLabel("Nome ou apelido").fill("Criança");
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await expect(page.locator(".ca-adesao__errors")).toHaveCount(0);
+    await page.getByLabel(/primeira missão/).fill("Aprender a criar jogos");
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await expect(page.locator(".ca-adesao__review")).not.toContainText("E-mail");
+    await page.getByLabel(/Li e aceito/).check();
+    await page.getByRole("button", { name: /Concluir prévia/ }).click();
+    await expect(page.locator(".ca-adesao__outcome")).toContainText("pending_guardian_review");
+  });
+
   test("adulto no Club grátis não precisa de revisão manual", async ({ page }) => {
     await page.goto("/participar");
     await page.getByRole("button", { name: "Continuar" }).click();
