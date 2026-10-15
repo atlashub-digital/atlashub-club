@@ -7,7 +7,7 @@
 |---|---|---|
 | 18 anos ou mais | Fluxo normal | `club_free`, `genesis_interest` ou `student_pending` |
 | Entre 12 e 17 anos | Avança sem bloqueio. Vê a mensagem positiva "Que bom ter você aqui!", que explica que alguns passos vão precisar da autorização de um responsável e que a equipe revisa cada caso. | `pending_guardian_review` |
-| Menos de 12 anos | O mesmo, com a nota extra de que o responsável participa desde o início do registro | `pending_guardian_review` |
+| Menos de 12 anos | O mesmo, com a nota extra de que o responsável participa desde o início do registro. **Não é pedido e-mail nem outro contacto da criança**: a revisão mostra "Contacto: através do responsável legal" | `pending_guardian_review` |
 
 **Para menores:**
 - O campo "Nome" passa a "Nome ou apelido".
