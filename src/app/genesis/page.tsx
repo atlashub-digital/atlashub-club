@@ -5,11 +5,12 @@ import Icon, { type IconName } from "@/components/ui/Icon";
 import { IconBox, LinkButton, SectionHeading, StatusTag } from "@/components/ui/primitives";
 import { ClubOfferCard, GenesisOfferCard } from "@/components/landing/OffersSection";
 import { genesisPhases } from "@/lib/content";
-import { genesisFacts, price, priceNotes } from "@/lib/offers";
+import { earlyAccess, genesisFacts, price, priceNotes } from "@/lib/offers";
+import { genesisWhatsAppUrl } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Genesis Turma 01",
-  description: `Oito semanas para construir o seu ecossistema de agentes. ${price.genesisStandard} valor padrão · ${price.genesisStudent} para estudantes elegíveis. Início previsto ${genesisFacts.start}.`,
+  description: `Oito semanas para construir o seu ecossistema de agentes. ${price.genesisStandard} valor padrão · ${price.genesisStudent} para estudantes elegíveis. Início previsto ${genesisFacts.start}. Early Access para quem registrar interesse até ${earlyAccess.deadline}.`,
 };
 
 /** Programa semanal — docs/09_GENESIS_24_ATELIERS.md (3 ateliers por semana, previstos). */
@@ -34,6 +35,10 @@ const benefits: { icon: IconName; title: string; detail: string }[] = [
 ];
 
 const faq = [
+  {
+    q: "O que é o Early Access?",
+    a: `${earlyAccess.summary} ${earlyAccess.fine} A Turma 01 continua prevista para ${genesisFacts.start}, com ${genesisFacts.weeks} semanas e ${genesisFacts.ateliers} ateliers. Se você já falou com a equipe pelo WhatsApp oficial sobre o Genesis, seu interesse já conta.`,
+  },
   {
     q: "Como funciona a condição de estudante?",
     a: `Quem é estudante pode pedir o valor de ${price.genesisStudent}. A condição só vale depois de validada (comprovativo mínimo, analisado antes de qualquer pagamento). Se não for aprovada, você escolhe entre o valor padrão de ${price.genesisStandard} ou continuar só no Club grátis — sem cobrança automática.`,
@@ -71,7 +76,10 @@ export default function Genesis() {
               previstos, mentoria e a comunidade Club ao seu lado. Não precisa saber programar.
             </p>
             <div className="ca-hero__actions">
-              <LinkButton href="/participar?plan=genesis" variant="gold">
+              <LinkButton href={genesisWhatsAppUrl} variant="gold" external>
+                Falar com a equipe sobre Genesis
+              </LinkButton>
+              <LinkButton href="/participar?plan=genesis" variant="outline">
                 Pré-inscrição (prévia)
               </LinkButton>
               <LinkButton href="#programa" variant="outline">
@@ -100,6 +108,10 @@ export default function Genesis() {
               </div>
             </dl>
             <p className="ca-offer__note">{priceNotes.student}</p>
+            <p className="ca-offer__note">
+              <strong>Early Access:</strong> registre interesse até {earlyAccess.deadline} e receba convite para 2 ateliers
+              extras e gratuitos em dezembro (datas a confirmar).
+            </p>
             <StatusTag status="prep" dot>
               Sem cobrança nesta fase
             </StatusTag>
