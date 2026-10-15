@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { liveConfig } from "@/lib/club/mode";
 import { memberClient } from "@/lib/club/supabase";
 import { statusLabels } from "@/lib/adesao/status";
+import { earlyAccess, genesisFacts, price, priceNotes } from "@/lib/offers";
 
 export const metadata: Metadata = { title: "A minha conta", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -13,6 +14,8 @@ const notices: Record<string, string> = {
   "ok:pedido": "Pedido registado. A equipe responde pelo e-mail da conta.",
   "erro:consentimento": "Não foi possível atualizar a preferência agora. Tente de novo.",
   "erro:pedido": "Não foi possível registar o pedido agora. Tente de novo.",
+  "ok:genesis": "Interesse no Genesis registrado. Nenhum pagamento foi pedido; a equipe entra em contato antes da abertura.",
+  "erro:genesis": "Não foi possível registrar o interesse no Genesis agora. Tente de novo.",
   "erro:perfil": "O seu e-mail foi confirmado, mas não conseguimos concluir o perfil agora. Tente entrar de novo mais tarde.",
 };
 
@@ -98,6 +101,27 @@ export default async function Conta({ searchParams }: { searchParams: Promise<Re
               </button>
             </form>
           </div>
+        </div>
+      )}
+      {name && (!genesis.data?.status || genesis.data.status === "withdrawn") && (
+        <div className="ca-card ca-account">
+          <h2>Genesis · Turma 01</h2>
+          <p>
+            Programa opcional de {genesisFacts.weeks} semanas e {genesisFacts.ateliers} ateliers, com início previsto em {genesisFacts.start}.{" "}
+            {earlyAccess.summary}
+          </p>
+          <p>{earlyAccess.fine}</p>
+          <form method="post" action="/api/club/genesis-interest" className="ca-account__actions">
+            <label className="check-inline">
+              <input type="checkbox" name="student" />
+              <span>
+                Sou estudante e quero pedir a condição de {price.genesisStudent} (padrão {price.genesisStandard}). {priceNotes.student}
+              </span>
+            </label>
+            <button type="submit" className="ca-btn ca-btn--gold">
+              Registrar interesse no Genesis
+            </button>
+          </form>
         </div>
       )}
       <div className="ca-card ca-account">

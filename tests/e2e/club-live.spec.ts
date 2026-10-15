@@ -296,7 +296,7 @@ test.describe("PR2B live · outbox CRM", () => {
 
 test.describe("PR2B live · rotas fechadas sem configuração", () => {
   test("APIs de conta respondem 503 e páginas dizem que as contas não estão ativas", async ({ request, page }) => {
-    for (const path of ["/api/club/login", "/api/club/auth/verify", "/api/club/complete", "/api/club/consent", "/api/club/logout", "/api/club/data-request"]) {
+    for (const path of ["/api/club/login", "/api/club/auth/verify", "/api/club/complete", "/api/club/consent", "/api/club/logout", "/api/club/data-request", "/api/club/genesis-interest"]) {
       expect((await request.post(path, { data: {} })).status(), path).toBe(503);
     }
     expect((await request.get("/api/club/crm-sync")).status()).toBe(503);
