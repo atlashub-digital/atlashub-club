@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import AdesaoForm, { type Plan } from "@/components/adesao/AdesaoForm";
+import { LinkButton } from "@/components/ui/primitives";
 import { liveConfig } from "@/lib/club/mode";
+import { clubWhatsAppUrl, genesisWhatsAppUrl } from "@/lib/contact";
 import { price } from "@/lib/offers";
 
 export const metadata: Metadata = { title: "Entrar no Club" };
@@ -40,6 +42,22 @@ export default async function Participar({ searchParams }: { searchParams: Promi
           </span>
         </p>
       )}
+      {/* WhatsApp assistido (PR #17): mantém-se nos dois modos como canal humano de reserva. */}
+      <div className="ca-card" style={{ marginBlock: "1.25rem" }}>
+        <h2>{cfg ? "Prefere falar com a equipe?" : "Quer participar desde já?"}</h2>
+        <p>
+          {cfg
+            ? "A equipe AtlasHub também atende pelo WhatsApp oficial."
+            : "Enquanto preparamos o cadastro online, a equipe AtlasHub recebe pedidos de interesse pelo WhatsApp oficial."}{" "}
+          A conversa é assistida: ela não cria automaticamente uma conta nem reserva uma vaga no Genesis.
+        </p>
+        <p>Se você tem menos de 18 anos, peça a um responsável legal para fazer o contato. Não envie documentos pessoais nesta primeira mensagem.</p>
+        <div className="ca-hero__actions">
+          <LinkButton href={initialPlan === "genesis" ? genesisWhatsAppUrl : clubWhatsAppUrl} variant="gold" external>
+            {initialPlan === "genesis" ? "Conversar sobre o Genesis" : "Falar sobre o Club Atlas"}
+          </LinkButton>
+        </div>
+      </div>
       <AdesaoForm initialPlan={initialPlan} live={cfg ? { turnstileSiteKey: cfg.turnstileSiteKey } : null} />
     </section>
   );
