@@ -3,18 +3,30 @@
 **Data:** 15/10/2026 · **Dono e autoridade:** Sérgio Monteiro · **Cooperação técnica:** Helena · **Implementação:** Claude Code
 **Regra:** PRs pequenos em rascunho; sem merge, deploy, DDL produtiva, cobrança ou campanha paga sem aprovação do Sérgio.
 
-## Estado real verificado (15/10/2026, 17h UTC)
-- **Produção Club = `dab885c`** (Vercel `dpl_6PWUYKyGmTb9z2yGzPnMdeFaSyeV`, READY). **`dc07f91` não está em produção**: não existe deployment Vercel para `5ed90b8` nem `dc07f91`, provavelmente bloqueado pela quota de builds na altura. Consequência: o **Early Access (#21) ainda não aparece em club.atlashub.si** (verificado no HTML de `/genesis`). A produção tem os segredos rodados e a escrita de `/api/interesse` suspensa.
-- Rollback disponível: `dpl_EUbCwyJEHv8CcFqGGXPWSDzQiqkh` (`85453eb`).
+## Estado real verificado
+**Atualização 15/10/2026, 19h UTC (decisão operacional do Sérgio, ponto 1):** #22 e #24 integrados num só merge (`dbbbf44`), com um único build de produção.
+- **Produção Club = `dbbbf44`** · Vercel `dpl_EtTk5EnJEDiMB9Px9JXJswQ6SRbQ` · READY · club.atlashub.si.
+- Homologado em club.atlashub.si:
+  - Early Access visível em `/genesis#early-access`, com o prazo de 30/11/2026;
+  - "Atelier extra 1" (híbrido, Anápolis + online) e "Atelier extra 2" (online), ambos gratuitos e com data a confirmar;
+  - início a 09/01/2027; R$ 490 / R$ 190 mostrados com "não é matrícula";
+  - WhatsApp operativo com o código `GEN-EA-SITE`;
+  - `POST /api/interesse` → 503;
+  - `/api/club/signup` → 404 (o registo real não está em produção); `/participar` em "Modo demonstração";
+  - `/api/atlas/turn` → 503;
+  - `noindex, nofollow` mantido;
+  - nenhum link para atlashub.si/workshops ainda.
+- Rollback: `dpl_6PWUYKyGmTb9z2yGzPnMdeFaSyeV` (`dab885c`).
+- Histórico: até esta data a produção estava em `dab885c` (não havia deploy de `5ed90b8`/`dc07f91`).
 
 ## PRs desta retoma
 | PR | Repo | Âmbito | Estado |
 |---|---|---|---|
 | #23 | atlashub-club | PR2B canónico (substitui #15, #19, #20) + interesse Genesis pela conta | rascunho, testes locais verdes |
 | #16 | atlashub-club | PR2C RFC + contratos ARO (só docs) | rascunho, CI verde no SHA anterior |
-| este PR | atlashub-club | Early Access completo, páginas Club alinhadas, campanhas, este quadro | rascunho |
+| #24 | atlashub-club | Early Access completo, páginas Club alinhadas, campanhas, este quadro | **integrado** (`dbbbf44`) e em produção |
 | AtlasHub.Si #6 | AtlasHub.Si | páginas dos 2 workshops + secção Workshops na home | rascunho |
-| #22 | atlashub-club | ajuste editorial do Early Access ("participação gratuita") — outra sessão | aberto; compatível com este PR |
+| #22 | atlashub-club | ajuste editorial do Early Access ("participação gratuita") | **integrado** via #24 |
 
 ---
 
