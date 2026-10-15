@@ -3,6 +3,7 @@ import heroTeam from "../../../public/assets/club/hero-team.webp";
 import { cast } from "@/lib/cast";
 import { primaryCta } from "@/lib/flags";
 import { price } from "@/lib/offers";
+import { clubWhatsAppUrl } from "@/lib/contact";
 import { LinkButton, StatusTag } from "../ui/primitives";
 
 /**
@@ -48,6 +49,7 @@ export default function HeroCollage() {
             </StatusTag>
             <span>Club grátis · Genesis opcional a partir de {price.genesisStudent} (estudante elegível)</span>
           </p>
+          <p><a href={clubWhatsAppUrl} target="_blank" rel="noopener noreferrer">Quer receber informações desde já? Fale com a equipe AtlasHub pelo WhatsApp oficial.</a></p>
         </div>
       </div>
 
