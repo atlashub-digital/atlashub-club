@@ -21,16 +21,16 @@ Cada CTA abre o WhatsApp oficial com mensagem pré-preenchida terminada por um *
 ## 1. Club gratuito
 - **Público:** estudantes de todas as áreas, iniciantes, criadores e pequenos empreendedores (18+ nos anúncios; menores só por canais orgânicos com revisão do responsável).
 - **Mensagem:** "Pessoas reais. Agentes próprios. Projetos vivos." · "Você não precisa saber programar; precisa começar." Gratuito, sem compra obrigatória.
-- **Landing:** `club.atlashub.si` (home) → `/participar`.
-- **CTA:** "Entrar no Club gratuitamente" (cadastro, quando o PR2B estiver live) / hoje "Falar sobre o Club Atlas" (WhatsApp `CLUB-*`).
-- **Conteúdos (out–dez):** manifesto do Club e do Atlas Lab (Lab da tela vazia ao ecossistema); série "Missão 001 em 4 passos"; apresentação dos mentores (Sérgio real; Lucas, Atlas, Marta e Bia identificados como personagens digitais); FAQ "só tenho celular"; convite para fóruns de novembro quando houver data.
+- **Landing:** `club.atlashub.si` (home).
+- **CTA (decisão de 15/10/2026):** "Conhecer o Club" + manifestar interesse pelo WhatsApp (`CLUB-*`). **Não** anunciar cadastro de membros, contas nem Missão 001 como disponíveis enquanto o PR2B estiver em NO-GO.
+- **Conteúdos (out–dez):** manifesto do Club e do Atlas Lab (Lab da tela vazia ao ecossistema); apresentação da Missão 001 **como em preparação** (o que vai ser, sem convite para a fazer); apresentação dos mentores (Sérgio real; Lucas, Atlas, Marta e Bia identificados como personagens digitais); FAQ "só tenho celular"; convite para fóruns de novembro quando houver data.
 - **Gate para campanha paga:** cadastro PR2B homologado (GO/NO-GO) **ou** atendimento WhatsApp com responsável e horário publicados; aviso de privacidade final; fóruns com data.
 
 ## 2. Genesis Early Access
 - **Público:** estudantes e profissionais em transição que querem construir um projeto com agentes em 8 semanas; quem já falou com a equipe pelo WhatsApp.
 - **Mensagem:** "Comece antes da Turma 01." Interesse até **30/11/2026** → convite para **2 ateliers extras e gratuitos em dezembro** (um híbrido em Anápolis + online, outro online de preparação dos projetos). Turma 01 em **09/01/2027**, 8 semanas, 24 ateliers. R$ 490 padrão · R$ 190 estudante elegível após validação. Registrar interesse não é matrícula.
 - **Landing:** `club.atlashub.si/genesis#early-access`.
-- **CTA:** "Registrar interesse pelo WhatsApp" (`GEN-EA-*`); pela conta do Club quando o PR2B estiver live.
+- **CTA:** "Registrar interesse pelo WhatsApp" (`GEN-EA-*`). O registo pela conta do Club só será anunciado depois do GO do PR2B.
 - **Conteúdos:** 15–31/10 "Seu próximo colega não é mais um chatbot" (curiosidade) e "Não sabe programar? Você pode começar dirigindo um projeto" (inclusão); 01–20/11 catálogo de projetos possíveis (exemplos rotulados como cenários) e conversa com o Sérgio; 14/11 menção breve no Workshop 01 (lista de interesse, sem cobrança); 21–30/11 contagem para o prazo do Early Access; dezembro: convites dos ateliers só depois de datas confirmadas.
 - **Gate para campanha paga:** datas e local do atelier híbrido confirmados; atendimento com responsável; condições definitivas (pagamento, cancelamento, reembolso) publicadas **antes** de qualquer anúncio que fale em preço; ARO homologado antes de abrir matrículas.
 

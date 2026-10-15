@@ -51,19 +51,23 @@ Em bio do Instagram/LinkedIn, usar a página (link único) e deixar o WhatsApp c
 ---
 
 ## 1. Club gratuito → club.atlashub.si
-**Criativo C1 (feed 1080×1350):** arte aprovada da equipe (Sérgio · Lucas · Atlas · Marta · Bia), sem rostos novos; título "Pessoas reais. Agentes próprios. Projetos vivos."; selo "Gratuito"; rodapé "club.atlashub.si". *Alt:* "Sérgio Monteiro e os personagens digitais Lucas, Atlas, Marta e Bia lado a lado; texto: Pessoas reais. Agentes próprios. Projetos vivos."
-**Criativo C2 (carrossel 4 cartões):** 1 "Você não precisa saber programar. Precisa começar." · 2 "Missão 001: crie, ensine e teste seu primeiro agente" · 3 "Funciona até no celular" · 4 "Entre grátis: club.atlashub.si".
+**Estado real a respeitar (15/10/2026):** o cadastro de membros e a Missão 001 **ainda não estão operacionais** (PR2B em NO-GO). As peças convidam a **conhecer o Club** e a **manifestar interesse pelo WhatsApp**; tudo o que ainda não existe é dito no futuro ou como "em preparação".
+
+**Criativo C1 (feed 1080×1350):** arte aprovada da equipe (Sérgio · Lucas · Atlas · Marta · Bia), sem rostos novos; título "Pessoas reais. Agentes próprios. Projetos vivos."; selo "Gratuito"; rodapé "Conheça: club.atlashub.si". *Alt:* "Sérgio Monteiro e os personagens digitais Lucas, Atlas, Marta e Bia lado a lado; texto: Pessoas reais. Agentes próprios. Projetos vivos."
+**Criativo C2 (carrossel 4 cartões):** 1 "Você não precisa saber programar. Precisa começar." · 2 "Em preparação: a Missão 001, para criar e testar seu primeiro agente" · 3 "Pensado para funcionar até no celular" · 4 "Conheça o Club e fale com a equipe: club.atlashub.si".
 **Instagram (feed):**
-> O Club Atlas é uma comunidade gratuita para quem quer aprender a construir com inteligência artificial — mesmo começando do zero.
-> Você cria seu primeiro agente, troca ideias com outras pessoas e desenvolve projetos de verdade, com mentoria humana e personagens digitais sempre identificados.
+> O Club Atlas vai ser uma comunidade gratuita para quem quer aprender a construir com inteligência artificial — mesmo começando do zero.
+> Estamos preparando os primeiros encontros e a Missão 001, para criar e testar um primeiro agente com mentoria humana e personagens digitais sempre identificados.
 > Gratuito. Sem compra obrigatória.
-> 👉 Fale com a equipe pelo link na bio (código CLUB-IG).
+> 👉 Quer acompanhar desde o início? Fale com a equipe pelo link na bio (código CLUB-IG).
 
-**Stories (3 telas):** "Quer aprender IA na prática?" → "Comunidade gratuita, do zero ao primeiro agente" → sticker de link `CLUB-ST`.
+**Stories (3 telas):** "Quer aprender IA na prática?" → "Uma comunidade gratuita está chegando" → "Fale com a equipe" + sticker de link `CLUB-ST`.
 **LinkedIn:**
-> Estamos abrindo o Club Atlas, a comunidade gratuita da AtlasHub para estudantes, iniciantes e criadores que querem aprender a construir com IA de forma prática e responsável. Sem pré-requisito técnico, com mentoria humana e projetos reais. Conheça: club.atlashub.si
+> Estamos preparando o Club Atlas, a comunidade gratuita da AtlasHub para estudantes, iniciantes e criadores que querem aprender a construir com IA de forma prática e responsável. Sem pré-requisito técnico, com mentoria humana. Conheça a proposta em club.atlashub.si e fale com a equipe pelo WhatsApp para acompanhar a abertura.
 
-**WhatsApp (status/partilha):** "Conhece o Club Atlas? Comunidade gratuita para aprender IA na prática, do zero. Fale com a equipe: [CLUB-WA]".
+**WhatsApp (status/partilha):** "Conhece o Club Atlas? Uma comunidade gratuita para aprender IA na prática, do zero, que está a ser preparada. Fale com a equipe: [CLUB-WA]".
+
+**Não usar até ao GO do PR2B:** "crie sua conta", "cadastre-se", "entre no Club" (como ação imediata), "faça a Missão 001", "já disponível".
 
 ## 2. Genesis Early Access → club.atlashub.si/genesis#early-access
 **Criativo G1 (feed 1080×1350):** fundo navy com brilho dourado; "GENESIS · TURMA 01"; "Comece antes da turma"; "Interesse até 30/11 → 2 ateliers extras e gratuitos em dezembro"; rodapé "Início previsto 09/01/2027 · 8 semanas · 24 ateliers". *Alt:* texto integral do cartão.
@@ -99,6 +103,24 @@ Em bio do Instagram/LinkedIn, usar a página (link único) e deixar o WhatsApp c
 > Lista de interesse: atlashub.si/workshops/enterprise-lab-ecommerce (código EL01-LI).
 
 Comunicação própria a partir de 17–19/11 e mais intensa a partir de 23/11; **sem campanha massiva no feriado de 20/11**.
+
+---
+
+## Lote 1 orgânico — Club e Genesis (para validação do Sérgio)
+Primeiro lote, só para páginas publicadas e homologadas (`dbbbf44`). **Nada é publicado sem a aprovação de cada peça.** Datas sugeridas; ajustar à agenda de atendimento do WhatsApp.
+
+| # | Data sugerida | Canal | Peça | Copy | Código | Estado |
+|---|---|---|---|---|---|---|
+| 1 | 20/10 | Instagram feed + Facebook | C1 (equipe) | §1 Instagram | `CLUB-IG` / `CLUB-FB` | aguarda validação |
+| 2 | 20/10 | LinkedIn (perfil do Sérgio) | C1 | §1 LinkedIn | `CLUB-LI` | aguarda validação |
+| 3 | 22/10 | Instagram stories | 3 telas Club | §1 Stories | `CLUB-ST` | aguarda validação |
+| 4 | 23/10 | Instagram feed + Facebook | G1 (Early Access) | §2 Instagram | `GEN-EA-IG` / `GEN-EA-FB` | aguarda validação |
+| 5 | 24/10 | LinkedIn | G1 | §2 LinkedIn | `GEN-EA-LI` | aguarda validação |
+| 6 | 27/10 | Instagram carrossel | C2 (Club, Missão 001 "em preparação") | §1 Criativo C2 | `CLUB-IG` | aguarda validação |
+| 7 | 29/10 | Instagram carrossel | G2 (Genesis, 5 cartões) | §2 Criativo G2 | `GEN-EA-IG` | aguarda validação |
+| 8 | 30/10 | WhatsApp status | Club + Genesis | §1/§2 WhatsApp | `CLUB-WA` / `GEN-EA-WA` | aguarda validação |
+
+**Antes da peça 1:** atendimento do WhatsApp com responsável e horário definidos; registo dos códigos no CRM a funcionar. **Medição:** contagem semanal de contactos por código (sem estimativas). **Workshops:** fora deste lote até as páginas AtlasHub.SI estarem homologadas.
 
 ---
 
