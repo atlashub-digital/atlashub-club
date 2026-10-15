@@ -11,11 +11,11 @@
 | Testes RLS (22 verificações, incl. revisão do responsável) | `docs/sql/drafts/tests/*.sql`, `scripts/test-sql-draft.sh`, job `sql-draft` no CI | recusa hosts remotos |
 | Validação de dados mínimos | `src/lib/club/signup-schema.ts` | espelha o formulário PR2A; sem CPF/RG/telefone/preço |
 | Rate limit | `src/lib/club/rate-limit.ts` (memória, preview) + `club.hit_rate_limit` (SQL, produção) | |
-| Endpoint | `POST /api/club/signup` → `src/lib/club/signup-handler.ts` | **503** por defeito; `dry-run` só fora de produção; nunca persiste |
-| Modo | `src/lib/club/mode.ts` | não há modo "live" neste PR |
+| Endpoint | `POST /api/club/signup` → `src/lib/club/signup-handler.ts` | **503** por defeito; `dry-run` só fora de produção; `live` (S3) com toda a configuração |
+| Modo | `src/lib/club/mode.ts` | `live` acrescentado em S3 — ver `docs/17_PR2B_LIVE_SETUP.md`; produção exige `CLUB_AUTH_PRODUCTION_APPROVED=yes` |
 | Testes TS | `tests/e2e/club-signup.spec.ts` | 12 testes (inclui menores: adolescente e criança) |
 
-O formulário `/participar` **não foi ligado** ao endpoint: continua "Prévia concluída — nada foi enviado."
+O formulário `/participar` só envia quando o servidor está em modo `live`; sem configuração continua "Prévia concluída — nada foi enviado." Configuração e testes de staging: `docs/17_PR2B_LIVE_SETUP.md`.
 
 ## 2. Decisão a tomar com a Helena antes de qualquer DDL
 | | **Opção A — projeto Supabase só do Club (recomendada)** | Opção B — reutilização governada |

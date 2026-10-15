@@ -10,3 +10,5 @@ trap 'dropdb --if-exists "$db"' EXIT
 psql -q -v ON_ERROR_STOP=1 -d "$db" -f docs/sql/drafts/tests/000_supabase_stub.sql
 psql -q -v ON_ERROR_STOP=1 -d "$db" -f docs/sql/drafts/002_club_auth_onboarding.sql
 psql -q -v ON_ERROR_STOP=1 -d "$db" -f docs/sql/drafts/tests/002_rls_test.sql
+psql -q -v ON_ERROR_STOP=1 -d "$db" -f docs/sql/drafts/003_club_signup_live.sql
+psql -q -v ON_ERROR_STOP=1 -d "$db" -f docs/sql/drafts/tests/003_live_test.sql

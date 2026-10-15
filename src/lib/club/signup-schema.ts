@@ -111,3 +111,11 @@ export function validateSignup(raw: unknown): SignupResult {
     },
   };
 }
+
+/** Forma guardada no convite do Supabase Auth (sem o e-mail, que vem do próprio utilizador). */
+export type StoredSignup = Omit<SignupInput, "email">;
+
+export function storedSignup(v: SignupInput): StoredSignup {
+  const { email: _email, ...rest } = v;
+  return rest;
+}

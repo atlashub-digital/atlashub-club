@@ -2,9 +2,11 @@
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import Icon from "../ui/Icon";
+import Turnstile from "../club/Turnstile";
 import { StatusTag } from "../ui/primitives";
 import { genesisFacts, price, priceNotes } from "@/lib/offers";
 import { ageBandLabels, deriveSignupOutcome, isMinor, statusLabels, type AgeBand } from "@/lib/adesao/status";
+import { PRIVACY_VERSION, TERMS_VERSION } from "@/lib/club/signup-schema";
 
 /**
  * Formulário de adesão em 4 etapas — MODO PRÉVIA (issue #14, PR2A).
@@ -14,6 +16,10 @@ import { ageBandLabels, deriveSignupOutcome, isMinor, statusLabels, type AgeBand
  * marcar "estudante" NÃO autoriza R$ 190 — fica "pendente de validação"; marketing desmarcado.
  * Menores de 18 (decisão de 14/10/2026): avançam sem bloqueio; o percurso fica em `pending_guardian_review`
  * (revisão manual do responsável pela equipa). Não há consentimento simulado nem campo "tenho autorização".
+ *
+ * Modo live (PR2B, só quando o servidor está em CLUB_AUTH_MODE=live — ver src/lib/club/mode.ts):
+ * envia para POST /api/club/signup com Turnstile; a conta só fica ativa depois de a pessoa confirmar
+ * o e-mail. Sem WhatsApp nem instituição (não são aceites pelo servidor). Nada é cobrado.
  */
 
 export type Plan = "club" | "genesis";
@@ -59,9 +65,15 @@ const AREAS = [
 
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
 
-export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Plan }) {
+export type LiveSignup = { turnstileSiteKey: string };
+type LiveResult = { next: "check_email" | "guardian_review"; child?: boolean };
+
+export default function AdesaoForm({ initialPlan = "club", live = null }: { initialPlan?: Plan; live?: LiveSignup | null }) {
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
+  const [token, setToken] = useState("");
+  const [sending, setSending] = useState(false);
+  const [liveResult, setLiveResult] = useState<LiveResult | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [d, setD] = useState<Draft>({
     plan: initialPlan,
@@ -109,8 +121,45 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
     }
     if (s === 3) {
       if (!d.terms) e.terms = "Para continuar, aceite os termos e o aviso de privacidade.";
+      if (live && !token) e.turnstile = "Aguarde a verificação anti-robô terminar e tente de novo.";
     }
     return e;
+  }
+
+  async function submitLive() {
+    setSending(true);
+    try {
+      const r = await fetch("/api/club/signup", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          plan: d.plan,
+          studentIntent: d.plan === "genesis" && d.student,
+          displayName: d.name,
+          email: d.email,
+          ageBand: d.age,
+          area: d.area || undefined,
+          interests: d.interests,
+          firstMission: d.firstMission,
+          device: d.device || undefined,
+          termsVersion: TERMS_VERSION,
+          privacyVersion: PRIVACY_VERSION,
+          marketingOptIn: !minor && d.marketing,
+          turnstileToken: token,
+        }),
+      });
+      const b = (await r.json().catch(() => ({}))) as { next?: LiveResult["next"]; child?: boolean; message?: string };
+      if (r.status === 202 && b.next) {
+        setLiveResult({ next: b.next, child: b.child });
+        setDone(true);
+      } else {
+        setErrors({ server: b.message ?? "Não foi possível enviar agora. Tente de novo." });
+      }
+    } catch {
+      setErrors({ server: "Sem ligação. Verifique a internet e tente de novo." });
+    } finally {
+      setSending(false);
+    }
   }
 
   function next() {
@@ -118,6 +167,7 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
     setErrors(e);
     if (Object.keys(e).length) return;
     if (step < STEPS.length - 1) setStep(step + 1);
+    else if (live) void submitLive();
     else setDone(true);
   }
 
@@ -138,6 +188,10 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
   const planLabel = d.plan === "club" ? "Club Atlas · gratuito" : `Genesis Turma 01 · ${genesisFacts.weeks} semanas`;
   const priceLabel =
     d.plan === "club" ? price.club : d.student ? `${price.genesisStudent} (pendente de validação)` : `${price.genesisStandard} (valor padrão)`;
+
+  if (done && live && liveResult) {
+    return <LiveDone result={liveResult} email={d.email} genesis={d.plan === "genesis"} headingRef={headingRef} />;
+  }
 
   if (done) {
     return (
@@ -246,17 +300,19 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
                 </label>
                 {d.student && (
                   <>
-                    <div className="ca-field">
-                      <label htmlFor={f("institution")}>Instituição de ensino (opcional nesta prévia)</label>
-                      <input
-                        id={f("institution")}
-                        className="ca-input"
-                        value={d.institution}
-                        onChange={(e) => set("institution", e.target.value)}
-                        autoComplete="organization"
-                        maxLength={120}
-                      />
-                    </div>
+                    {!live && (
+                      <div className="ca-field">
+                        <label htmlFor={f("institution")}>Instituição de ensino (opcional nesta prévia)</label>
+                        <input
+                          id={f("institution")}
+                          className="ca-input"
+                          value={d.institution}
+                          onChange={(e) => set("institution", e.target.value)}
+                          autoComplete="organization"
+                          maxLength={120}
+                        />
+                      </div>
+                    )}
                     <p className="ca-notice" role="note">
                       <span>
                         <strong>Sujeito a validação de elegibilidade.</strong> Marcar esta opção não garante o valor de{" "}
@@ -302,7 +358,7 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
               <input id={f("email")} type="email" className="ca-input" value={d.email} onChange={(e) => set("email", e.target.value)} autoComplete="email" maxLength={190} {...errProps("email")} />
               {err("email")}
             </div>
-            {!minor && (
+            {!minor && !live && (
               <div className="ca-field">
                 <label htmlFor={f("whatsapp")}>WhatsApp (opcional)</label>
                 <input id={f("whatsapp")} type="tel" inputMode="tel" className="ca-input" value={d.whatsapp} onChange={(e) => set("whatsapp", e.target.value)} autoComplete="tel" maxLength={20} {...errProps("whatsapp")} />
@@ -316,7 +372,7 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
           <div className="ca-adesao__grid">
             <div className="ca-field ca-adesao__wide">
               <label htmlFor={f("firstMission")}>Se você pudesse criar um agente só seu, qual seria sua primeira missão?</label>
-              <textarea id={f("firstMission")} className="ca-input ca-textarea" rows={3} value={d.firstMission} onChange={(e) => set("firstMission", e.target.value)} maxLength={400} placeholder="Ex.: organizar o meu semestre e me lembrar das entregas" {...errProps("firstMission")} />
+              <textarea id={f("firstMission")} className="ca-input ca-textarea" rows={3} value={d.firstMission} onChange={(e) => set("firstMission", e.target.value)} maxLength={live ? 280 : 400} placeholder="Ex.: organizar o meu semestre e me lembrar das entregas" {...errProps("firstMission")} />
               {err("firstMission")}
             </div>
             <fieldset className="ca-field ca-adesao__wide">
@@ -394,10 +450,18 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
               </span>
             </label>
             {err("terms")}
-            <label className="check-inline ca-adesao__wide" htmlFor={f("marketing")}>
-              <input id={f("marketing")} type="checkbox" checked={d.marketing} onChange={(e) => set("marketing", e.target.checked)} />
-              <span>Quero receber novidades do Club Atlas e do Genesis por e-mail (opcional; pode cancelar quando quiser).</span>
-            </label>
+            {!(live && minor) && (
+              <label className="check-inline ca-adesao__wide" htmlFor={f("marketing")}>
+                <input id={f("marketing")} type="checkbox" checked={d.marketing} onChange={(e) => set("marketing", e.target.checked)} />
+                <span>Quero receber novidades do Club Atlas e do Genesis por e-mail (opcional; pode cancelar quando quiser).</span>
+              </label>
+            )}
+            {live && (
+              <div className="ca-adesao__wide" id={f("turnstile")}>
+                <Turnstile siteKey={live.turnstileSiteKey} onToken={setToken} />
+                {err("turnstile")}
+              </div>
+            )}
           </div>
         )}
 
@@ -407,8 +471,8 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
               Voltar
             </button>
           )}
-          <button type="submit" className={`ca-btn ${d.plan === "genesis" ? "ca-btn--gold" : "ca-btn--primary"}`}>
-            {step < 3 ? "Continuar" : "Concluir prévia (nada é enviado)"}
+          <button type="submit" disabled={sending} className={`ca-btn ${d.plan === "genesis" ? "ca-btn--gold" : "ca-btn--primary"}`}>
+            {step < 3 ? "Continuar" : live ? (sending ? "Enviando…" : liveSubmitLabel(d.plan, minor)) : "Concluir prévia (nada é enviado)"}
             <Icon name="arrow" className="ca-btn__icon" />
           </button>
         </div>
@@ -441,7 +505,8 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
           </p>
         )}
         <p className="ca-adesao__demo">
-          <Icon name="shield" size={16} /> Prévia: nada é enviado nem guardado.
+          <Icon name="shield" size={16} />{" "}
+          {live ? "Sem pagamento. A conta só fica ativa depois de confirmar o e-mail." : "Prévia: nada é enviado nem guardado."}
         </p>
       </aside>
     </div>
@@ -490,6 +555,57 @@ function OutcomePanel({ outcome }: { outcome: ReturnType<typeof deriveSignupOutc
           Fica em espera até a revisão: {outcome.onHold.join(" · ")}. As páginas públicas do Club continuam abertas.
         </p>
       )}
+    </div>
+  );
+}
+
+function liveSubmitLabel(plan: Plan, minor: boolean) {
+  if (minor) return "Enviar para revisão do responsável";
+  return plan === "genesis" ? "Criar conta e enviar pré-candidatura (sem pagamento)" : "Criar conta gratuita";
+}
+
+/** Resultado real do envio (modo live). Não afirma conta criada: falta confirmar o e-mail ou a revisão. */
+function LiveDone({
+  result,
+  email,
+  genesis,
+  headingRef,
+}: {
+  result: LiveResult;
+  email: string;
+  genesis: boolean;
+  headingRef: React.RefObject<HTMLHeadingElement | null>;
+}) {
+  const guardian = result.next === "guardian_review";
+  return (
+    <div className="ca-adesao">
+      <section className="ca-card ca-card--glow ca-adesao__done" aria-labelledby="adesao-done" role="status">
+        <span className="ca-icon-box">
+          <Icon name={guardian ? "shield" : "check"} />
+        </span>
+        <h2 id="adesao-done" ref={headingRef} tabIndex={-1}>
+          {guardian ? "Pedido recebido para revisão do responsável" : "Falta só confirmar o seu e-mail"}
+        </h2>
+        {guardian ? (
+          <p>
+            {result.child
+              ? "Para menores de 12 anos, quem faz o cadastro é o responsável. Não guardamos o seu e-mail: peça a um adulto responsável para falar com a equipe do Club."
+              : "A equipe do Club vai entrar em contato pelo e-mail informado para validar a autorização de um responsável. Até lá, nenhuma conta é ativada."}{" "}
+            Enquanto isso, as páginas públicas do Club continuam abertas para você.
+          </p>
+        ) : (
+          <p>
+            Enviamos um link para <strong>{email}</strong>. A sua conta gratuita só fica ativa depois de clicar nele e confirmar. O link vale
+            por pouco tempo; se não o encontrar, veja a caixa de spam ou promoções.
+            {genesis && " A pré-candidatura ao Genesis fica registada na conta, sem nenhuma cobrança."}
+          </p>
+        )}
+        <div className="ca-hero__actions">
+          <Link className="ca-btn ca-btn--outline" href="/">
+            Voltar ao início
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

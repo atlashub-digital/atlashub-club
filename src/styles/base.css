@@ -414,3 +414,45 @@ p {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* PR2B · conta do Club (entrar, confirmar, conta) */
+.ca-narrow {
+  max-width: 640px;
+  display: grid;
+  gap: 18px;
+}
+.ca-login {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+.ca-login .ca-field {
+  width: 100%;
+}
+.ca-turnstile {
+  min-height: 65px;
+}
+.ca-account {
+  display: grid;
+  gap: 16px;
+}
+.ca-account dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 16px;
+  margin: 0;
+}
+.ca-account dt {
+  color: var(--ca-text-2);
+}
+.ca-account dd {
+  margin: 0;
+}
+.ca-account form {
+  display: inline;
+}
+.ca-account__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

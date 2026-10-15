@@ -1,4 +1,5 @@
-import { createHash } from "node:crypto";
+import type { ClubBackend } from "./backend";
+import { clientIp, sha } from "./hash";
 import { clubAuthMode } from "./mode";
 import { createMemoryRateLimiter, type RateLimiter } from "./rate-limit";
 import { validateSignup } from "./signup-schema";
@@ -6,8 +7,10 @@ import { deriveSignupOutcome } from "@/lib/adesao/status";
 
 /**
  * Lógica do POST /api/club/signup, separada da rota para ser testável sem servidor.
- * Nunca persiste nada neste PR: em "dry-run" devolve o plano de escrita (tabelas e campos),
- * com o email reduzido a um hash, para auditoria.
+ * - "dry-run": devolve o plano de escrita (tabelas e campos), com o email reduzido a um hash. Nunca persiste.
+ * - "live": Turnstile + rate limit partilhado (SQL) e pedido de link de confirmação ao Supabase Auth.
+ *   Nenhuma conta fica ativa nem perfil é criado antes de a pessoa confirmar o e-mail
+ *   (src/app/api/club/auth/verify). Menores: só um pedido de revisão do responsável, sem conta.
  */
 export type HandlerResult = { status: number; body: Record<string, unknown>; headers?: Record<string, string> };
 
@@ -15,21 +18,33 @@ const perIp = createMemoryRateLimiter(5, 10 * 60_000);
 const perEmail = createMemoryRateLimiter(3, 60 * 60_000);
 const MAX_BYTES = 4096;
 
-const sha = (v: string) => createHash("sha256").update(v).digest("hex").slice(0, 16);
+const unavailable: HandlerResult = { status: 503, body: { message: "Registo temporariamente indisponível. Tente de novo mais tarde." } };
+const checkEmail: HandlerResult = { status: 202, body: { ok: true, next: "check_email" } };
 
 export async function handleSignup(
   req: { headers: Headers; text(): Promise<string> },
   env: Record<string, string | undefined> = process.env,
   limiters: { ip: RateLimiter; email: RateLimiter } = { ip: perIp, email: perEmail },
+  backend?: ClubBackend,
 ): Promise<HandlerResult> {
-  if (clubAuthMode(env) === "off") return { status: 503, body: { message: "Adesão ainda não disponível." } };
+  const mode = clubAuthMode(env);
+  if (mode === "off") return { status: 503, body: { message: "Adesão ainda não disponível." } };
+  if (mode === "live") {
+    if (!backend) return unavailable;
+    try {
+      return await handleLive(req, env, backend);
+    } catch (e) {
+      console.error("club.signup", e instanceof Error ? e.message : "erro");
+      return unavailable;
+    }
+  }
 
   const origin = env.CLUB_SITE_ORIGIN;
   if (!origin || req.headers.get("origin") !== origin) return { status: 403, body: { message: "Pedido inválido." } };
   if (!req.headers.get("content-type")?.startsWith("application/json"))
     return { status: 415, body: { message: "Formato inválido." } };
 
-  const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
+  const ip = clientIp(req.headers);
   const ipHit = limiters.ip.hit(sha(ip));
   if (!ipHit.allowed)
     return { status: 429, body: { message: "Muitas tentativas." }, headers: { "retry-after": String(ipHit.retryAfterS) } };
@@ -114,4 +129,58 @@ export async function handleSignup(
       emailHash: sha(v.email),
     },
   };
+}
+
+async function handleLive(
+  req: { headers: Headers; text(): Promise<string> },
+  env: Record<string, string | undefined>,
+  backend: ClubBackend,
+): Promise<HandlerResult> {
+  const origin = env.CLUB_SITE_ORIGIN?.replace(/\/$/, "");
+  if (!origin || req.headers.get("origin") !== origin) return { status: 403, body: { message: "Pedido inválido." } };
+  if (!req.headers.get("content-type")?.startsWith("application/json"))
+    return { status: 415, body: { message: "Formato inválido." } };
+
+  const ip = clientIp(req.headers);
+  // Limite por IP mais largo do que no dry-run: escolas e universidades partilham IP.
+  if (!(await backend.hitRateLimit(`signup:ip:${sha(ip)}`, 10, 600)))
+    return { status: 429, body: { message: "Muitas tentativas. Aguarde alguns minutos." }, headers: { "retry-after": "600" } };
+
+  const raw = await req.text();
+  if (raw.length > MAX_BYTES) return { status: 413, body: { message: "Pedido demasiado grande." } };
+  let json: Record<string, unknown>;
+  try {
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error();
+    json = parsed as Record<string, unknown>;
+  } catch {
+    return { status: 400, body: { message: "Pedido inválido." } };
+  }
+  if (json.website) return checkEmail; // honeypot: resposta neutra
+
+  const { turnstileToken, ...fields } = json;
+  const parsed = validateSignup(fields);
+  if (!parsed.ok) return { status: 400, body: { message: "Verifique os dados.", errors: parsed.errors } };
+  const v = parsed.value;
+
+  if (typeof turnstileToken !== "string" || !(await backend.verifyTurnstile(turnstileToken, ip)))
+    return { status: 400, body: { message: "Não foi possível confirmar que você não é um robô. Tente de novo.", errors: { turnstile: "failed" } } };
+
+  // Resposta neutra por e-mail para não permitir enumeração de contas.
+  if (!(await backend.hitRateLimit(`signup:email:${sha(v.email)}`, 3, 3600))) return checkEmail;
+
+  const outcome = deriveSignupOutcome({ plan: v.plan, student: v.studentIntent, age: v.ageBand });
+  if (outcome.reviews.guardian) {
+    await backend.createGuardianReview({
+      ageBand: v.ageBand as "teen" | "child",
+      plan: v.plan,
+      studentIntent: v.studentIntent,
+      contactEmail: v.ageBand === "child" ? null : v.email,
+    });
+    return { status: 202, body: { ok: true, next: "guardian_review", status: outcome.status, child: v.ageBand === "child" } };
+  }
+
+  if ((await backend.sendLink(v.email, v)) === "rate_limited")
+    return { status: 429, body: { message: "Muitos e-mails enviados agora. Tente de novo em alguns minutos." } };
+  return { status: 202, body: { ok: true, next: "check_email", status: outcome.status } };
 }
