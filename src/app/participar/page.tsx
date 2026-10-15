@@ -38,11 +38,18 @@ export default async function Participar({ searchParams }: { searchParams: Promi
             confirmar. Já tem conta? <Link href="/entrar">Entrar</Link>.
           </span>
         </p>
-      ) : (
+      ) : leadSiteKey ? (
         <p className="ca-notice" role="note">
           <span>
             <strong>Interesse no Club, sem pagamento.</strong> Registamos o seu pedido e a equipe entra em contato por e-mail. A criação de
             contas ainda não está aberta: é ativada quando autenticação, privacidade e anti-abuso forem homologados.
+          </span>
+        </p>
+      ) : (
+        <p className="ca-notice" role="note">
+          <span>
+            <strong>Modo demonstração.</strong> Este formulário ainda não cria contas nem envia dados: nada sai do seu navegador. O cadastro
+            real abre depois de aprovados autenticação, privacidade e anti-abuso.
           </span>
         </p>
       )}

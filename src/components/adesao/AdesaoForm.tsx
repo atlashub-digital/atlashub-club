@@ -522,12 +522,10 @@ export default function AdesaoForm({
                 <dt>Nome</dt>
                 <dd>{d.name}</dd>
               </div>
-              {!child && (
-                <div>
-                  <dt>E-mail</dt>
-                  <dd>{d.email}</dd>
-                </div>
-              )}
+              <div>
+                <dt>E-mail</dt>
+                <dd>{child ? "Através do responsável legal" : d.email}</dd>
+              </div>
               <div className="ca-adesao__wide">
                 <dt>Primeira missão</dt>
                 <dd>{d.firstMission}</dd>
