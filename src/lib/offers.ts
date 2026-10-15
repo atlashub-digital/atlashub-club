@@ -49,6 +49,22 @@ export const genesisFacts = {
   format: "Anápolis + online",
 };
 
+/**
+ * Genesis Early Access (decisão do Sérgio, 15/10/2026).
+ * Elegível quem manifestar interesse no Genesis até ao prazo, incluindo quem já falou pelo WhatsApp oficial.
+ * Datas e capacidade dos ateliers de dezembro dependem de confirmação logística: NÃO publicar datas aqui.
+ */
+const earlyAccessDeadline = "30/11/2026";
+const earlyAccessBenefit =
+  "convite antecipado para 2 ateliers extras e gratuitos em dezembro: um híbrido, em Anápolis e online, e outro online, de preparação dos projetos. Datas a confirmar.";
+
+export const earlyAccess = {
+  deadline: earlyAccessDeadline,
+  benefit: earlyAccessBenefit,
+  summary: `Quem registrar interesse no Genesis até ${earlyAccessDeadline} recebe ${earlyAccessBenefit} Também recebe primeiro as notícias sobre a abertura das matrículas e as condições definitivas.`,
+  fine: "Participação sujeita a confirmação e capacidade disponível. Registrar interesse não é matrícula: não reserva vaga, não tem desconto adicional nem obrigação de compra.",
+};
+
 /** Avisos obrigatórios que acompanham sempre um preço. */
 export const priceNotes = {
   student: "Condição para estudantes elegíveis, sujeita a validação antes de qualquer pagamento.",
