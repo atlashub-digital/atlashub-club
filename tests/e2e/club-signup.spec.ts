@@ -63,16 +63,6 @@ test.describe("PR2B · validação de dados mínimos", () => {
     }
   });
 
-  test("criança: e-mail não é exigido nem guardado", () => {
-    const { email: _e, ...noEmail } = valid;
-    const r = validateSignup({ ...noEmail, ageBand: "child" });
-    expect(r.ok && r.value.email).toBeNull();
-    const withEmail = validateSignup({ ...valid, ageBand: "child" });
-    expect(withEmail.ok && withEmail.value.email).toBeNull();
-    const adult = validateSignup(noEmail);
-    expect(!adult.ok && adult.errors.email).toBe("invalid");
-  });
-
   test("intenção de estudante só conta no plano Genesis", () => {
     const club = validateSignup({ ...valid, studentIntent: true });
     const genesis = validateSignup({ ...valid, plan: "genesis", studentIntent: true });
@@ -125,8 +115,13 @@ test.describe("PR2B · handler em dry-run", () => {
     expect(r.body.withheld).toEqual(expect.arrayContaining(["auth.users", "club.club_crm_outbox", "club.club_genesis_applications"]));
   });
 
-  test("criança: o e-mail é descartado (nem hash) e pede-se o contacto do responsável", async () => {
-    const r = await handleSignup(req({ ...valid, ageBand: "child" }), dryEnv, limiters());
+  test("criança: e-mail recusado se enviado; sem e-mail segue para revisão do responsável", async () => {
+    const withEmail = await handleSignup(req({ ...valid, ageBand: "child" }), dryEnv, limiters());
+    expect(withEmail.status).toBe(400);
+    expect((withEmail.body.errors as Record<string, string>).email).toBe("not_allowed_for_child");
+    const { email: _omit, ...noEmail } = valid;
+    const r = await handleSignup(req({ ...noEmail, ageBand: "child" }), dryEnv, limiters());
+    expect(r.status).toBe(202);
     expect(r.body.status).toBe("pending_guardian_review");
     expect(r.body.emailHash).toBeUndefined();
     expect(JSON.stringify(r.body)).toContain("contact_email=null");

@@ -36,8 +36,8 @@ export type SignupInput = {
   /** Intenção declarada; só vale após revisão humana (PR2C). */
   studentIntent: boolean;
   displayName: string;
-  /** null só para crianças (<12): o e-mail da criança não é pedido nem aceite; o responsável trata com a equipa. */
-  email: string | null;
+  /** Ausente para crianças (<12): o contacto é sempre o do responsável. */
+  email?: string;
   /** Menores não são bloqueados: seguem para `pending_guardian_review` (decisão de 14/10/2026). */
   ageBand: AgeBand;
   area?: (typeof AREAS)[number];
@@ -69,10 +69,11 @@ export function validateSignup(raw: unknown): SignupResult {
   const ageBand = str(b.ageBand);
   if (!has(AGE_BANDS, ageBand)) errors.ageBand = "invalid";
 
-  // Criança: o e-mail é descartado mesmo que chegue (defesa em profundidade; a UI não o pede).
-  const child = ageBand === "child";
-  const email = child ? null : str(b.email).toLowerCase();
-  if (email !== null && (email.length > 190 || !EMAIL.test(email))) errors.email = "invalid";
+  // Criança (<12): nenhum contacto direto é aceite — nem chega a ser transmitido.
+  const email = str(b.email).toLowerCase();
+  if (ageBand === "child") {
+    if ("email" in b) errors.email = "not_allowed_for_child";
+  } else if (email.length > 190 || !EMAIL.test(email)) errors.email = "invalid";
 
   const area = str(b.area);
   if (area && !has(AREAS, area)) errors.area = "invalid";
@@ -101,7 +102,7 @@ export function validateSignup(raw: unknown): SignupResult {
       plan: plan as SignupInput["plan"],
       studentIntent: plan === "genesis" && b.studentIntent === true,
       displayName,
-      email,
+      email: ageBand === "child" ? undefined : email,
       ageBand: ageBand as AgeBand,
       area: area ? (area as SignupInput["area"]) : undefined,
       interests: [...new Set(interests)] as SignupInput["interests"],
@@ -115,7 +116,7 @@ export function validateSignup(raw: unknown): SignupResult {
   };
 }
 
-/** Forma guardada no convite do Supabase Auth (sem o e-mail, que vem do próprio utilizador). */
+/** Forma guardada antes da confirmação (sem o e-mail, que vem do próprio utilizador). */
 export type StoredSignup = Omit<SignupInput, "email">;
 
 export function storedSignup(v: SignupInput): StoredSignup {

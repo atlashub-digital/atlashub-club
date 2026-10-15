@@ -106,7 +106,6 @@ export default function AdesaoForm({ initialPlan = "club", live = null }: { init
   }, [errors]);
 
   const minor = d.age !== "" && isMinor(d.age);
-  // Menores de 12: o e-mail da criança não é pedido, guardado nem enviado; o responsável trata com a equipa.
   const child = d.age === "child";
   const outcome = d.age ? deriveSignupOutcome({ plan: d.plan, student: d.student, age: d.age }) : null;
 
@@ -114,6 +113,7 @@ export default function AdesaoForm({ initialPlan = "club", live = null }: { init
     const e: Record<string, string> = {};
     if (s === 1) {
       if (d.name.trim().length < 2) e.name = "Informe o seu nome (mínimo 2 letras).";
+      // Menos de 12 anos: nenhum contacto direto da criança — o contacto é sempre o do responsável.
       if (!child && !emailOk(d.email)) e.email = "Informe um e-mail válido, por exemplo nome@exemplo.com.";
       if (!minor && d.whatsapp && d.whatsapp.replace(/\D/g, "").length < 10) e.whatsapp = "WhatsApp é opcional; se preencher, use DDD + número.";
       if (!d.age) e.age = "Indique a sua faixa de idade.";
@@ -364,7 +364,8 @@ export default function AdesaoForm({ initialPlan = "club", live = null }: { init
             </div>
             {child ? (
               <p className="ca-adesao__hint ca-adesao__wide">
-                Não pedimos o seu e-mail. Para continuar depois, peça a um adulto responsável para falar com a equipe do Club.
+                Não pedimos o seu e-mail nem outro contacto: para menores de 12 anos, quem fala com a equipe é sempre o
+                responsável legal.
               </p>
             ) : (
               <div className="ca-field">
@@ -441,12 +442,10 @@ export default function AdesaoForm({ initialPlan = "club", live = null }: { init
                 <dt>Nome</dt>
                 <dd>{d.name}</dd>
               </div>
-              {!child && (
-                <div>
-                  <dt>E-mail</dt>
-                  <dd>{d.email}</dd>
-                </div>
-              )}
+              <div>
+                <dt>{child ? "Contacto" : "E-mail"}</dt>
+                <dd>{child ? "Através do responsável legal" : d.email}</dd>
+              </div>
               <div className="ca-adesao__wide">
                 <dt>Primeira missão</dt>
                 <dd>{d.firstMission}</dd>

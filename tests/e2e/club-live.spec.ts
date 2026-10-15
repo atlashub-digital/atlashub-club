@@ -151,11 +151,12 @@ test.describe("PR2B live · registo", () => {
     expect(calls.keys.some((k) => k.startsWith("signup:email"))).toBe(false);
   });
 
-  test("criança: e-mail enviado por engano é descartado", async () => {
+  test("criança: e-mail enviado por engano é recusado e nada é gravado", async () => {
     const { backend, calls } = fakeBackend();
-    await handleSignup(req({ ...valid, ageBand: "child" }), liveEnv, undefined, backend);
-    expect(calls.reviews).toEqual([{ ageBand: "child", plan: "club", studentIntent: false, contactEmail: null }]);
-    expect(JSON.stringify(calls)).not.toContain("example.test");
+    const r = await handleSignup(req({ ...valid, ageBand: "child" }), liveEnv, undefined, backend);
+    expect(r.status).toBe(400);
+    expect(calls.reviews).toHaveLength(0);
+    expect(calls.links).toHaveLength(0);
   });
 });
 
