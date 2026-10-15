@@ -108,7 +108,7 @@ export type ClubEvent = {
  * Páginas comerciais dos workshops na AtlasHub.SI (atlashub-digital/AtlasHub.Si, PR #6, pré-lançamento).
  * Mudar para true só depois de essas páginas estarem publicadas em atlashub.si, para não haver links quebrados.
  */
-export const atlashubWorkshopsLive = false;
+export const atlashubWorkshopsLive = true;
 
 export const events: ClubEvent[] = [
   { day: "NOV", month: "2026", date: "NOV • 2026", title: "Fóruns Abertos do Club", detail: "Sessões introdutórias online: ideias, agentes e projetos. Horários a confirmar.", format: "ONLINE", state: "EM PREPARAÇÃO", status: "prep", kind: "club" },
