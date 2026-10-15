@@ -62,7 +62,7 @@ export const earlyAccess = {
   deadline: earlyAccessDeadline,
   benefit: earlyAccessBenefit,
   summary: `Quem registrar interesse no Genesis até ${earlyAccessDeadline} recebe ${earlyAccessBenefit} Também recebe primeiro as notícias sobre a abertura das matrículas e as condições definitivas.`,
-  fine: "Participação sujeita a confirmação e capacidade disponível. Registrar interesse não é matrícula: não reserva vaga, não tem desconto adicional nem obrigação de compra.",
+  fine: "Participação gratuita, sujeita a confirmação e capacidade disponível. Registrar interesse não é matrícula: não reserva vaga, não tem desconto adicional nem obrigação de compra.",
 };
 
 /** Os 2 ateliers extras do Early Access (formato decidido; datas, horários e local a confirmar). */
