@@ -94,13 +94,15 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
   }, [errors]);
 
   const minor = d.age !== "" && isMinor(d.age);
+  const child = d.age === "child";
   const outcome = d.age ? deriveSignupOutcome({ plan: d.plan, student: d.student, age: d.age }) : null;
 
   function validate(s: number): Record<string, string> {
     const e: Record<string, string> = {};
     if (s === 1) {
       if (d.name.trim().length < 2) e.name = "Informe o seu nome (mínimo 2 letras).";
-      if (!emailOk(d.email)) e.email = "Informe um e-mail válido, por exemplo nome@exemplo.com.";
+      // Menos de 12 anos: nenhum contacto direto da criança — o contacto é sempre o do responsável.
+      if (!child && !emailOk(d.email)) e.email = "Informe um e-mail válido, por exemplo nome@exemplo.com.";
       if (!minor && d.whatsapp && d.whatsapp.replace(/\D/g, "").length < 10) e.whatsapp = "WhatsApp é opcional; se preencher, use DDD + número.";
       if (!d.age) e.age = "Indique a sua faixa de idade.";
     }
@@ -282,7 +284,14 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
                       type="radio"
                       name="age"
                       checked={d.age === band}
-                      onChange={() => setD((prev) => ({ ...prev, age: band, whatsapp: isMinor(band) ? "" : prev.whatsapp }))}
+                      onChange={() =>
+                        setD((prev) => ({
+                          ...prev,
+                          age: band,
+                          whatsapp: isMinor(band) ? "" : prev.whatsapp,
+                          email: band === "child" ? "" : prev.email,
+                        }))
+                      }
                       {...(errors.age ? { "aria-describedby": f("age-err") } : {})}
                     />{" "}
                     <span>{ageBandLabels[band]}</span>
@@ -297,11 +306,18 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
               <input id={f("name")} className="ca-input" value={d.name} onChange={(e) => set("name", e.target.value)} autoComplete={minor ? "nickname" : "name"} maxLength={90} {...errProps("name")} />
               {err("name")}
             </div>
-            <div className="ca-field">
-              <label htmlFor={f("email")}>E-mail</label>
-              <input id={f("email")} type="email" className="ca-input" value={d.email} onChange={(e) => set("email", e.target.value)} autoComplete="email" maxLength={190} {...errProps("email")} />
-              {err("email")}
-            </div>
+            {child ? (
+              <p className="ca-adesao__hint ca-adesao__wide">
+                Não pedimos o seu e-mail nem outro contacto: para menores de 12 anos, quem fala com a equipe é sempre o
+                responsável legal.
+              </p>
+            ) : (
+              <div className="ca-field">
+                <label htmlFor={f("email")}>E-mail</label>
+                <input id={f("email")} type="email" className="ca-input" value={d.email} onChange={(e) => set("email", e.target.value)} autoComplete="email" maxLength={190} {...errProps("email")} />
+                {err("email")}
+              </div>
+            )}
             {!minor && (
               <div className="ca-field">
                 <label htmlFor={f("whatsapp")}>WhatsApp (opcional)</label>
@@ -371,8 +387,8 @@ export default function AdesaoForm({ initialPlan = "club" }: { initialPlan?: Pla
                 <dd>{d.name}</dd>
               </div>
               <div>
-                <dt>E-mail</dt>
-                <dd>{d.email}</dd>
+                <dt>{child ? "Contacto" : "E-mail"}</dt>
+                <dd>{child ? "Através do responsável legal" : d.email}</dd>
               </div>
               <div className="ca-adesao__wide">
                 <dt>Primeira missão</dt>

@@ -102,13 +102,21 @@ test.describe("Formulário de adesão (prévia)", () => {
     expect(apiCalls).toEqual([]);
   });
 
-  test("menor de 12 anos vê a nota de participação do responsável desde o início", async ({ page }) => {
+  test("menor de 12 anos: nenhum contacto direto da criança é pedido", async ({ page }) => {
     await page.goto("/participar");
     await page.getByRole("button", { name: "Continuar" }).click();
     await page.getByLabel("Menos de 12 anos").check();
     await expect(page.getByRole("note").filter({ hasText: "Que bom ter você aqui!" })).toContainText(
       "o responsável participa desde o início",
     );
+    await expect(page.getByLabel("E-mail", { exact: true })).toHaveCount(0);
+    await expect(page.getByLabel("WhatsApp (opcional)")).toHaveCount(0);
+    await page.getByLabel("Nome ou apelido").fill("Pequeno Explorador");
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await expect(page.locator(".ca-adesao__errors")).toHaveCount(0);
+    await page.getByLabel(/primeira missão/).fill("Um agente que conta histórias");
+    await page.getByRole("button", { name: "Continuar" }).click();
+    await expect(page.locator(".ca-adesao__review")).toContainText("Através do responsável legal");
   });
 
   test("adulto no Club grátis não precisa de revisão manual", async ({ page }) => {
