@@ -18,7 +18,8 @@
 O formulário `/participar` só envia quando o servidor está em modo `live`; sem configuração continua "Prévia concluída — nada foi enviado." Configuração e testes de staging: `docs/17_PR2B_LIVE_SETUP.md`.
 
 ## 2. Decisão a tomar com a Helena antes de qualquer DDL
-| | **Opção A — projeto Supabase só do Club (recomendada)** | Opção B — reutilização governada |
+> **DECIDIDO (ATL-D29, Founder):** adotada uma variante da opção B — o Club usa a **DB MASTER central `aakdyumavlzgyklbrsrw`** (AtlasHub), com **schema `club`** para separar das tabelas existentes. NÃO criar projeto Supabase dedicado. O que já está live e não muda: tabela `club_interest` (com RLS), Turnstile, env vars da Vercel e o endpoint `/api/interesse`. Tabela original da decisão, para contexto:
+| | **Opção A — projeto Supabase só do Club (recomendada)** | Opção B — reutilização governada (adotada em ATL-D29, schema `club` na master `aakdyumavlzgyklbrsrw`) |
 |---|---|---|
 | Isolamento | total: Auth, chaves, backups, logs separados da Holding | schema `club` num projeto existente; depende de disciplina de grants |
 | Risco de mistura pedagógico × B2B | nulo por construção | mitigado por RLS/grants; erro humano possível |

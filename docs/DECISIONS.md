@@ -14,3 +14,5 @@
 ## 2026-10-14 — PR2B separado (Auth/onboarding/CRM)
 - Aberto em branch próprio por diretiva do Sérgio; só rascunho SQL (não aplicado), código fail-closed e testes.
 - Recomendação técnica: projeto Supabase só do Club (Opção A). **Pendente** decisão com a Helena e aprovação do Sérgio antes de qualquer DDL (`docs/16_PR2B_AUTH_ONBOARDING_CRM.md` §2).
+
+2026-10-15 — ATL-D29 (Sérgio): o Club usa a **DB MASTER central `aakdyumavlzgyklbrsrw`** (AtlasHub) com **schema `club`** para separar das tabelas existentes; NÃO criar projeto Supabase dedicado. Live e inalterado: `club_interest` (RLS), Turnstile, env vars da Vercel, endpoint `/api/interesse`. Pagamentos ficam para o ARO; PR2B final (reconciliação #15 + #19) é draft, sem merge e sem produção.

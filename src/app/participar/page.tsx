@@ -11,8 +11,9 @@ export const metadata: Metadata = { title: "Entrar no Club" };
 export default async function Participar({ searchParams }: { searchParams: Promise<{ plan?: string }> }) {
   const { plan } = await searchParams;
   const initialPlan: Plan = plan === "genesis" ? "genesis" : "club";
-  // Contas reais (modo live PR2B) só quando o projeto Supabase Club dedicado estiver configurado pela
-  // Helena; caso contrário o formulário fica na prévia ou no modo lead (POST /api/interesse, ao vivo).
+  // Contas reais (modo live PR2B) só quando as env vars do Supabase master (ATL-D29: aakdyumavlzgyklbrsrw,
+  // schema `club`) estiverem configuradas; caso contrário o formulário fica na prévia ou no modo lead
+  // (POST /api/interesse, ao vivo).
   const cfg = liveConfig();
   // Site key pública do Turnstile: sem modo live de contas, alimenta a captura de interesse no /api/interesse.
   const leadSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || null;

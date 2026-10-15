@@ -21,8 +21,8 @@ import { PRIVACY_VERSION, TERMS_VERSION } from "@/lib/club/signup-schema";
  * envia para POST /api/club/signup com Turnstile; a conta só fica ativa depois de a pessoa confirmar
  * o e-mail. Sem WhatsApp nem instituição (não são aceites pelo servidor). Nada é cobrado.
  *
- * Modo lead (padrão do PR2B final enquanto o projeto Supabase Club dedicado não existe): com a site
- * key do Turnstile configurada, o pedido de interesse é enviado para POST /api/interesse (ao vivo).
+ * Modo lead (padrão do PR2B final enquanto as env vars do Supabase master não estão no ambiente):
+ * com a site key do Turnstile configurada, o pedido de interesse é enviado para POST /api/interesse (ao vivo).
  * Menores de 12 anos não enviam nada (nenhum e-mail é pedido nem transmitido): a via é o WhatsApp do
  * soft launch, orientado ao responsável. O botão "Criar conta" e o login só ativam com modo live.
  */

@@ -12,8 +12,8 @@
 6. Menores: **sem conta**. Adolescente → linha em `club.club_guardian_reviews` com o e-mail de contacto; criança (<12) → o formulário **não pede nem envia** o e-mail e o servidor descarta-o se chegar; fica uma linha sem contacto e a criança é orientada a pedir a um responsável que fale com a equipa. A equipa trata manualmente; nada de conta, CRM, matrícula ou cobrança antes da revisão.
 7. CRM: `club.club_crm_outbox` → webhook HTTPS assinado (§5). Entrega imediata após registo/alteração; o cron diário (`vercel.json` → `/api/club/crm-sync`) repete falhas e aplica a retenção (`club.purge_expired`).
 
-## 2. Supabase (Helena — decisão A/B do doc 16 §2; recomendada A: projeto só do Club)
-Primeiro em **staging**, nunca no AI Workforce nem no app.atlashub.si.
+## 2. Supabase (Helena — **ATL-D29: DB MASTER central `aakdyumavlzgyklbrsrw`, schema `club`; não criar projeto dedicado**)
+Primeiro em **staging**, nunca no AI Workforce nem no app.atlashub.si. Todas as tabelas/funcões novas ficam no schema `club` da master (os drafts 002/003 já o fazem). A tabela `club_interest` (com RLS), o Turnstile, as env vars da Vercel e o endpoint `/api/interesse` já estão live e não devem ser alterados.
 1. SQL Editor (por esta ordem): `docs/sql/drafts/002_club_auth_onboarding.sql` e `docs/sql/drafts/003_club_signup_live.sql`. Correr o Security Advisor a seguir.
 2. **Settings → API → Exposed schemas:** acrescentar `club`.
 3. **Authentication → Providers → Email:** ativo, "Confirm email" ligado. Desligar sign-up por password não é necessário (o site só usa links).
