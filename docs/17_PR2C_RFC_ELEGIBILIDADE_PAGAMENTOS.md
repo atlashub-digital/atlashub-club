@@ -11,8 +11,8 @@
 3. **O acesso Genesis só é concedido por confirmação autenticada e idempotente do provedor** (webhook assinado + reconciliação), nunca por redirect do browser.
 4. **Nenhuma chave nem dado de pagamento** chega ao frontend nem ao CRM.
 5. Preço R$ 190 só com `club_student_eligibility.status = 'APPROVED'` e não expirado; caso contrário, R$ 490.
-7. **Estudante e responsável são verificações independentes** (decisão de 14/10/2026). Menor (`club_guardian_reviews`, PR2B) só recebe cotação, ordem ou entitlement com `guardian_approved`; um menor estudante precisa das duas aprovações. Nenhuma cobrança a menor sem a validação legal exigida.
 6. Valor final, encargos, cancelamento e política de reembolso mostrados **antes** da confirmação.
+7. **Estudante e responsável são verificações independentes** (decisão de 14/10/2026). Menor (`club_guardian_reviews`, PR2B) só recebe cotação, ordem ou entitlement com `guardian_approved`; um menor estudante precisa das duas aprovações. Nenhuma cobrança a menor sem a validação legal exigida.
 
 ## 2. Estados (continuação do PR2B)
 ```
