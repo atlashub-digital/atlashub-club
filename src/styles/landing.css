@@ -8,6 +8,9 @@
   display: grid;
   gap: var(--ca-space-3);
 }
+.ca-grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 .ca-grid--3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -27,6 +30,7 @@
   }
 }
 @media (max-width: 600px) {
+  .ca-grid--2,
   .ca-grid--3,
   .ca-grid--4,
   .ca-grid--5 {

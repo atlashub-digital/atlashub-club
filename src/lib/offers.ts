@@ -62,8 +62,30 @@ export const earlyAccess = {
   deadline: earlyAccessDeadline,
   benefit: earlyAccessBenefit,
   summary: `Quem registrar interesse no Genesis até ${earlyAccessDeadline} recebe ${earlyAccessBenefit} Também recebe primeiro as notícias sobre a abertura das matrículas e as condições definitivas.`,
-  fine: "Participação sujeita a confirmação e capacidade disponível. Registrar interesse não é matrícula: não reserva vaga, não tem desconto adicional nem obrigação de compra.",
+  fine: "Participação gratuita, sujeita a confirmação e capacidade disponível. Registrar interesse não é matrícula: não reserva vaga, não tem desconto adicional nem obrigação de compra.",
 };
+
+/** Os 2 ateliers extras do Early Access (formato decidido; datas, horários e local a confirmar). */
+export const earlyAccessAteliers: { title: string; format: string; detail: string }[] = [
+  {
+    title: "Atelier extra 1 · Primeiro agente em grupo",
+    format: "Híbrido: Anápolis + online",
+    detail: "Encontro para conhecer a turma, os mentores e criar juntos um primeiro agente, com participação presencial em Anápolis ou a distância.",
+  },
+  {
+    title: "Atelier extra 2 · Preparação dos projetos",
+    format: "Online",
+    detail: "Sessão para escolher e preparar a ideia de projeto que você vai desenvolver nas 8 semanas do Genesis.",
+  },
+];
+
+/** Linha do tempo pública do Genesis Turma 01 (sem datas não decididas). */
+export const genesisTimeline: { when: string; what: string }[] = [
+  { when: `Até ${earlyAccessDeadline}`, what: "Registro de interesse no Genesis (WhatsApp oficial hoje; pela conta do Club quando o cadastro abrir)." },
+  { when: "Dezembro de 2026", what: "2 ateliers extras e gratuitos do Early Access, com datas confirmadas por convite." },
+  { when: "Antes da abertura", what: "Publicação das condições definitivas: pagamento, cancelamento e reembolso. Só então há matrícula." },
+  { when: genesisFacts.start, what: `Início previsto da Turma 01: ${genesisFacts.weeks} semanas, ${genesisFacts.ateliers} ateliers, ${genesisFacts.format}.` },
+];
 
 /** Avisos obrigatórios que acompanham sempre um preço. */
 export const priceNotes = {
