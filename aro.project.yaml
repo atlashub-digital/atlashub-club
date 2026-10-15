@@ -18,7 +18,7 @@ products:
     type: course
 
 offers:
-  - code: genesis-01-standard
+  - code: genesis-01-br
     name: Genesis Turma 01 — valor padrão
     products:
       - genesis-01
@@ -29,10 +29,10 @@ offers:
     payment_methods:
       - PIX
     entitlements:
-      - atlas-club:genesis:turma-01
+      - atlas-club:course:genesis-01
     status: draft
 
-  - code: genesis-01-student
+  - code: genesis-01-student-br
     name: Genesis Turma 01 — estudante elegível (validação prévia no Club)
     products:
       - genesis-01
@@ -43,12 +43,12 @@ offers:
     payment_methods:
       - PIX
     entitlements:
-      - atlas-club:genesis:turma-01
+      - atlas-club:course:genesis-01
     status: draft
     metadata:
       club_requires: student_eligibility_approved
 
 fulfillment:
-  - entitlement: atlas-club:genesis:turma-01
+  - entitlement: atlas-club:course:genesis-01
     type: web_access
     target: /conta

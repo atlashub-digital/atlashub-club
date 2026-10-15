@@ -24,13 +24,16 @@ Configuração desejada versionada no repositório do projeto, revista e sincron
 
 | Projeto | Oferta | Valor | Direitos (entitlements) |
 |---|---|---|---|
-| `atlas-club` | `genesis-01-standard` | 49000 BRL, `once` | `atlas-club:genesis:turma-01` |
-| `atlas-club` | `genesis-01-student` | 19000 BRL, `once` | `atlas-club:genesis:turma-01` |
-| `atlashub-si` | `workshop-01-empresa-aumentada-antecipado` / `-regular` | 29700 / 34700 BRL (base de planeamento, sujeita a aprovação) | `atlashub-si:workshop:w01-2026-11-14` |
-| `atlashub-si` | `enterprise-lab-01-ecommerce-antecipado` / `-regular` | 99000 / 129000 BRL por empresa, 1 representante (idem) | `atlashub-si:workshop:el01-2026-11-28` |
+| `atlas-club` | `genesis-01-br` | 49000 BRL, `once` | `atlas-club:course:genesis-01` |
+| `atlas-club` | `genesis-01-student-br` | 19000 BRL, `once` | `atlas-club:course:genesis-01` |
+| `atlashub-si` | `workshop-01-empresa-aumentada-antecipado-br` / `-regular-br` | 29700 / 34700 BRL (base de planeamento, sujeita a aprovação) | `atlashub-si:workshop:workshop-01-empresa-aumentada` |
+| `atlashub-si` | `enterprise-lab-01-ecommerce-antecipado-br` / `-regular-br` | 99000 / 129000 BRL por empresa, 1 representante (idem) | `atlashub-si:workshop:enterprise-lab-01-ecommerce` |
+
+Convenção do catálogo ARO (exemplos de `atlashub-finance`): ofertas `<produto>-<mercado>` (p. ex. `course-a-br`) e direitos `<projeto>:<tipo>:<produto>` (p. ex. `academia-x:course:course-a`).
+Correspondência com a UI do Club (`src/lib/offers.ts`, só exibição): `genesis-01-standard` → `genesis-01-br`; `genesis-01-student` → `genesis-01-student-br`. Os identificadores da UI serão unificados com os do ARO no PR de implementação do checkout.
 
 Notas:
-- **A oferta padrão do Genesis não exige elegibilidade estudantil;** só `genesis-01-student`. O ARO não conhece elegibilidade: o Club aplica a regra antes de criar o checkout (RFC `docs/19` §2) e, por isso, cria-o sempre a partir do servidor.
+- **A oferta padrão do Genesis não exige elegibilidade estudantil;** só `genesis-01-student-br`. O ARO não conhece elegibilidade: o Club aplica a regra antes de criar o checkout (RFC `docs/19` §2) e, por isso, cria-o sempre a partir do servidor.
 - O Club Atlas gratuito não passa pelo ARO.
 - Lotes (antecipado/regular) são ofertas separadas do mesmo produto, ativadas/desativadas no catálogo; capacidade e prazos de lote ficam com a operação até o ARO os suportar no catálogo.
 
@@ -56,9 +59,9 @@ Atribuição: o código de origem das campanhas (`GEN-EA-IG`, `W01-LI`, …) vai
 ## 5. Direitos → acesso
 | Direito ACTIVE | Club / AtlasHub.SI |
 |---|---|
-| `atlas-club:genesis:turma-01` | `club_genesis_applications.status = 'member'`; acesso às áreas Genesis |
-| `atlashub-si:workshop:w01-2026-11-14` | bilhete W01 + convite para a Clínica de Ideias (16/11); comunidade de 30 dias só com adesão própria |
-| `atlashub-si:workshop:el01-2026-11-28` | bilhete EL01 por empresa |
+| `atlas-club:course:genesis-01` | `club_genesis_applications.status = 'member'`; acesso às áreas Genesis |
+| `atlashub-si:workshop:workshop-01-empresa-aumentada` | bilhete W01 + convite para a Clínica de Ideias (16/11); comunidade de 30 dias só com adesão própria |
+| `atlashub-si:workshop:enterprise-lab-01-ecommerce` | bilhete EL01 por empresa |
 
 `REVOKED`/`EXPIRED` → retirar acesso conforme a política.
 

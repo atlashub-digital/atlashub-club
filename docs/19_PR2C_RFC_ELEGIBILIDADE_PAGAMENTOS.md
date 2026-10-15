@@ -18,16 +18,16 @@
 ## 2. Ofertas e regras de elegibilidade
 | Oferta (código ARO) | Valor no catálogo | Quem pode pedir (regra do Club) |
 |---|---|---|
-| `genesis-01-standard` | 49000 BRL | **qualquer membro adulto** com perfil; menor só com `guardian_approved`. **Não exige elegibilidade estudantil.** |
-| `genesis-01-student` | 19000 BRL | só com `club_student_eligibility.status = 'APPROVED'` e não expirada; menor também com `guardian_approved` |
+| `genesis-01-br` | 49000 BRL | **qualquer membro adulto** com perfil; menor só com `guardian_approved`. **Não exige elegibilidade estudantil.** |
+| `genesis-01-student-br` | 19000 BRL | só com `club_student_eligibility.status = 'APPROVED'` e não expirada; menor também com `guardian_approved` |
 
-Se a validação de estudante for recusada ou expirar, o membro escolhe entre `genesis-01-standard` ou ficar só no Club grátis — sem cobrança automática.
+Se a validação de estudante for recusada ou expirar, o membro escolhe entre `genesis-01-br` ou ficar só no Club grátis — sem cobrança automática.
 
 ## 3. Estados do lado do Club
 ```
-interested ──(pede condição de estudante)──▶ student_pending ──APPROVED──▶ pode pedir genesis-01-student
-     │                                            └─REJECTED/EXPIRED──────▶ pode pedir genesis-01-standard
-     └───────────────────────────────────────────────────────────────────▶ pode pedir genesis-01-standard
+interested ──(pede condição de estudante)──▶ student_pending ──APPROVED──▶ pode pedir genesis-01-student-br
+     │                                            └─REJECTED/EXPIRED──────▶ pode pedir genesis-01-br
+     └───────────────────────────────────────────────────────────────────▶ pode pedir genesis-01-br
 checkout ARO (PENDING) ──payment.approved + entitlement.granted (re-resolvido)──▶ member
 member ──entitlement.revoked (reembolso/chargeback)──▶ acesso retirado
 ```
