@@ -14,3 +14,8 @@
 ## 2026-10-14 — PR2B separado (Auth/onboarding/CRM)
 - Aberto em branch próprio por diretiva do Sérgio; só rascunho SQL (não aplicado), código fail-closed e testes.
 - Recomendação técnica: projeto Supabase só do Club (Opção A). **Pendente** decisão com a Helena e aprovação do Sérgio antes de qualquer DDL (`docs/16_PR2B_AUTH_ONBOARDING_CRM.md` §2).
+
+## 2026-10-15 — ATL-D29: Club na DB Master AtlasHub
+- Decidido: o Club usa a DB Master `aakdyumavlzgyklbrsrw`, schema `club` (Opção B). Não criar projeto Supabase dedicado.
+- Adaptações no PR #19: escrita direta do `authenticated` no schema `club` retirada (003); dados do formulário fora do `user_metadata` (`club.club_pending_signups`, por hash); modelos de e-mail globais intocados (PKCE); termos aceites pelo dono do e-mail em `/conta/concluir`; a purga nunca apaga `auth.users`.
+- Migrações 002/003 só depois de testadas num ambiente isolado preparado pela Helena e aprovadas pelo Sérgio.

@@ -18,6 +18,8 @@
 O formulário `/participar` só envia quando o servidor está em modo `live`; sem configuração continua "Prévia concluída — nada foi enviado." Configuração e testes de staging: `docs/17_PR2B_LIVE_SETUP.md`.
 
 ## 2. Decisão a tomar com a Helena antes de qualquer DDL
+> **Decidido (ATL-D29, 15/10/2026): Opção B na DB Master AtlasHub, schema `club`.** As salvaguardas para `auth.users` partilhado estão em `docs/17_PR2B_LIVE_SETUP.md` §1.
+
 | | **Opção A — projeto Supabase só do Club (recomendada)** | Opção B — reutilização governada |
 |---|---|---|
 | Isolamento | total: Auth, chaves, backups, logs separados da Holding | schema `club` num projeto existente; depende de disciplina de grants |

@@ -14,12 +14,10 @@ export function serviceClient(cfg: LiveConfig): SupabaseClient {
   return createClient(cfg.supabaseUrl, cfg.serviceKey, { auth: noPersist });
 }
 
-/** Cliente anónimo sem sessão, só para pedir links de confirmação por e-mail. */
-export function anonClient(cfg: LiveConfig): SupabaseClient {
-  return createClient(cfg.supabaseUrl, cfg.anonKey, { auth: { ...noPersist, flowType: "implicit" } });
-}
-
-/** Cliente com a sessão do membro (cookies). As leituras passam pelas políticas RLS do schema `club`. */
+/**
+ * Cliente com a sessão do membro (cookies, fluxo PKCE). Pede os links de e-mail e troca o código
+ * pela sessão; as leituras passam pelas políticas RLS do schema `club`.
+ */
 export async function memberClient(cfg: LiveConfig): Promise<SupabaseClient> {
   const store = await cookies();
   return createServerClient(cfg.supabaseUrl, cfg.anonKey, {

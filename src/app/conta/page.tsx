@@ -70,8 +70,8 @@ export default async function Conta({ searchParams }: { searchParams: Promise<Re
       {!name ? (
         <p className="ca-notice" role="note">
           <span>
-            O seu e-mail está confirmado, mas ainda não há perfil do Club associado. Se acabou de se cadastrar, tente entrar de novo
-            daqui a pouco; se o problema continuar, fale com a equipe.
+            O seu e-mail está confirmado, mas ainda não há perfil do Club associado a ele. Para entrar no Club,{" "}
+            <Link href="/participar">faça o cadastro gratuito</Link>; se acabou de o fazer e o problema continuar, fale com a equipe.
           </span>
         </p>
       ) : (
@@ -101,23 +101,29 @@ export default async function Conta({ searchParams }: { searchParams: Promise<Re
         </div>
       )}
       <div className="ca-card ca-account">
-        <h2>Os seus dados</h2>
-        <p>
-          Pode pedir uma cópia dos seus dados ou o apagamento da conta. Consulte o <Link href="/privacidade">aviso de privacidade</Link>.
-        </p>
+        <h2>{name ? "Os seus dados" : "Sessão"}</h2>
+        {name && (
+          <p>
+            Pode pedir uma cópia dos seus dados do Club ou o apagamento deles. Consulte o <Link href="/privacidade">aviso de privacidade</Link>.
+          </p>
+        )}
         <div className="ca-account__actions">
-          <form method="post" action="/api/club/data-request">
-            <input type="hidden" name="kind" value="access" />
-            <button type="submit" className="ca-btn ca-btn--outline">
-              Pedir cópia dos dados
-            </button>
-          </form>
-          <form method="post" action="/api/club/data-request">
-            <input type="hidden" name="kind" value="delete" />
-            <button type="submit" className="ca-btn ca-btn--outline">
-              Pedir apagamento da conta
-            </button>
-          </form>
+          {name && (
+            <>
+              <form method="post" action="/api/club/data-request">
+                <input type="hidden" name="kind" value="access" />
+                <button type="submit" className="ca-btn ca-btn--outline">
+                  Pedir cópia dos dados
+                </button>
+              </form>
+              <form method="post" action="/api/club/data-request">
+                <input type="hidden" name="kind" value="delete" />
+                <button type="submit" className="ca-btn ca-btn--outline">
+                  Pedir apagamento dos dados do Club
+                </button>
+              </form>
+            </>
+          )}
           <form method="post" action="/api/club/logout">
             <button type="submit" className="ca-btn ca-btn--ghost">
               Sair

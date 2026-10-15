@@ -3,28 +3,30 @@
 **Estado:** código pronto e testado; **nada aplicado nem ativado**. Sem as variáveis abaixo o site continua em modo demonstração (`/participar` não envia nada; `/entrar`, `/conta` e as APIs `/api/club/*` respondem "ainda não ativo"/503).
 **Não ativa pagamentos.** O Genesis continua a ser só pré-candidatura sem cobrança.
 
-## 1. Como funciona (modo `live`)
-1. `/participar` (4 etapas) → `POST /api/club/signup`: Origin, JSON ≤ 4 KB, honeypot, **Turnstile**, rate limit partilhado em SQL (`club.hit_rate_limit`: 10/10 min por IP, 3/h por e-mail, chaves em hash).
-2. Adulto → Supabase Auth `signInWithOtp` envia um **link de confirmação**. Os dados do formulário ficam no convite (`user_metadata.club_signup`) até à confirmação. **Nenhum perfil existe antes de confirmar.**
-3. O link abre `/entrar/confirmar`, que pede um clique ("Confirmar e entrar") → `POST /api/club/auth/verify` → `verifyOtp`. O clique evita que os scanners de e-mail gastem o link.
-4. Com o e-mail verificado, o servidor revalida os dados e chama `club.complete_signup` (uma transação): perfil, intenção, consentimentos de termos/privacidade com versão, marketing separado, candidatura Genesis (`interested` ou `student_pending`) e, **só com opt-in**, o evento no outbox CRM. Depois apaga os dados do convite.
-5. `/conta`: dados do membro lidos com a sessão dele (**RLS**), ligar/desligar novidades (`club.set_marketing_consent` → opt-in/opt-out no outbox), pedir cópia ou apagamento dos dados, sair. `/entrar` envia link de entrada (nunca cria conta; resposta igual exista ou não o e-mail).
-6. Menores: **sem conta**. Adolescente → linha em `club.club_guardian_reviews` com o e-mail de contacto; criança (<12) → o formulário **não pede nem envia** o e-mail e o servidor descarta-o se chegar; fica uma linha sem contacto e a criança é orientada a pedir a um responsável que fale com a equipa. A equipa trata manualmente; nada de conta, CRM, matrícula ou cobrança antes da revisão.
-7. CRM: `club.club_crm_outbox` → webhook HTTPS assinado (§5). Entrega imediata após registo/alteração; o cron diário (`vercel.json` → `/api/club/crm-sync`) repete falhas e aplica a retenção (`club.purge_expired`).
+## 1. Como funciona (modo `live`) na DB Master (ATL-D29)
+O Club usa a DB Master AtlasHub (`aakdyumavlzgyklbrsrw`), schema `club`. **Não** se cria projeto Supabase próprio. Consequências desenhadas no código:
+- O `auth.users` e o papel `authenticated` são partilhados com outras aplicações AtlasHub. Ser utilizador da Master **não** faz de ninguém membro do Club: só `club.complete_signup` (servidor) cria o perfil, e a migração 003 retira ao `authenticated` qualquer escrita direta em perfis, intenções, consentimentos e Genesis.
+- Uma sessão do Club também não abre nada fora do schema `club`: na auditoria de leitura de 15/10/2026 `anon`/`authenticated` não tinham privilégios em nenhuma tabela de `public`, nem buckets de Storage, nem funções públicas executáveis. **As outras aplicações não devem tratar "ter sessão na Master" como autorização** (a confirmar pela Helena para cada app).
+- Os dados do formulário **não** vão para o `user_metadata` (viajaria no JWT partilhado): ficam em `club.club_pending_signups`, chaveados por `sha256(email)`, sem e-mail em claro, 48 h.
+- Os **modelos de e-mail globais da Master não são alterados**: o link usa o fluxo PKCE padrão (`?code=`), por isso tem de ser aberto no mesmo navegador do pedido.
+- A purga nunca apaga utilizadores de `auth.users`.
 
-## 2. Supabase (Helena — decisão A/B do doc 16 §2; recomendada A: projeto só do Club)
-Primeiro em **staging**, nunca no AI Workforce nem no app.atlashub.si.
-1. SQL Editor (por esta ordem): `docs/sql/drafts/002_club_auth_onboarding.sql` e `docs/sql/drafts/003_club_signup_live.sql`. Correr o Security Advisor a seguir.
-2. **Settings → API → Exposed schemas:** acrescentar `club`.
-3. **Authentication → Providers → Email:** ativo, "Confirm email" ligado. Desligar sign-up por password não é necessário (o site só usa links).
-4. **Authentication → URL Configuration:** Site URL = origem do site (staging ou `https://club.atlashub.si`); **Redirect URLs** = `<origem>/entrar/confirmar`.
-5. **Authentication → Email Templates** — "Confirm signup" **e** "Magic Link", o link passa a ser:
-   ```html
-   <a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=email">Confirmar e entrar no Club Atlas</a>
-   ```
-   Texto em PT-BR, sem prometer vaga nem pagamento.
-6. **SMTP próprio** (domínio do Club, SPF/DKIM). O SMTP de teste do Supabase só envia para a equipa do projeto e tem limite baixo — serve para staging, não para lançamento.
-7. Rate limits de e-mail do Auth ajustados ao volume previsto.
+Fluxo:
+1. `/participar` (4 etapas) → `POST /api/club/signup`: Origin, JSON ≤ 4 KB, honeypot, **Turnstile**, rate limit partilhado em SQL (`club.hit_rate_limit`: 10/10 min por IP, 3/h por e-mail, chaves em hash).
+2. Adulto → `club.stash_signup` guarda os dados validados (sem e-mail) → Supabase Auth `signInWithOtp` envia o link. **Nenhum perfil existe antes de confirmar.** Se o registo por e-mail estiver fechado na Master (`signup_disabled`/`otp_disabled`), a API responde 503 em vez de fingir envio.
+3. O link abre `/entrar/confirmar`, que pede um clique ("Confirmar e entrar") → `POST /api/club/auth/verify` → `exchangeCodeForSession` (ou `verifyOtp` se um dia houver `token_hash`). O clique evita que os scanners de e-mail gastem o link.
+4. Com o e-mail verificado e dados pendentes, a pessoa vai para `/conta/concluir`: vê o resumo, **aceita os termos (obrigatório, desmarcado)** e confirma ou não as novidades → `POST /api/club/complete` → `club.complete_signup` (uma transação): perfil, intenção, consentimentos com versão, marketing separado, candidatura Genesis (`interested` ou `student_pending`) e, **só com opt-in**, o evento no outbox CRM; os dados pendentes são apagados. Assim quem consente é o dono do e-mail, não quem preencheu o formulário.
+5. `/conta`: dados do membro lidos com a sessão dele (**RLS**), ligar/desligar novidades (`club.set_marketing_consent` → opt-in/opt-out no outbox), pedir cópia ou apagamento dos dados do Club, sair. `/entrar` envia link de entrada (nunca cria conta; resposta igual exista ou não o e-mail). Um utilizador da Master sem perfil do Club vê só o convite para se cadastrar.
+6. Menores: **sem conta**. Adolescente → linha em `club.club_guardian_reviews` com o e-mail de contacto; criança (<12) → o formulário **não pede nem envia** o e-mail e a API recusa-o (400) se chegar; fica uma linha sem contacto. A equipa trata manualmente; nada de conta, CRM, matrícula ou cobrança antes da revisão.
+7. CRM: `club.club_crm_outbox` → webhook HTTPS assinado (§5). Entrega imediata após registo/alteração; o cron diário (`vercel.json` → `/api/club/crm-sync`) repete falhas e aplica a retenção (`club.purge_expired`).
+8. Interessados já recebidos (`public.club_interest`, `/api/interesse`) e o WhatsApp assistido ficam como estão; o PR2B não os lê nem os altera.
+
+## 2. Supabase — DB Master (Helena; nada disto foi feito)
+1. **Ambiente isolado primeiro** (branch Supabase ou cópia, preparado pela Helena): aplicar `docs/sql/drafts/002_club_auth_onboarding.sql` e depois `docs/sql/drafts/003_club_signup_live.sql`; correr o Security Advisor. Só depois, com aprovação do Sérgio, na Master. Localmente: `scripts/test-sql-draft.sh` (Postgres descartável) corre os testes RLS e do modo live.
+2. **Settings → API → Exposed schemas:** acrescentar `club` (as tabelas ficam fechadas por RLS; o membro só lê o que é seu).
+3. **Authentication → Providers → Email:** ativo e "Confirm email" ligado. **Decisão Helena/Sérgio:** se "Allow new users to sign up" estiver desligado na Master, o cadastro devolve 503 até ser ligado.
+4. **Authentication → URL Configuration → Redirect URLs:** acrescentar `<origem do Club>/entrar/confirmar` (staging e produção). **Não mudar o Site URL** nem os modelos de e-mail: são globais da Master.
+5. **SMTP próprio** da Master com SPF/DKIM e limites de envio adequados; o SMTP de teste do Supabase não serve para lançamento.
 
 ## 3. Cloudflare Turnstile
 Widget para o hostname do Club (e o de staging), modo "Managed". Gera `NEXT_PUBLIC_TURNSTILE_SITE_KEY` e `TURNSTILE_SECRET_KEY`.
@@ -33,10 +35,10 @@ Widget para o hostname do Club (e o de staging), modo "Managed". Gera `NEXT_PUBL
 | Variável | Valor | Segredo? |
 |---|---|---|
 | `CLUB_AUTH_MODE` | `live` | não |
-| `CLUB_SITE_ORIGIN` | origem exata do ambiente (sem `/` final) | não |
-| `SUPABASE_URL` | URL do projeto | não |
-| `SUPABASE_ANON_KEY` | chave anon/publishable (usada só no servidor) | não, mas não expor sem necessidade |
-| `SUPABASE_SERVICE_ROLE_KEY` | service role | **sim** |
+| `CLUB_SITE_ORIGIN` | origem exata do ambiente (sem `/` final); o Preview precisa da sua própria | não |
+| `SUPABASE_URL` | URL da Master (já existe) | não |
+| `SUPABASE_ANON_KEY` | chave anon/publishable da Master (usada só no servidor) — **falta** | não, mas não expor sem necessidade |
+| `SUPABASE_SERVICE_ROLE_KEY` | service role (já existe; marcar como **Sensitive**) | **sim** |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY` | §3 | secret: **sim** |
 | `CRON_SECRET` | aleatório ≥ 32 caracteres | **sim** |
 | `CLUB_CRM_WEBHOOK_URL` / `CLUB_CRM_WEBHOOK_SECRET` | §5 (opcional no início) | secret: **sim** |
@@ -57,18 +59,20 @@ Basta faltar uma variável obrigatória para o modo cair para `off` (fail-closed
 - Mapeamento sugerido no CRM AtlasHub: `contact_opt_in` → `crm_contact` + `crm_consent` (marketing, `source='club'`); `genesis_interest` → `crm_lead`; `contact_opt_out` → `crm_suppression`.
 - **Nunca** chegam ao CRM interesses, primeira missão, área, equipamento, progresso, idade ou dados de menores (`CHECK` no SQL).
 
-## 6. Teste em staging (antes de qualquer produção)
-1. `/participar` com conta `@example.test` ou caixa da equipa → e-mail recebido → "Confirmar e entrar" → `/conta` mostra nome e percurso.
-2. Confirmar no SQL: 1 linha em `club_profiles`, 3 em `club_consent_events`, 0 no outbox sem opt-in.
+## 6. Teste no ambiente isolado (antes de qualquer produção)
+1. `/participar` com caixa da equipa → e-mail recebido → "Confirmar e entrar" (mesmo navegador) → `/conta/concluir` → aceitar termos → `/conta` mostra nome e percurso.
+2. Confirmar no SQL: 1 linha em `club_profiles`, 3 em `club_consent_events`, 0 no outbox sem opt-in, 0 em `club_pending_signups`.
 3. Repetir com opt-in e Genesis estudante → `student_pending` + 2 eventos no outbox; desligar novidades em `/conta` → `contact_opt_out`.
-4. Menor (adolescente/criança) → só `club_guardian_reviews`, nenhum utilizador em `auth.users`.
+4. Menor (adolescente/criança) → só `club_guardian_reviews`, nenhum utilizador novo em `auth.users`; criança sem e-mail.
 5. `/entrar` com e-mail inexistente → mesma mensagem, nenhum e-mail enviado.
-6. `GET /api/club/crm-sync` com `Authorization: Bearer <CRON_SECRET>` → JSON com `crm` e `purge`.
+6. Utilizador existente de outra app da Master entra pelo `/entrar` → `/conta` mostra "ainda não há perfil do Club"; com a sessão dele, `select` em `public.*` pela API devolve erro de permissão.
+7. `GET /api/club/crm-sync` com `Authorization: Bearer <CRON_SECRET>` → JSON com `crm` e `purge`.
 
 ## 7. Reversão
 - Desligar: remover `CLUB_AUTH_MODE` (ou pôr `off`) e refazer o deploy → o formulário volta ao modo demonstração; nenhum dado é apagado.
 - Código: reverter o merge deste PR.
-- Base: `drop schema club cascade` + apagar utilizadores do Club em `auth.users` (só com decisão do Sérgio; destrói registos).
+- Base: `drop schema club cascade` (só com decisão do Sérgio; destrói registos do Club). **Nunca apagar utilizadores de `auth.users` na Master**: podem pertencer a outras aplicações; contas criadas só pelo Club tratam-se caso a caso.
+- Redirect URL do Club removível da lista sem efeito nas outras apps.
 
 ## 8. Pendentes fora do código
 - Textos finais de termos e privacidade (versões `club-terms-*`/`club-privacy-*`), incluindo tratamento real de dados e menores.

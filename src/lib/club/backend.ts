@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { LiveConfig } from "./mode";
-import { anonClient, serviceClient } from "./supabase";
+import { emailHash } from "./hash";
+import { memberClient, serviceClient } from "./supabase";
 import { verifyTurnstile } from "./turnstile";
 import { storedSignup, type SignupInput } from "./signup-schema";
 
@@ -20,7 +21,14 @@ export type ClubBackend = {
 
 export const CONFIRM_PATH = "/entrar/confirmar";
 
-export function supabaseBackend(cfg: LiveConfig, service: SupabaseClient = serviceClient(cfg)): ClubBackend {
+/** Erros do Auth que significam "registo fechado na Master": nunca fingir que o link foi enviado. */
+const SIGNUP_CLOSED = new Set(["signup_disabled", "otp_disabled", "email_provider_disabled"]);
+
+export function supabaseBackend(
+  cfg: LiveConfig,
+  service: SupabaseClient = serviceClient(cfg),
+  authClient: () => Promise<SupabaseClient> = () => memberClient(cfg),
+): ClubBackend {
   const club = service.schema("club");
   return {
     async hitRateLimit(key, limit, windowSeconds) {
@@ -32,17 +40,26 @@ export function supabaseBackend(cfg: LiveConfig, service: SupabaseClient = servi
       return verifyTurnstile(cfg.turnstileSecret, token, ip, new URL(cfg.origin).hostname);
     },
     async sendLink(email, signup) {
-      const { error } = await anonClient(cfg).auth.signInWithOtp({
+      if (signup) {
+        // Dados do formulário fora do auth.users (o user_metadata viaja no JWT partilhado da Master):
+        // tabela club.club_pending_signups, por hash do e-mail, 48 h. O perfil só nasce em /conta/concluir.
+        const { error } = await club.rpc("stash_signup", { p_email_hash: emailHash(email), p_payload: storedSignup(signup) });
+        if (error) throw new Error(`stash_signup: ${error.code ?? error.message}`);
+      }
+      // Fluxo PKCE (cookies httpOnly do @supabase/ssr): funciona com os modelos de e-mail globais da
+      // Master, sem os alterar. O link tem de ser aberto no mesmo navegador que fez o pedido.
+      const auth = (await authClient()).auth;
+      const { error } = await auth.signInWithOtp({
         email,
         options: {
           shouldCreateUser: Boolean(signup),
           emailRedirectTo: cfg.origin + CONFIRM_PATH,
-          // Dados do formulário guardados no convite até à confirmação; o perfil só nasce no callback.
-          ...(signup ? { data: { club_signup: storedSignup(signup) } } : {}),
+          ...(signup ? { data: { signup_source: "club" } } : {}),
         },
       });
       if (!error) return "sent";
       if (error.status === 429) return "rate_limited";
+      if (signup && error.code && SIGNUP_CLOSED.has(error.code)) throw new Error(`auth: registo fechado (${error.code})`);
       // 4xx (p.ex. entrada pedida para e-mail sem conta): resposta neutra, sem enumeração.
       if (error.status && error.status < 500) {
         console.warn("club.sendLink", error.status, error.code);
