@@ -1,96 +1,85 @@
-# RFC PR2C — Elegibilidade estudantil, cotação e pagamentos (só arquitetura)
+# RFC PR2C — Elegibilidade estudantil e cobrança Genesis via ARO (só arquitetura)
 
-**Estado:** RFC para discussão. **Sem código executável, sem gateway, sem checkout, sem upload de comprovativos, sem "matrículas abertas".**
-**Autorização:** diretiva do Sérgio no PR #11 (14/10/2026): "PR2C: apenas design/RFC… Sem PIXGO/MISTICPay ativado, sem checkout vivo, sem upload de comprovativos em produção."
-**Depende de:** PR2B canónico (#23: Auth, `club.*`, consentimentos; DB Master por ATL-D29).
-**Atualização 15/10/2026 (retoma operacional):** toda a cobrança de Genesis e workshops passa pelo **ARO — Atlas Revenue Operations**. Este RFC deixa de escolher provedores (PixGo, MisticPay, cartão): o Club só cria pedidos no ARO e recebe dele o pagamento confirmado e o direito de acesso. Contratos em `docs/20_ARO_CONTRATOS.md`. Ativação condicionada à homologação do piloto financeiro EspelhoMeu.
-**Fonte:** `design/handoff/club-signup-genesis-v2/01_SPEC_FUNCIONAL_ADESAO_E_GENESIS.md`, issue #14, `src/lib/offers.ts`.
+**Estado:** RFC para discussão. **Sem código executável, sem checkout, sem chamadas ao ARO, sem upload de comprovativos, sem "matrículas abertas".**
+**Autorização:** diretiva do Sérgio no PR #11 (14/10/2026) — PR2C só design/RFC; correção de 15/10/2026 (decisão operacional, ponto 5): **não criar contratos de pagamento próprios**; usar o ARO real.
+**Fontes canónicas do ARO** (repositório `atlashub-digital/atlashub-finance`): `openapi/aro-v1.yaml`, `docs/35_PROJECT_INTEGRATION_CONTRACT_V1.md`, kit `docs/developer/` (em especial `START_HERE.md` e `PROJECT_COMMERCE_BOOTSTRAP.md`), `schemas/project-commerce-manifest.schema.json`. Em caso de divergência, **prevalecem essas fontes**; este RFC só descreve o que o Club faz do seu lado.
+**Depende de:** PR2B canónico (#23: Auth, `club.*`, revisão do responsável).
+**Ativação:** só depois da homologação do fluxo ARO no piloto **EspelhoMeu** e de nova aprovação comercial do Sérgio. Nenhuma cobrança antes disso.
 
-## 1. Princípios (invariantes)
-1. **O montante é sempre do servidor.** O cliente envia `offer_id`, nunca valores; o servidor emite uma cotação assinada.
-2. **Pré-candidatura ≠ reserva de vaga; intenção de pagar ≠ pagamento; comprovativo submetido ≠ elegibilidade aprovada** (SPEC 01).
-3. **O acesso Genesis só é concedido por confirmação autenticada e idempotente do ARO** (webhook assinado + reconciliação), nunca por redirect do browser.
-4. **Nenhuma chave nem dado de pagamento** chega ao frontend nem ao CRM.
-5. Preço R$ 190 só com `club_student_eligibility.status = 'APPROVED'` e não expirado; caso contrário, R$ 490.
-6. Valor final, encargos, cancelamento e política de reembolso mostrados **antes** da confirmação.
-7. **Estudante e responsável são verificações independentes** (decisão de 14/10/2026). Menor (`club_guardian_reviews`, PR2B) só recebe cotação, ordem ou entitlement com `guardian_approved`; um menor estudante precisa das duas aprovações. Nenhuma cobrança a menor sem a validação legal exigida.
+## 1. Princípios
+1. **O ARO é a autoridade comercial:** catálogo, preço, roteamento, checkout, pedido, pagamento, eventos e direitos (`entitlements`). O Club não integra provedores (PixGo, MisticPay, Stripe) nem guarda dados de pagamento.
+2. **O Club só escolhe o código da oferta** e envia-o ao ARO; o ARO resolve o preço a partir do catálogo sincronizado (`aro.project.yaml`). Não há cotação assinada nem preço calculado no Club.
+3. **Elegibilidade é do Club, antes do checkout.** O ARO não conhece a condição de estudante nem a revisão do responsável: o backend do Club decide **que oferta pode ser pedida** e só então cria a sessão de checkout. Por isso o checkout do Genesis é sempre criado **pelo servidor do Club** (proxy), nunca diretamente pelo browser.
+4. **Pré-candidatura ≠ vaga; intenção de pagar ≠ pagamento; comprovativo submetido ≠ elegibilidade aprovada** (SPEC 01).
+5. **Acesso só com direito ACTIVE resolvido no ARO** (`POST /v1/entitlements/resolve`); o webhook é notificação, não autoridade.
+6. Valor final, encargos, cancelamento e reembolso visíveis **antes** do pagamento.
+7. **Estudante e responsável são verificações independentes** (14/10/2026). Menor só chega ao checkout com `guardian_approved`; um menor estudante precisa das duas aprovações.
 
-## 2. Estados (continuação do PR2B)
+## 2. Ofertas e regras de elegibilidade
+| Oferta (código ARO) | Valor no catálogo | Quem pode pedir (regra do Club) |
+|---|---|---|
+| `genesis-01-standard` | 49000 BRL | **qualquer membro adulto** com perfil; menor só com `guardian_approved`. **Não exige elegibilidade estudantil.** |
+| `genesis-01-student` | 19000 BRL | só com `club_student_eligibility.status = 'APPROVED'` e não expirada; menor também com `guardian_approved` |
+
+Se a validação de estudante for recusada ou expirar, o membro escolhe entre `genesis-01-standard` ou ficar só no Club grátis — sem cobrança automática.
+
+## 3. Estados do lado do Club
 ```
-GENESIS_INTEREST ──(declara estudante)──▶ STUDENT_PENDING ──APPROVED──▶ QUOTE_READY(19000)
-        │                                       ├─REJECTED (com contestação)──▶ QUOTE_READY(49000)
-        │                                       └─EXPIRED ──▶ QUOTE_READY(49000)
-        └──────────────(não estudante)──────────────────────────────▶ QUOTE_READY(49000)
-QUOTE_READY ──cria ordem──▶ AWAITING_PAYMENT ──webhook paid──▶ PAID_CONFIRMED ──entitlement──▶ GENESIS_MEMBER
-AWAITING_PAYMENT ──expira/cancela──▶ QUOTE_READY (nova cotação)
-GENESIS_MEMBER ──reembolso/chargeback──▶ REFUNDED (entitlement revogado)
+interested ──(pede condição de estudante)──▶ student_pending ──APPROVED──▶ pode pedir genesis-01-student
+     │                                            └─REJECTED/EXPIRED──────▶ pode pedir genesis-01-standard
+     └───────────────────────────────────────────────────────────────────▶ pode pedir genesis-01-standard
+checkout ARO (PENDING) ──payment.approved + entitlement.granted (re-resolvido)──▶ member
+member ──entitlement.revoked (reembolso/chargeback)──▶ acesso retirado
 ```
-Todas as transições a partir de `STUDENT_PENDING` são **só servidor** (o PR2B já impede `UPDATE` pelo membro).
+Os estados de pagamento (`CREATED, PENDING, APPROVED, FAILED, CANCELED, EXPIRED, REFUNDED, CHARGEBACK`) são os do ARO e só são mostrados, nunca recalculados.
 
-### Matriz de verificações antes da cotação
-| Perfil | Revisão do responsável | Validação de estudante | Preço cotável |
-|---|---|---|---|
-| Adulto | — | não pedida | R$ 490 |
-| Adulto estudante | — | `APPROVED` | R$ 190 (senão R$ 490) |
-| Menor (12–17 / <12) | `guardian_approved` obrigatório | não pedida | R$ 490 só após aprovação |
-| Menor estudante | `guardian_approved` obrigatório | `APPROVED` | R$ 190 só após as **duas** |
-
-A `POST /api/genesis/quote` recusa (`409 guardian_review_required`) se o perfil não for adulto e não houver `guardian_approved`; o trigger `club.genesis_minor_gate` (PR2B) garante o mesmo na base.
-
-## 3. Entidades (rascunho lógico — DDL só num PR futuro aprovado)
+## 4. Entidades do Club (rascunho lógico — DDL só num PR futuro aprovado)
 | Tabela | Campos-chave | Notas |
 |---|---|---|
-| `club_offers` | `id` (`club-free-v1`, `genesis-01-standard`, `genesis-01-student`), `amount_cents`, `currency='BRL'`, `requires` (`student_approved`), `status` (`pending_launch`/`active`/`closed`), `valid_from/to` | espelha `src/lib/offers.ts`; fonte única no servidor |
-| `club_student_eligibility` | `user_id`, `status` PENDING/APPROVED/REJECTED/EXPIRED, `institution`, `evidence_ref`, `reviewer_id`, `decided_at`, `expires_at`, `appeal_of` | decisão humana auditável; contestação |
-| `club_price_quotes` | `id`, `user_id`, `offer_id`, `amount_cents`, `eligibility_id?`, `nonce`, `expires_at` (≤ 30 min), `signature` (HMAC servidor) | imutável; usada uma vez |
-| `club_payment_orders` | `id`, `quote_id` (único), `provider`, `provider_ref` (único), `status` created/pending/paid/failed/expired/refunded/chargeback, `idempotency_key` | só servidor |
-| `club_payment_events` | `provider`, `event_id` (único), `payload_hash`, `received_at`, `verified` | deduplicação de webhooks; payload bruto não guardado se contiver dados pessoais |
-| `club_entitlements` | `user_id`, `kind='genesis-01'`, `source_order_id`, `granted_at`, `revoked_at`, `reason` | concessão/revogação só por servidor |
-| `club_attribution` | `user_id`, `utm_*` (opcional, com consentimento) | sem fingerprinting |
+| `club_student_eligibility` | `user_id`, `status` PENDING/APPROVED/REJECTED/EXPIRED, `institution`, `evidence_ref`, `reviewer_id`, `decided_at`, `expires_at`, `appeal_of` | decisão humana auditável, com contestação |
+| `club_aro_checkouts` | `user_id`, `aro_checkout_id`, `aro_order_id`, `offer`, `created_at` | só referências; sem montantes como autoridade nem dados de pagamento |
+| `club_aro_events` | `event_id` (único), `type`, `received_at` | deduplicação de `X-ARO-Event-Id`; sem payload pessoal |
 
-## 4. Elegibilidade estudantil
-- **Recolha mínima:** instituição + curso + validade. Prova documental só se estritamente necessária; preferir verificação por email institucional quando possível.
-- **Upload (quando aprovado):** bucket privado, URLs assinadas de curta duração, sem acesso público, tipos limitados (PDF/JPG/PNG ≤ 5 MB), varrimento antimalware, **retenção curta** (ex.: apagar 30 dias após decisão), acesso só a revisores com registo.
-- **Decisão:** humana, com motivo; o membro vê o estado e pode contestar uma vez; expiração (ex.: fim do semestre).
-- **Neste RFC:** nenhum upload implementado. Em produção, proibido até aprovação jurídica e do Sérgio.
+Pedidos, pagamentos e direitos **não** são duplicados no Club (ARO é a autoridade). `club_genesis_applications.status = 'member'` é só reflexo do direito ACTIVE re-resolvido.
 
-## 5. Cotação assinada
-`POST /api/genesis/quote { offer_id }` (autenticado, email verificado):
-1. Lê a oferta (`status = active`, janela válida) e a elegibilidade.
-2. Calcula `amount_cents` no servidor; recusa se `offer_id = genesis-01-student` sem `APPROVED` válido.
-3. Grava `club_price_quotes` com `nonce`, `expires_at`, `signature = HMAC(secret, user|offer|amount|nonce|exp)`.
-4. Devolve só `{quote_id, amount_cents, currency, expires_at, termos}` para exibição.
+## 5. Elegibilidade estudantil
+- **Recolha mínima:** instituição + curso + validade; preferir verificação por e-mail institucional.
+- **Upload (quando aprovado):** bucket privado, URLs assinadas curtas, PDF/JPG/PNG ≤ 5 MB, antimalware, retenção curta (ex.: 30 dias após decisão), acesso só a revisores com registo.
+- **Decisão:** humana, com motivo; contestação uma vez; expiração (ex.: fim do semestre).
+- **Neste RFC:** nenhum upload implementado; em produção, proibido até aprovação jurídica e do Sérgio.
 
-## 6. Ordem de pagamento — via ARO (sem checkout paralelo)
-- O Club **não integra provedores** nem guarda dados de pagamento. `POST /api/genesis/order { quote_id }` valida assinatura/validade/uso único da cotação e chama `ARO.createOrder` no servidor (contrato `aro.order.v1`, `docs/20_ARO_CONTRATOS.md` §3), com `idempotency_key = quote_id`.
-- O ARO devolve `aro_order_id` e um `checkout_url` alojado pelo ARO (PIX, cartão tokenizado ou outro meio que o ARO homologue). O Club só redireciona e mostra o estado.
-- Seleção, auditoria e operação de provedores (contrato, KYC, taxas, reembolso/estorno, assinatura de webhook) são responsabilidade do ARO.
+## 6. Checkout (contrato ARO, ver `docs/20_ARO_CONTRATOS.md`)
+1. Membro autenticado escolhe Genesis → `POST /api/genesis/checkout { offer }` no Club.
+2. O Club valida as regras do §2 (perfil, revisão do responsável, elegibilidade) e recusa com `409` se não cumprir.
+3. O Club chama `POST /v1/checkout-sessions` do ARO **a partir do servidor**, com `Idempotency-Key` e corpo `{project:"atlas-club", offer, market:"BR", currency:"BRL", payment_method, payer, attribution}`.
+4. Guarda `id`/`order_id` e o `checkout_secret` só na sessão do servidor; mostra a instrução de pagamento devolvida (p. ex. `qr_payload` PIX, sem o alterar).
+5. Estado por `GET /v1/checkout-sessions/{id}` com `X-ARO-Checkout-Secret`.
 
-## 7. Webhooks e reconciliação (eventos do ARO)
-- Um único endpoint `POST /api/aro/events` para eventos `aro.payment.v1` e `aro.entitlement.v1`; verificação de assinatura HMAC do ARO + timestamp (janela ≤ 5 min).
-- Deduplicação por `event_id`; processamento idempotente numa transação (`order → paid`, `entitlement` criado uma única vez).
-- Montante e moeda do evento têm de coincidir com a cotação; divergência → `failed` + alerta, sem entitlement.
-- Reconciliação diária por `ARO.getOrder` para ordens `pending` > 1 h; relatório para o Sérgio.
-- Retries do ARO aceites (200 em eventos já processados).
+## 7. Webhooks e direitos
+- Endpoint único `POST /api/aro/webhook` (configurado no projeto ARO).
+- Cabeçalhos `X-ARO-Event-Id`, `X-ARO-Timestamp`, `X-ARO-Signature: v1=<hex>`; HMAC-SHA256 com o segredo do projeto sobre `timestamp + "." + corpo bruto`; tolerância de timestamp; comparação em tempo constante; deduplicação por event id; responder 2xx depressa.
+- Em `entitlement.granted` / `entitlement.revoked`, o Club **re-resolve** com `POST /v1/entitlements/resolve` (`Authorization: Bearer <ARO_SERVER_KEY>`) antes de mudar o acesso.
+- Entrega pelo ARO é *at least once*: consumidor idempotente.
 
 ## 8. Cancelamento, reembolso e chargeback
-- Política (prazos, CDC art. 49 para compra à distância, regras de desistência após início em 09/01/2027) definida pelo jurídico **antes** de ativar.
-- Pedido do membro → `club_data_requests`-like `refund_request` → decisão humana → `provider.refund` → webhook `refunded` → `entitlement.revoked_at`.
-- Chargeback → revogação automática + registo; contacto humano.
+Política (prazos, CDC art. 49, regras após o início a 09/01/2027) definida pelo jurídico **antes** de ativar. Reembolso e chargeback são executados pelo ARO; o Club reage a `entitlement.revoked`.
 
-## 9. Segurança e observabilidade
-- Segredo partilhado com o ARO e HMAC das cotações só em env do servidor (Vercel protegido); rotação documentada.
-- Logs sem dados de pagamento nem documentos; métricas: cotações emitidas, ordens por estado, webhooks rejeitados, divergências.
-- Alertas: assinatura inválida, montante divergente, pico de falhas.
+## 9. Segurança
+- Variáveis só do servidor: `ARO_API_URL`, `ARO_PROJECT_SLUG`, `ARO_PUBLIC_KEY`, `ARO_SERVER_KEY`, `ARO_WEBHOOK_SECRET`. Nenhum segredo de provedor no Club.
+- Logs sem dados de pagamento nem documentos; `payer.document` só se o meio de pagamento o exigir (minimização LGPD).
 
-## 10. Testes obrigatórios (para o PR de implementação)
-Menor sem `guardian_approved` não obtém cotação nem ordem · menor estudante com só uma das aprovações fica bloqueado · Estudante rejeitado não obtém R$ 190 · cotação adulterada/expirada/reutilizada recusada · replay de webhook não duplica entitlement · webhook com assinatura inválida recusado · montante divergente não concede acesso · menor bloqueado · reembolso revoga acesso · pagamento tardio após expiração tratado · nenhum segredo no bundle do cliente.
+## 10. Testes obrigatórios (PR de implementação)
+Oferta de estudante recusada sem elegibilidade APPROVED · oferta padrão aceite sem elegibilidade estudantil · menor sem `guardian_approved` não chega ao checkout · menor estudante com só uma aprovação bloqueado · webhook com assinatura inválida ou fora da tolerância recusado · replay de event id inofensivo · acesso só com direito ACTIVE re-resolvido · `entitlement.revoked` retira acesso · nenhuma chave ARO no bundle do cliente.
 
 ## 11. Gates
-1. PR2B ativo em staging. 2. ARO homologado no piloto financeiro EspelhoMeu e contratos `aro.*.v1` aceites pelo dono do ARO. 3. Política de cancelamento/reembolso e termos de venda aprovados pelo jurídico. 4. Sandbox do ARO apenas, contas de teste. 5. Aprovação explícita do Sérgio para checkout real. Nenhuma comunicação de "matrículas abertas" antes do gate 5.
+1. PR2B homologado (Helena) e GO do Sérgio.
+2. Fluxo ARO homologado no EspelhoMeu.
+3. Projeto `atlas-club` registado no ARO; `aro.project.yaml` revisto e sincronizado (ofertas passam de `draft` a `active` só com aprovação).
+4. Política de cancelamento/reembolso e termos aprovados.
+5. Pagamento controlado em ambiente de teste do ARO e checklist `docs/developer/ACCEPTANCE_CHECKLIST.md`.
+6. Nova aprovação comercial explícita do Sérgio. Nenhuma comunicação de "matrículas abertas" antes disto.
 
 ## 12. Questões em aberto
-- Emissão de nota fiscal/recibo: entidade emissora e país (BR vs SI)?
-- Parcelamento: permitido? (não exibir até decisão — `content:check` bloqueia "parcelas de").
-- Moeda única BRL ou também EUR para membros fora do Brasil?
-- Prazo de validade da elegibilidade estudantil.
+- Emissão de recibo/nota fiscal (entidade BR) — no ARO ou fora dele?
+- Parcelamento (não exibir até decisão).
+- Validade da elegibilidade estudantil.

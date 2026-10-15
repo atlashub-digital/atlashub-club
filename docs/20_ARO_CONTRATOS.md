@@ -1,88 +1,76 @@
-# ARO — contratos de oferta, pedido, pagamento e direito de acesso (candidatos)
+# ARO — integração do Club (Genesis) e dos workshops AtlasHub.SI
 
-**Estado:** contratos **candidatos**, para validar com o dono do ARO (Atlas Revenue Operations). Nada implementado, nenhuma chamada ao ARO, nenhuma cobrança.
-**Decisão (Sérgio, 15/10/2026):** toda a cobrança de **Genesis** e **Workshops** usa o ARO. Não criar checkouts nem integrações financeiras paralelas. Ativação condicionada à **homologação do piloto financeiro EspelhoMeu**.
-**Consumidores:** Club Atlas (`club.atlashub.si`, Genesis) e AtlasHub.SI (`atlashub.si/workshops/*`). Cada consumidor só conhece o ARO; nenhum fala com provedores de pagamento.
+**Estado:** mapeamento para o contrato **real** do ARO; nada implementado, nenhuma chamada, nenhuma cobrança.
+**Não há contratos próprios.** Fontes canónicas (`atlashub-digital/atlashub-finance`):
+- `openapi/aro-v1.yaml`
+- `docs/35_PROJECT_INTEGRATION_CONTRACT_V1.md`
+- kit `docs/developer/` (`START_HERE.md`, `PROJECT_COMMERCE_BOOTSTRAP.md`, `INTEGRATION_RECIPES.md`, `ACCEPTANCE_CHECKLIST.md`, `ENVIRONMENTS.md`)
+- `schemas/project-commerce-manifest.schema.json` e `examples/typescript/*`
 
-## 1. Fronteira de responsabilidades
-| ARO | Consumidor (Club / AtlasHub.SI) |
+Se este documento divergir dessas fontes, **valem as fontes**.
+**Ativação:** fluxo ARO homologado no EspelhoMeu + nova aprovação comercial do Sérgio.
+
+## 1. Fronteira (do contrato V1)
+| ARO | Projeto (Club / AtlasHub.SI) |
 |---|---|
-| Catálogo comercial (oferta, preço, moeda, lotes, janela) | Mostra a oferta; nunca define o montante |
-| Pedido, checkout alojado, meios de pagamento, provedores, KYC | Cria o pedido no servidor com `offer_id` + `buyer_ref`; redireciona para o checkout do ARO |
-| Confirmação de pagamento, reembolso, chargeback, recibos/NF | Recebe eventos assinados; mostra estado |
-| Emissão e revogação de **direitos** (entitlements) | Aplica o direito (acesso Genesis, bilhete de workshop) só a partir do evento do ARO |
-| Dados de pagamento | **Nunca** recebe dados de cartão/PIX/documento fiscal |
+| autoridade da oferta, roteamento, provedores, sessão de checkout, estado de pedido/pagamento, webhooks de provedores, eventos de receita, estado dos direitos | página de venda, UI de checkout, escolha da oferta, estado mostrado ao cliente, fulfillment, área protegida |
 
-## 2. `aro.offer.v1` — oferta
-```json
-{
-  "offer_id": "genesis-01-standard",
-  "seller": "club-atlas",
-  "title": "Genesis Turma 01",
-  "amount_minor": 49000,
-  "currency": "BRL",
-  "status": "draft | approved | active | closed",
-  "valid_from": "2026-12-01T00:00:00-03:00",
-  "valid_to": "2027-01-08T23:59:59-03:00",
-  "requires": ["student_approved"],
-  "requires_guardian_approval_for_minors": true,
-  "capacity": null,
-  "entitlement_kind": "GENESIS_COHORT_01",
-  "policy_refs": { "cancellation": "url-versionada", "terms": "url-versionada" }
-}
-```
-| `offer_id` | Vendedor | Montante | Requisitos | Direito |
-|---|---|---|---|---|
-| `genesis-01-standard` | club-atlas | 49000 BRL | — | `GENESIS_COHORT_01` |
-| `genesis-01-student` | club-atlas | 19000 BRL | `student_approved` | `GENESIS_COHORT_01` |
-| `workshop-01-empresa-aumentada` | atlashub-si | **a aprovar** | — | `WORKSHOP_TICKET` (W01 + Clínica 16/11 + comunidade 30 dias) |
-| `enterprise-lab-01-ecommerce` | atlashub-si | **a aprovar** (por empresa) | — | `WORKSHOP_TICKET` (EL01) |
+Projetos **não** contêm credenciais nem lógica de PixGo, MisticPay ou Stripe.
 
-Os IDs Genesis coincidem com `src/lib/offers.ts`; os de workshops com `aroOfferId` em `atlashub-digital/AtlasHub.Si` `lib/workshops.ts`. Os montantes dos workshops só entram no ARO depois da aprovação do Sérgio (propostas em `AtlasHub.Si/docs/WORKSHOPS.md`). O Club Atlas gratuito (`club-free-v1`) **não** passa pelo ARO.
+## 2. Catálogo (`aro.project.yaml`)
+Configuração desejada versionada no repositório do projeto, revista e sincronizada no catálogo central do ARO (`PROJECT_COMMERCE_BOOTSTRAP.md`). Rascunhos preparados, todos com `status: draft`:
+- Club: `aro.project.yaml` na raiz deste repositório (projeto `atlas-club`).
+- Workshops: `aro.project.yaml` em `atlashub-digital/AtlasHub.Si` (projeto `atlashub-si`, **a registar no ARO**).
 
-## 3. `aro.order.v1` — pedido (servidor → ARO)
-Pedido criado **só no servidor do consumidor**, autenticado com credencial de serviço do ARO (nunca no browser).
-```json
-{
-  "idempotency_key": "quote_7f3c… | ws_req_…",
-  "offer_id": "genesis-01-student",
-  "buyer_ref": "club:user:<uuid>",
-  "buyer_contact": { "email": "…", "name": "…" },
-  "eligibility": { "student": "approved:<eligibility_id>", "guardian": "not_required | approved:<review_id>" },
-  "return_url": "https://club.atlashub.si/conta?pedido=",
-  "metadata": { "campaign_code": "GEN-EA-SITE" }
-}
-```
-Resposta: `{ "aro_order_id", "status": "awaiting_payment", "amount_minor", "currency", "checkout_url", "expires_at" }`.
-**Recusas obrigatórias do ARO:** oferta não `active`; `genesis-01-student` sem `student: approved`; comprador menor sem `guardian: approved` (o Club envia o estado do PR2B `club_guardian_reviews`; nenhum menor chega aqui sem aprovação); `idempotency_key` repetida devolve o mesmo pedido.
+| Projeto | Oferta | Valor | Direitos (entitlements) |
+|---|---|---|---|
+| `atlas-club` | `genesis-01-standard` | 49000 BRL, `once` | `atlas-club:genesis:turma-01` |
+| `atlas-club` | `genesis-01-student` | 19000 BRL, `once` | `atlas-club:genesis:turma-01` |
+| `atlashub-si` | `workshop-01-empresa-aumentada-antecipado` / `-regular` | 29700 / 34700 BRL (base de planeamento, sujeita a aprovação) | `atlashub-si:workshop:w01-2026-11-14` |
+| `atlashub-si` | `enterprise-lab-01-ecommerce-antecipado` / `-regular` | 99000 / 129000 BRL por empresa, 1 representante (idem) | `atlashub-si:workshop:el01-2026-11-28` |
 
-## 4. `aro.payment.v1` — eventos de pagamento (ARO → consumidor)
-`POST /api/aro/events` (Club) e equivalente na AtlasHub.SI. Cabeçalhos `ARO-Signature: t=<unix>,v1=<hmac-sha256(secret, t + "." + body)>`, `ARO-Event-Id`.
-```json
-{ "event_id": "evt_…", "type": "payment.confirmed | payment.failed | payment.expired | payment.refunded | payment.chargeback",
-  "aro_order_id": "…", "offer_id": "…", "buyer_ref": "club:user:<uuid>", "amount_minor": 19000, "currency": "BRL", "occurred_at": "…" }
-```
-Regras no consumidor: janela de timestamp ≤ 5 min; deduplicação por `event_id`; montante/moeda têm de bater com o pedido (divergência → alerta, sem acesso); resposta 200 a eventos já processados; nunca conceder acesso por redirect do browser.
+Notas:
+- **A oferta padrão do Genesis não exige elegibilidade estudantil;** só `genesis-01-student`. O ARO não conhece elegibilidade: o Club aplica a regra antes de criar o checkout (RFC `docs/19` §2) e, por isso, cria-o sempre a partir do servidor.
+- O Club Atlas gratuito não passa pelo ARO.
+- Lotes (antecipado/regular) são ofertas separadas do mesmo produto, ativadas/desativadas no catálogo; capacidade e prazos de lote ficam com a operação até o ARO os suportar no catálogo.
 
-## 5. `aro.entitlement.v1` — direito de acesso (ARO → consumidor)
-```json
-{ "event_id": "evt_…", "type": "entitlement.granted | entitlement.revoked",
-  "entitlement_id": "ent_…", "kind": "GENESIS_COHORT_01 | WORKSHOP_TICKET",
-  "buyer_ref": "club:user:<uuid>", "source_order": "aro_order_id", "reason": "paid | refunded | chargeback | manual" }
-```
-No Club: `granted` → `club_genesis_applications.status = 'member'` + registo em `club_entitlements` (PR2C); `revoked` → revoga acesso. Na AtlasHub.SI: bilhete do workshop e convite para a Clínica/comunidade (com adesão própria ao WhatsApp).
+## 3. Endpoints e cabeçalhos usados
+| Passo | Chamada ARO | Autenticação / cabeçalhos |
+|---|---|---|
+| Criar checkout | `POST /v1/checkout-sessions` | `X-ARO-Public-Key` (escopo público, origem na allowlist) **ou** via backend do projeto (obrigatório no Genesis); `Idempotency-Key: <uuid>` |
+| Ler estado | `GET /v1/checkout-sessions/{id}` | `X-ARO-Checkout-Secret: <checkout_secret>` |
+| Pedido | `GET /v1/orders/{order_id}` | conforme `aro-v1.yaml` |
+| Resolver direitos | `POST /v1/entitlements/resolve` | `Authorization: Bearer <ARO_SERVER_KEY>`; corpo `{project, customer_id}` ou, transitório, `{project, identity:{email}}` |
 
-## 6. Reconciliação e operação
-- `GET aro/orders/{id}` diário para pedidos `awaiting_payment` > 1 h; relatório ao Sérgio.
-- Segredos (credencial de serviço, segredo HMAC) só em variáveis de servidor protegidas; rotação documentada pela Helena.
-- Logs sem dados de pagamento; métricas: pedidos por estado, eventos rejeitados, divergências.
+Corpo mínimo do checkout: `{project, offer, market, currency, payment_method (PIX|CARD), payer{name,email[,document só se o meio exigir]}, attribution{utm_*}, metadata}`. Estados mostrados: `CREATED, PENDING, APPROVED, FAILED, CANCELED, EXPIRED, REFUNDED, CHARGEBACK`. O `qr_payload` PIX é renderizado sem alteração.
 
-## 7. Gates de ativação
-1. Piloto financeiro **EspelhoMeu homologado** no ARO (fluxo pedido → pagamento → direito → reembolso).
-2. Dono do ARO aceita estes contratos (ou publica a versão definitiva, que substitui esta).
-3. Ofertas criadas no ARO com montantes aprovados pelo Sérgio e políticas de cancelamento/reembolso publicadas.
-4. PR2B live (Genesis) / inscrição aprovada (workshops) e testes ponta a ponta em sandbox do ARO.
-5. Aprovação explícita do Sérgio para cobrança real.
+Atribuição: o código de origem das campanhas (`GEN-EA-IG`, `W01-LI`, …) vai em `attribution.utm_campaign`/`utm_source` ou `metadata.campaign_code`.
 
-## 8. Testes obrigatórios (implementação futura)
-Assinatura inválida ou fora da janela recusada · replay de `event_id` não duplica direito · montante divergente não concede acesso · menor sem aprovação não gera pedido · estudante não aprovado não obtém `genesis-01-student` · reembolso/chargeback revoga direito · nenhum segredo do ARO no bundle do cliente.
+## 4. Webhook do ARO para o projeto
+- `POST https://club.atlashub.si/api/aro/webhook` (e `https://atlashub.si/api/aro/webhook` para os workshops), configurado no registo do projeto.
+- Cabeçalhos: `X-ARO-Event-Id`, `X-ARO-Timestamp`, `X-ARO-Signature: v1=<hex>`.
+- Verificação: `HMAC-SHA256(ARO_WEBHOOK_SECRET, timestamp + "." + corpo_bruto)`, tolerância de timestamp, comparação em tempo constante, deduplicação por event id, 2xx rápido, processamento assíncrono. Exemplo de referência: `examples/typescript/verify-aro-webhook.ts`.
+- Eventos V1: `checkout.started`, `payment.pending`, `payment.approved`, `payment.failed`, `payment.refunded`, `payment.chargeback`, `order.approved`, `entitlement.granted`, `entitlement.revoked`.
+- Entrega *at least once*; o webhook é notificação — o acesso decide-se re-resolvendo os direitos.
+
+## 5. Direitos → acesso
+| Direito ACTIVE | Club / AtlasHub.SI |
+|---|---|
+| `atlas-club:genesis:turma-01` | `club_genesis_applications.status = 'member'`; acesso às áreas Genesis |
+| `atlashub-si:workshop:w01-2026-11-14` | bilhete W01 + convite para a Clínica de Ideias (16/11); comunidade de 30 dias só com adesão própria |
+| `atlashub-si:workshop:el01-2026-11-28` | bilhete EL01 por empresa |
+
+`REVOKED`/`EXPIRED` → retirar acesso conforme a política.
+
+## 6. Ambiente
+Só servidor: `ARO_API_URL`, `ARO_PROJECT_SLUG`, `ARO_PUBLIC_KEY`, `ARO_SERVER_KEY`, `ARO_WEBHOOK_SECRET`. Nenhum segredo de provedor.
+
+## 7. Aceitação (do contrato V1)
+Checkout criado · instrução de pagamento visível · `PENDING` visível · pagamento controlado passa a `APPROVED` · webhook verificado · direito `ACTIVE` resolvido · produto desbloqueado · webhook duplicado inofensivo · reembolso/revogação retira acesso · trocar de provedor não exige código no projeto. Mais, do lado do Club: oferta de estudante recusada sem elegibilidade; menor sem aprovação do responsável não chega ao checkout.
+
+## 8. Gates
+1. Fluxo ARO homologado no EspelhoMeu.
+2. Projetos `atlas-club` e `atlashub-si` registados; manifestos revistos e sincronizados.
+3. Preços e políticas aprovados pelo Sérgio (workshops: decisão comercial W01 a 20/10/2026).
+4. Teste de pagamento controlado.
+5. Aprovação comercial explícita antes de qualquer cobrança.
