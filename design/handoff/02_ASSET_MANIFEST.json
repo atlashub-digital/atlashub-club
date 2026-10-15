@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "date": "2026-10-14",
+  "source": "Arte aprovadas pelo usuario na conversa + assets e mockups construidos no projeto",
+  "note": "A arte de grupo e a referencia principal de casting e ambiente; boards de UI contem numeros/datas/nomes ilustrativos que NAO sao dados de producao. Logo corporativo e mascote Atlas diferenciam-se. Assets precisam ser disponibilizados fisicamente a Claude Code.",
+  "conflicts": [
+    "GitHub/SOUL: Caio e Bia; cast aprovado na imagem: Lucas e LIA. Necessaria aprovacao para renomear perfis.",
+    "Drive contem NEXO e datas Genesis antigas.",
+    "A figura LIA precisa de desambiguacao face ao projeto LeveLab."
+  ],
+  "assets": [
+    {
+      "path": "assets/approved/ATLAS_HUB_LOGO_FONTE.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 2196606,
+      "sha256": "c7bfe2b7b3090dbe8e7f137c2d2047fd923fc350ab83ce88629916079ca21e6e",
+      "status": "REFERENCIA_MARCA"
+    },
+    {
+      "path": "assets/approved/ATLAS_LOGO_ENERGIA.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2829108,
+      "sha256": "07e20ed9d0b1e89fc2c61227eef574a0cbbc70686b6a7d1affced335e90ee3b0",
+      "status": "REFERENCIA_MARCA"
+    },
+    {
+      "path": "assets/approved/CLUB_ATLAS_TEAM_VALIDADO.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2374867,
+      "sha256": "eec486306097c1eb7da4d04bcd7004dbdae2d938829e382dd5fb483b495a5984",
+      "status": "VALIDADO_GUPO"
+    },
+    {
+      "path": "assets/reference/BIBLIOTECA.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2174351,
+      "sha256": "62eeab05da8511b433ab87522fd066ced4e6482ff1899436be9a6f1bf89693fe",
+      "status": "REFERENCIA_UX"
+    },
+    {
+      "path": "assets/reference/BOARD_ECOSISTEMA.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2990744,
+      "sha256": "c2f5eb2a9895ce414358140cc39c0a1492f4a7c51556301a40545a15af001ba4",
+      "status": "REFERENCIA_UX"
+    },
+    {
+      "path": "assets/reference/BOARD_UX.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3119527,
+      "sha256": "f1eaf9fd82c80121bf751c883ed7f19e813e5c1b46410d15a2316aab59aba5c8",
+      "status": "REFERENCIA_UX"
+    },
+    {
+      "path": "assets/reference/COMUNIDADE.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2250427,
+      "sha256": "ec62d2a7f79303307ee3f605352afff33abc55e95ae410b9c2eb08af2074009a",
+      "status": "REFERENCIA_UX"
+    },
+    {
+      "path": "assets/reference/DASHBOARD_NEON.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2226519,
+      "sha256": "6015882f2b1997edd327c86f5ce98bf7dd0fa22528787d445dda46fb65e0d3f7",
+      "status": "REFERENCIA_UX"
+    },
+    {
+      "path": "assets/reference/DESIGN_SYSTEM_BOARD.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2250901,
+      "sha256": "53ca97d77efa324a94594004f063175010d5b73b07d80997d2e9e49adc49766e",
+      "status": "REFERENCIA_UX"
+    },
+    {
+      "path": "assets/reference/GENESIS.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2397871,
+      "sha256": "086a15220a0ba76cf2ee4d703c0f019abf92558c682c53f34ff5c623686b6004",
+      "status": "REFERENCIA_UX"
+    },
+    {
+      "path": "assets/reference/WEB_ECOSISTEMA.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2453703,
+      "sha256": "3c4ad1fb98ee9ac630c14cf27aeb102d804ef579f7907273e8fc5ee981467423",
+      "status": "REFERENCIA_UX"
+    }
+  ]
+}

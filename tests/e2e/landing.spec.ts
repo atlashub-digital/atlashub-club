@@ -1,0 +1,105 @@
+import { expect, test } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+
+test.describe("Landing pública", () => {
+  test("hero com h1, CTA honesto e elenco aprovado", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Pessoas reais. Agentes próprios. Projetos vivos.");
+    await expect(page.getByText("O futuro se constrói por pessoas como você.")).toBeVisible();
+    // Fonte v3 (design/handoff/premium-v3/index.html): eyebrow e faixa de pilares
+    await expect(page.getByText("Club Atlas · comunidade aberta e laboratório experimental")).toBeVisible();
+    await expect(page.getByRole("list", { name: "Como funciona o Club" }).getByRole("listitem")).toHaveCount(4);
+    const hero = page.locator(".ca-hero");
+    await expect(hero.getByRole("link", { name: /Entrar no Club gratuitamente/ })).toHaveAttribute("href", "/participar");
+    await expect(hero.getByRole("link", { name: /Conhecer o Genesis/ })).toHaveAttribute("href", "/genesis");
+    await expect(page.getByText("Inscrições em preparação").first()).toBeVisible();
+    const cast = page.getByRole("list", { name: "Quem constrói com você" });
+    for (const name of ["Sérgio Monteiro", "Lucas", "Atlas", "Marta", "Bia"]) {
+      await expect(cast.getByText(name, { exact: true })).toBeVisible();
+    }
+    // Declaração humano/digital explícita
+    await expect(cast.getByText("Pessoa real")).toHaveCount(1);
+    await expect(cast.getByText("Personagem digital")).toHaveCount(4);
+  });
+
+  test("não publica preços, métricas ou datas não homologadas", async ({ page }) => {
+    await page.goto("/");
+    const text = await page.locator("body").innerText();
+    // Só os preços aprovados na issue #14 podem aparecer.
+    const prices = [...text.matchAll(/R\$\s?\d[\d.,]*/g)].map((m) => m[0].replace(/\s/, " "));
+    expect(new Set(prices)).toEqual(new Set(["R$ 490", "R$ 190"]));
+    expect(text).not.toMatch(/€\s?\d|\/m[eê]s|parcel(a|e)s? de/i);
+    expect(text).not.toMatch(/inscri[cç][oõ]es abertas|vagas abertas/i);
+    expect(text).not.toMatch(/12\/01\/2027|21\/11/);
+    expect(text).toContain("09/01/2027");
+  });
+
+  test("todas as imagens têm texto alternativo e nenhum link interno quebrado", async ({ page, request }) => {
+    await page.goto("/");
+    const missingAlt = await page.locator("img:not([alt])").count();
+    expect(missingAlt).toBe(0);
+    const hrefs = await page.locator('a[href^="/"]').evaluateAll((as) => [...new Set(as.map((a) => a.getAttribute("href")!))]);
+    for (const href of hrefs) {
+      const res = await request.get(href.split("#")[0]);
+      expect(res.status(), href).toBeLessThan(400);
+    }
+  });
+
+  test("acessibilidade: sem violações axe sérias/críticas (WCAG 2.2 AA)", async ({ page }) => {
+    await page.goto("/");
+    const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
+    const serious = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
+    expect(serious.map((v) => `${v.id}: ${v.nodes.length}`)).toEqual([]);
+  });
+
+  test("equipa e Atlas visíveis na primeira dobra", async ({ page }) => {
+    await page.goto("/");
+    const vh = page.viewportSize()!.height;
+    const media = await page.locator(".ca-hero__media").boundingBox();
+    expect(media).not.toBeNull();
+    expect(media!.y).toBeLessThan(vh);
+    expect(media!.y + media!.height).toBeLessThanOrEqual(vh);
+    for (const name of ["Sérgio Monteiro", "Bia"]) {
+      const box = await page.locator(".ca-cast__name", { hasText: name }).boundingBox();
+      expect(box!.y + box!.height, name).toBeLessThanOrEqual(vh);
+    }
+  });
+
+  test("laboratório: secção destacada, simulação rotulada e sem claims de infraestrutura", async ({ page }) => {
+    await page.goto("/");
+    const lab = page.locator("#laboratorio-atlas");
+    await expect(lab.getByRole("heading", { level: 2 })).toContainText("Da tela vazia ao seu ecossistema vivo");
+    await expect(lab.getByText(/Simulação ilustrativa/)).toBeVisible();
+    const text = await lab.innerText();
+    expect(text).not.toMatch(/VPS (ativa|disponível)|SDK disponível|autonomia (total|irrestrita)/i);
+    await expect(lab.getByRole("link", { name: /Conhecer o laboratório/ })).toHaveAttribute("href", "/lab");
+  });
+
+  test("sem colisão pública de nomes: Clara/Lia não aparecem no Club", async ({ page }) => {
+    await page.goto("/");
+    const text = await page.locator("body").innerText();
+    expect(text).not.toMatch(/\bClara\b|\bLia\b|\bLIA\b/);
+  });
+
+  test("noindex mantido até homologação SEO", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+  });
+
+  test("FAQ abre por teclado", async ({ page }) => {
+    await page.goto("/");
+    const summary = page.locator("summary", { hasText: "O Club Atlas é pago?" });
+    await summary.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.getByText(/não depende de comprar nada/)).toBeVisible();
+  });
+});
+
+test.describe("Movimento reduzido", () => {
+  test("mascote Atlas fica estática", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    const anim = await page.locator(".ca-avatar--animated .ca-avatar__img").first().evaluate((el) => getComputedStyle(el).animationName);
+    expect(anim).toBe("none");
+  });
+});

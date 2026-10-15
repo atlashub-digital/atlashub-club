@@ -1,3 +1,29 @@
-import type {Metadata} from "next";import AtlasMark from "@/components/AtlasMark";import {mentors} from "@/lib/content";
-export const metadata:Metadata={title:"Os mentores"};
-export default function Mentores(){return <><section className="wrap subhero"><p className="kicker">PESSOAS + INTELIGÊNCIA</p><h1>Conhece quem constrói contigo.</h1><p>Mentoria humana e identidades digitais com funções próprias. O Atlas é representado pelo triângulo pulsante; Clara, Caio e Bia são personagens sintéticas claramente identificadas como tais.</p></section><section className="wrap content-grid">{mentors.map(m=><article className="glass content-card" key={m.name}><div className="avatar">{m.name==="Atlas"?<AtlasMark size={49}/>:m.monogram}</div><span className="mini-tag">{m.type}</span><h3>{m.name}</h3><p><b>{m.role}</b></p><p>{m.description}</p></article>)}</section></>;}
+import type { Metadata } from "next";
+import MentorCard from "@/components/landing/MentorCard";
+import { cast } from "@/lib/cast";
+
+export const metadata: Metadata = { title: "Mentores" };
+
+export default function Mentores() {
+  return (
+    <section className="ca-section ca-container" aria-labelledby="mentores-title">
+      <div className="ca-heading">
+        <div>
+          <span className="ca-eyebrow">Pessoas + inteligência</span>
+          <h1 id="mentores-title" className="ca-page-title">
+            Conheça quem constrói com você.
+          </h1>
+          <p>
+            Sérgio Monteiro é uma pessoa real. Atlas, Lucas, Marta e Bia são personagens digitais, sempre identificados
+            como tais. Cooperam lado a lado, sem hierarquia, e não decidem nada sobre você sem supervisão humana.
+          </p>
+        </div>
+      </div>
+      <div className="ca-mentors ca-mentors--page">
+        {cast.map((m) => (
+          <MentorCard key={m.key} member={m} headingLevel={2} />
+        ))}
+      </div>
+    </section>
+  );
+}

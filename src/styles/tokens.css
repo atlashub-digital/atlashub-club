@@ -1,0 +1,90 @@
+/*
+ * Club Atlas — design tokens v1.0
+ * Fonte: design/reference/screens/DESIGN_SYSTEM_BOARD.png (secções 02–04, 15) e
+ * WEB_ECOSISTEMA.png (paleta). Divergências entre os dois boards estão em design/README.md.
+ * Valores de cor mantidos como no board; combinações texto/fundo validadas para WCAG AA.
+ */
+:root {
+  /* Fundos e superfícies (navy profundo) */
+  --ca-bg: #050b17;
+  --ca-bg-deep: #02060f;
+  --ca-surface: #0b1424;
+  --ca-surface-2: #111c31;
+  --ca-surface-3: #1f2937;
+  --ca-border: #23324b;
+  --ca-border-strong: #334155;
+
+  /* Marca */
+  --ca-electric: #007bff;      /* Azul elétrico — ação primária */
+  --ca-electric-deep: #0b3bff; /* Azul profundo — gradientes */
+  --ca-electric-ui: #0066ee;   /* Variante AA (5.08:1 com branco) para fundos de botão */
+  --ca-cyan: #00d4ff;          /* Ciano Atlas — confiança/tecnologia */
+  --ca-cyan-bright: #00e5ff;
+  --ca-blue-light: #60a5fa;
+  --ca-gold: #ffc857;          /* Dourado Atlas — realização/destaque */
+  --ca-amber: #ff9f0a;         /* Âmbar — energia/ação */
+  --ca-violet: #8b5cf6;        /* Roxo IA — criatividade/futuro */
+  --ca-success: #22c55e;
+  --ca-danger: #f87171;
+
+  /* Texto */
+  --ca-text: #f9fafb;
+  --ca-text-2: #cbd5e1;
+  --ca-text-3: #94a3b8;
+  --ca-text-disabled: #64748b;
+  --ca-on-gold: #1a1203;
+
+  /* Gradientes (board secção 03) */
+  --ca-grad-atlas: linear-gradient(115deg, #0b3bff 0%, #007bff 45%, #00d4ff 100%);
+  --ca-grad-premium: linear-gradient(115deg, #1d4ed8 0%, #60a5fa 40%, #ffc857 100%);
+  --ca-grad-ai: linear-gradient(115deg, #00d4ff 0%, #8b5cf6 100%);
+  --ca-grad-energy: linear-gradient(115deg, #ffc857 0%, #ff9f0a 100%);
+
+  /* Tipografia (Inter + Caveat para notas manuscritas) */
+  --ca-font-sans: "Inter Variable", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ca-font-hand: "Caveat", "Segoe Print", cursive;
+  --ca-fs-xs: 0.75rem;
+  --ca-fs-sm: 0.875rem;
+  --ca-fs-md: 1rem;
+  --ca-fs-lg: 1.125rem;
+  --ca-fs-xl: 1.375rem;
+  --ca-fs-h3: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+  --ca-fs-h2: clamp(1.625rem, 1.2rem + 1.6vw, 2.5rem);
+  --ca-fs-h1: clamp(2.125rem, 1.4rem + 3.2vw, 4rem);
+
+  /* Espaçamento — base 8px (board secção 15) */
+  --ca-space-1: 4px;
+  --ca-space-2: 8px;
+  --ca-space-3: 16px;
+  --ca-space-4: 24px;
+  --ca-space-5: 32px;
+  --ca-space-6: 48px;
+  --ca-space-7: 72px;
+  --ca-space-8: 104px;
+
+  /* Raios, sombras, brilho */
+  --ca-radius-sm: 8px;
+  --ca-radius: 12px;
+  --ca-radius-lg: 18px;
+  --ca-radius-pill: 999px;
+  --ca-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  --ca-glow-cyan: 0 0 24px rgba(0, 212, 255, 0.28);
+  --ca-glow-blue: 0 0 26px rgba(0, 123, 255, 0.35);
+  --ca-glow-gold: 0 0 24px rgba(255, 200, 87, 0.28);
+
+  /* Layout */
+  --ca-container: 1240px;
+  --ca-gutter: 24px;
+  --ca-header-h: 72px;
+
+  /* Motion */
+  --ca-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ca-dur: 200ms;
+}
+
+@media (max-width: 600px) {
+  :root {
+    --ca-gutter: 16px;
+    --ca-header-h: 64px;
+  }
+}

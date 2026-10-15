@@ -1,0 +1,304 @@
+/* Club Atlas — header, navegação, footer, logótipo e mascote. */
+
+/* Logo */
+.ca-logo {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--ca-text);
+  line-height: 1;
+}
+.ca-logo__row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+}
+.ca-logo__word {
+  display: inline-flex;
+  align-items: flex-end;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  font-size: 1em;
+}
+.ca-logo__gap {
+  width: 0.32em;
+}
+.ca-logo__a {
+  width: 0.98em;
+  height: 0.85em;
+  margin-right: 0.02em;
+  transform: translateY(-0.02em);
+}
+.ca-logo__atlas {
+  font-weight: 700;
+}
+.ca-logo__symbol {
+  width: 1.5em;
+  height: 1.3em;
+}
+.ca-logo__tagline {
+  font-size: 0.34em;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ca-text-2);
+  padding-left: 0.1em;
+}
+.ca-logo--sm {
+  font-size: 1.15rem;
+}
+.ca-logo--md {
+  font-size: 1.6rem;
+}
+.ca-logo--lg {
+  font-size: 2.6rem;
+}
+.ca-logo--xl {
+  font-size: clamp(2.8rem, 2rem + 4vw, 5.5rem);
+}
+
+/* Header */
+.ca-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(3, 8, 18, 0.86);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(96, 165, 250, 0.14);
+}
+.ca-header__inner {
+  min-height: var(--ca-header-h);
+  display: flex;
+  align-items: center;
+  gap: var(--ca-space-4);
+}
+.ca-header__brand {
+  display: inline-flex;
+  padding: 6px 0;
+}
+.ca-header__nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.ca-navlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 4px;
+}
+.ca-navlist a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: var(--ca-radius-sm);
+  font-size: var(--ca-fs-sm);
+  font-weight: 500;
+  color: var(--ca-text-2);
+  position: relative;
+  transition: color var(--ca-dur) var(--ca-ease);
+}
+.ca-navlist a:hover {
+  color: var(--ca-text);
+}
+.ca-navlist a[aria-current="page"] {
+  color: var(--ca-cyan);
+}
+.ca-navlist a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ca-cyan);
+  box-shadow: var(--ca-glow-cyan);
+}
+.ca-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ca-space-2);
+  margin-left: auto;
+}
+.ca-mobilenav {
+  display: none;
+}
+.ca-mobilenav__toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--ca-radius-sm);
+  border: 1px solid var(--ca-border-strong);
+  background: var(--ca-surface);
+  color: var(--ca-text);
+  cursor: pointer;
+}
+.ca-mobilenav__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  padding: var(--ca-space-3) var(--ca-gutter) var(--ca-space-4);
+  background: rgba(3, 8, 18, 0.98);
+  border-bottom: 1px solid var(--ca-border);
+  box-shadow: var(--ca-shadow);
+}
+.ca-mobilenav__panel[hidden] {
+  display: none;
+}
+.ca-mobilenav__panel .ca-navlist {
+  flex-direction: column;
+}
+.ca-mobilenav__panel .ca-navlist a {
+  min-height: 48px;
+  width: 100%;
+  font-size: var(--ca-fs-md);
+}
+.ca-mobilenav__panel .ca-navlist a[aria-current="page"]::after {
+  left: 0;
+  right: auto;
+  top: 12px;
+  bottom: 12px;
+  width: 3px;
+  height: auto;
+}
+@media (max-width: 1080px) {
+  .ca-header__nav {
+    display: none;
+  }
+  .ca-mobilenav {
+    display: block;
+  }
+}
+@media (max-width: 480px) {
+  .ca-header__cta-free {
+    display: none;
+  }
+  .ca-header__cta.ca-btn {
+    padding: 0 12px;
+  }
+}
+
+/* Footer */
+.ca-footer {
+  margin-top: var(--ca-space-7);
+  border-top: 1px solid rgba(96, 165, 250, 0.16);
+  background: linear-gradient(180deg, rgba(5, 11, 23, 0.4), var(--ca-bg-deep));
+  padding-top: var(--ca-space-6);
+}
+.ca-footer__grid {
+  display: grid;
+  grid-template-columns: 1.6fr repeat(3, 1fr);
+  gap: var(--ca-space-5);
+}
+.ca-footer__brand p {
+  color: var(--ca-text-3);
+  font-size: var(--ca-fs-sm);
+  margin-top: var(--ca-space-3);
+}
+.ca-footer__hand.ca-hand {
+  font-size: 1.6rem;
+  color: var(--ca-gold);
+  margin-top: var(--ca-space-2);
+}
+.ca-footer__title {
+  font-size: var(--ca-fs-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ca-text-3);
+  margin-bottom: var(--ca-space-3);
+}
+.ca-footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.ca-footer ul a {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  color: var(--ca-text-2);
+  font-size: var(--ca-fs-sm);
+}
+.ca-footer ul a:hover {
+  color: var(--ca-cyan);
+}
+.ca-footer__fine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--ca-space-2);
+  margin-top: var(--ca-space-6);
+  padding-block: var(--ca-space-4);
+  border-top: 1px solid rgba(96, 165, 250, 0.1);
+  color: var(--ca-text-3);
+  font-size: var(--ca-fs-xs);
+}
+@media (max-width: 900px) {
+  .ca-footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .ca-footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Mascote Atlas animada */
+.ca-avatar {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+}
+.ca-avatar__img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 24px rgba(0, 123, 255, 0.35));
+}
+.ca-avatar__halo {
+  position: absolute;
+  inset: 4%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.28), rgba(0, 123, 255, 0.08) 55%, transparent 70%);
+}
+.ca-avatar--animated .ca-avatar__img {
+  animation: ca-float 6s var(--ca-ease) infinite;
+}
+.ca-avatar--animated .ca-avatar__halo {
+  animation: ca-glow 4s ease-in-out infinite;
+}
+@keyframes ca-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes ca-glow {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: scale(0.97);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ca-avatar--animated .ca-avatar__img,
+  .ca-avatar--animated .ca-avatar__halo {
+    animation: none;
+  }
+}

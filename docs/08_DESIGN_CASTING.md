@@ -1,3 +1,5 @@
+> **Atualização 14/10/2026:** a composição aprovada `design/reference/approved/CLUB_ATLAS_TEAM_VALIDADO.png` prevalece para a UI (Lucas/Lia; mascote Atlas com rosto distinta do logo). Ver `docs/IDENTITY_DECISION.md`. O texto abaixo mantém-se como histórico.
+
 # Brand Sheet / casting — candidato v1
 
 ## Marca

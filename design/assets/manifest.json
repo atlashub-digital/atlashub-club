@@ -1,0 +1,307 @@
+{
+  "schema_version": "1.1",
+  "date": "2026-10-14",
+  "note": "Originais preservados em design/reference (não servidos pela web). Derivados em public/assets/club são recortes diretos da composição aprovada — sem redesenho de rostos, sem IA generativa, sem retoque. next/image serve AVIF/WebP redimensionados. Revisão PR #11: retratos renomeados para os nomes de UI (marta, bia); rostos inalterados.",
+  "handoff_manifest": "design/handoff/02_ASSET_MANIFEST.json",
+  "originals": [
+    {
+      "path": "design/reference/approved/ATLAS_HUB_LOGO_FONTE.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 2196606,
+      "sha256": "c7bfe2b7b3090dbe8e7f137c2d2047fd923fc350ab83ce88629916079ca21e6e",
+      "status": "APROVADO_OWNER"
+    },
+    {
+      "path": "design/reference/approved/ATLAS_LOGO_ENERGIA.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2829108,
+      "sha256": "07e20ed9d0b1e89fc2c61227eef574a0cbbc70686b6a7d1affced335e90ee3b0",
+      "status": "APROVADO_OWNER"
+    },
+    {
+      "path": "design/reference/approved/CLUB_ATLAS_TEAM_VALIDADO.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2374867,
+      "sha256": "eec486306097c1eb7da4d04bcd7004dbdae2d938829e382dd5fb483b495a5984",
+      "status": "APROVADO_OWNER"
+    },
+    {
+      "path": "design/reference/screens/BIBLIOTECA.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2174351,
+      "sha256": "62eeab05da8511b433ab87522fd066ced4e6482ff1899436be9a6f1bf89693fe",
+      "status": "REFERENCIA_UX (dados ilustrativos)"
+    },
+    {
+      "path": "design/reference/screens/BOARD_ECOSISTEMA.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2990744,
+      "sha256": "c2f5eb2a9895ce414358140cc39c0a1492f4a7c51556301a40545a15af001ba4",
+      "status": "REFERENCIA_UX (dados ilustrativos)"
+    },
+    {
+      "path": "design/reference/screens/BOARD_UX.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3119527,
+      "sha256": "f1eaf9fd82c80121bf751c883ed7f19e813e5c1b46410d15a2316aab59aba5c8",
+      "status": "REFERENCIA_UX (dados ilustrativos)"
+    },
+    {
+      "path": "design/reference/screens/COMUNIDADE.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2250427,
+      "sha256": "ec62d2a7f79303307ee3f605352afff33abc55e95ae410b9c2eb08af2074009a",
+      "status": "REFERENCIA_UX (dados ilustrativos)"
+    },
+    {
+      "path": "design/reference/screens/DASHBOARD_NEON.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2226519,
+      "sha256": "6015882f2b1997edd327c86f5ce98bf7dd0fa22528787d445dda46fb65e0d3f7",
+      "status": "REFERENCIA_UX (dados ilustrativos)"
+    },
+    {
+      "path": "design/reference/screens/DESIGN_SYSTEM_BOARD.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2250901,
+      "sha256": "53ca97d77efa324a94594004f063175010d5b73b07d80997d2e9e49adc49766e",
+      "status": "REFERENCIA_UX (dados ilustrativos)"
+    },
+    {
+      "path": "design/reference/screens/GENESIS.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2397871,
+      "sha256": "086a15220a0ba76cf2ee4d703c0f019abf92558c682c53f34ff5c623686b6004",
+      "status": "REFERENCIA_UX (dados ilustrativos)"
+    },
+    {
+      "path": "design/reference/screens/WEB_ECOSISTEMA.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2453703,
+      "sha256": "3c4ad1fb98ee9ac630c14cf27aeb102d804ef579f7907273e8fc5ee981467423",
+      "status": "REFERENCIA_UX (dados ilustrativos)"
+    },
+    {
+      "path": "design/reference/legacy_v1.1/01_Landing_Publica_Desktop.png",
+      "width": 1440,
+      "height": 1122,
+      "bytes": 874465,
+      "sha256": "c61064f3a27f62b42c3c9edcc47be3913e0bd1d5d086ac2d5e0ede37515a10d2",
+      "status": "LEGADO_REFERENCIA"
+    },
+    {
+      "path": "design/reference/legacy_v1.1/01_Landing_Publica_Mobile.png",
+      "width": 390,
+      "height": 1678,
+      "bytes": 446187,
+      "sha256": "c8ed0ede2fb8152609464baf17b1e7ac552ebc18f7d2c703ce4b223b2009776e",
+      "status": "LEGADO_REFERENCIA"
+    },
+    {
+      "path": "design/reference/legacy_v1.1/02_Dashboard_Membro_Desktop.png",
+      "width": 1440,
+      "height": 1120,
+      "bytes": 786042,
+      "sha256": "1d6abaaf27e6e986900d47f97c7f1749bc070fb8abf0b0faafed552d5569b117",
+      "status": "LEGADO_REFERENCIA"
+    },
+    {
+      "path": "design/reference/legacy_v1.1/02_Dashboard_Membro_Mobile.png",
+      "width": 390,
+      "height": 1876,
+      "bytes": 499263,
+      "sha256": "f813ca96e104e95c41f7ea7464e899f88fdb3f968e9f5e5aa1cefb30e9c82887",
+      "status": "LEGADO_REFERENCIA"
+    },
+    {
+      "path": "design/reference/legacy_v1.1/03_Genesis_Lab_Desktop.png",
+      "width": 1440,
+      "height": 1033,
+      "bytes": 744779,
+      "sha256": "b071070967f117b5065b14c0fbb694fe47bb6623a45fa34e150727c88a477db8",
+      "status": "LEGADO_REFERENCIA"
+    },
+    {
+      "path": "design/reference/legacy_v1.1/04_Campus_Comunidade_Desktop.png",
+      "width": 1440,
+      "height": 1054,
+      "bytes": 769032,
+      "sha256": "40bd0ca85627d12da834d198640e4f003573c8403fb9c6f357dece51f8567af0",
+      "status": "LEGADO_REFERENCIA"
+    },
+    {
+      "path": "design/reference/approved/ATLAS_MASCOTE_TRANSPARENTE.png",
+      "width": 1373,
+      "height": 1145,
+      "bytes": 1509235,
+      "sha256": "bc49b88f5a70b8df364f97fa9c7e4ff7b3c824d0772e59ca052c33a0e0e6f2a3",
+      "status": "APROVADO_OWNER (enviado no chat 14/10)"
+    },
+    {
+      "path": "design/reference/v2/LANDING_V2_CANDIDATA_LONGA.png",
+      "width": 811,
+      "height": 2000,
+      "bytes": 815251,
+      "sha256": "40333514cc50b78a8c1d704bb831bd319ffdf62b62c0cd3b9edac7b64592e577",
+      "status": "REFERENCIA_UX v2 (candidata)"
+    },
+    {
+      "path": "design/reference/v2/LANDING_V3_CONCEITO_DESKTOP.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1666118,
+      "sha256": "0bcd1ffcb34c0cdfdd999595151a11910b88576fe84b69260225b5351bf2e569",
+      "status": "REFERENCIA_UX v3 (conceito)"
+    }
+  ],
+  "derived": [
+    {
+      "path": "public/assets/club/hero-team.webp",
+      "width": 1672,
+      "height": 393,
+      "bytes": 121152,
+      "sha256": "9d804bff063df466a7574d759b87d7d003afcb2e8402c2ed72ab6036e34cd865",
+      "source": "design/reference/approved/CLUB_ATLAS_TEAM_VALIDADO.png",
+      "crop_box_ltrb": [
+        0,
+        165,
+        1672,
+        558
+      ],
+      "format": "webp q88",
+      "use": "hero",
+      "retouched": false
+    },
+    {
+      "path": "public/assets/club/portrait-sergio.webp",
+      "width": 300,
+      "height": 300,
+      "bytes": 15476,
+      "sha256": "2568c6b60dbcdf7e2e0439e84c28db00ff1319e5c6a0ca5b5e54a55455807307",
+      "source": "design/reference/approved/CLUB_ATLAS_TEAM_VALIDADO.png",
+      "crop_box_ltrb": [
+        60,
+        150,
+        360,
+        450
+      ],
+      "format": "webp q88",
+      "use": "retrato MentorCard/AtlasAvatar",
+      "retouched": false
+    },
+    {
+      "path": "public/assets/club/portrait-lucas.webp",
+      "width": 290,
+      "height": 290,
+      "bytes": 16046,
+      "sha256": "6b1297c14c0caff5f0507fbb4f2ac99dca9896b2dc9456137341deb270c23eee",
+      "source": "design/reference/approved/CLUB_ATLAS_TEAM_VALIDADO.png",
+      "crop_box_ltrb": [
+        375,
+        165,
+        665,
+        455
+      ],
+      "format": "webp q88",
+      "use": "retrato MentorCard/AtlasAvatar",
+      "retouched": false
+    },
+    {
+      "path": "public/assets/club/portrait-atlas.webp",
+      "width": 350,
+      "height": 350,
+      "bytes": 31286,
+      "sha256": "b9aee91c5546ec893fc7c9f3d22875f538f3a9ce9b612eb5d20f6de176faebce",
+      "source": "design/reference/approved/CLUB_ATLAS_TEAM_VALIDADO.png",
+      "crop_box_ltrb": [
+        660,
+        170,
+        1010,
+        520
+      ],
+      "format": "webp q88",
+      "use": "retrato MentorCard/AtlasAvatar",
+      "retouched": false
+    },
+    {
+      "path": "public/assets/club/portrait-marta.webp",
+      "width": 300,
+      "height": 300,
+      "bytes": 17716,
+      "sha256": "6674da226570351efd349b22f24b05e2985c58e7c10a7aac5c7e34c44277a267",
+      "source": "design/reference/approved/CLUB_ATLAS_TEAM_VALIDADO.png",
+      "crop_box_ltrb": [
+        1015,
+        175,
+        1315,
+        475
+      ],
+      "format": "webp q88",
+      "use": "retrato MentorCard/AtlasAvatar",
+      "retouched": false
+    },
+    {
+      "path": "public/assets/club/portrait-bia.webp",
+      "width": 300,
+      "height": 300,
+      "bytes": 19342,
+      "sha256": "3e46bfb018770f78d86f8419013fa7ec6811d3d709ef669640bd61740ae177b1",
+      "source": "design/reference/approved/CLUB_ATLAS_TEAM_VALIDADO.png",
+      "crop_box_ltrb": [
+        1345,
+        150,
+        1645,
+        450
+      ],
+      "format": "webp q88",
+      "use": "retrato MentorCard/AtlasAvatar",
+      "retouched": false
+    },
+    {
+      "path": "public/assets/club/og-club-atlas.jpg",
+      "width": 1200,
+      "height": 630,
+      "bytes": 117423,
+      "sha256": "18923a28eec607b83157d9cca8a55931e29510aea0730e79ed9c4d5a871f7730",
+      "source": "public/assets/club/hero-team.webp (recorte sem nomes gravados) + texto Inter",
+      "use": "OpenGraph 1200x630",
+      "retouched": false,
+      "note": "Regenerado na revisão PR #11: o OG anterior mostrava 'CLARA' e 'LIA' gravados na arte"
+    },
+    {
+      "path": "public/assets/club/atlas-mascote.webp",
+      "width": 720,
+      "height": 681,
+      "bytes": 124464,
+      "sha256": "da3945f5d16cf928e93249eeeba882913d94b70242713d07456b148dc70b9640",
+      "source": "design/reference/approved/ATLAS_MASCOTE_TRANSPARENTE.png",
+      "use": "AtlasAvatar + Atlas companion",
+      "retouched": false,
+      "note": "recorte ao bbox alfa + redimensionado 720px; sem alteração de pixels"
+    }
+  ],
+  "vectors": [
+    {
+      "path": "src/components/brand/AtlasMark.tsx",
+      "source": "design/reference/approved/ATLAS_HUB_LOGO_FONTE.png",
+      "status": "VETORIZACAO_MANUAL_PROVISORIA — substituir pelo SVG de origem quando entregue"
+    }
+  ],
+  "pending_assets": [
+    "SVG de origem do símbolo Atlas e do wordmark CLUB ATLAS",
+    "Retratos individuais em alta resolução (Sérgio, Lucas, Clara, Lia) com fundo neutro",
+    "Licenças/direitos de imagem de cada retrato",
+    "Modelo GLB animável do Atlas (evolução 3D)"
+  ]
+}
