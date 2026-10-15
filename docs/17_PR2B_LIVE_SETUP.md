@@ -68,6 +68,25 @@ Basta faltar uma variável obrigatória para o modo cair para `off` (fail-closed
 6. Utilizador existente de outra app da Master entra pelo `/entrar` → `/conta` mostra "ainda não há perfil do Club"; com a sessão dele, `select` em `public.*` pela API devolve erro de permissão.
 7. `GET /api/club/crm-sync` com `Authorization: Bearer <CRON_SECRET>` → JSON com `crm` e `purge`.
 
+### 6.1 Prova de que uma sessão do Club não autoriza nada noutras apps da Master
+Só leitura; anexar o resultado ao relatório GO/NO-GO (com o SHA completo do commit testado).
+1. Privilégios do `authenticated`/`anon` fora do schema `club` (esperado: nenhuma linha, ou só as que cada app justificar):
+   ```sql
+   select table_schema, table_name, grantee, privilege_type
+   from information_schema.role_table_grants
+   where grantee in ('anon','authenticated') and table_schema not in ('club','pg_catalog','information_schema')
+   order by 1,2;
+   ```
+2. Funções executáveis por `authenticated` fora de `club`, `auth`, `extensions` e `graphql`:
+   ```sql
+   select n.nspname, p.proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+   where has_function_privilege('authenticated', p.oid, 'execute')
+     and n.nspname not in ('club','auth','extensions','graphql','graphql_public','pg_catalog','information_schema','realtime','storage','vault','net','cron','pgbouncer');
+   ```
+3. Storage: políticas em `storage.objects` que aceitem qualquer `authenticated` (`select policyname, roles, qual from pg_policies where schemaname = 'storage'`).
+4. Edge Functions e backends das outras apps: confirmar que não aceitam "qualquer JWT válido da Master" como autorização (devem verificar papel/pertença próprios). Teste prático: com a sessão de uma conta criada só pelo Club, chamar as APIs de cada app e esperar 401/403.
+5. Realtime: nenhum canal de outra app aberto a `authenticated` sem filtro.
+
 ## 7. Reversão
 - Desligar: remover `CLUB_AUTH_MODE` (ou pôr `off`) e refazer o deploy → o formulário volta ao modo demonstração; nenhum dado é apagado.
 - Código: reverter o merge deste PR.
