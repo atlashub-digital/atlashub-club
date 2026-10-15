@@ -10,7 +10,7 @@ import Icon from "@/components/ui/Icon";
 import { IconBox, LinkButton, SectionHeading, StatusTag } from "@/components/ui/primitives";
 import { cast } from "@/lib/cast";
 import { primaryCta } from "@/lib/flags";
-import { price } from "@/lib/offers";
+import { earlyAccess, price } from "@/lib/offers";
 import {
   audiences,
   channels,
@@ -206,6 +206,11 @@ export default function Home() {
                 </dd>
               </div>
             </dl>
+            <p className="ca-offer__note">
+              <strong>Early Access até {earlyAccess.deadline}:</strong> registre interesse no Genesis e receba{" "}
+              {earlyAccess.benefit}
+            </p>
+            <p className="ca-offer__fine">{earlyAccess.fine}</p>
             <div className="ca-hero__actions">
               <LinkButton href="/genesis" variant="gold">
                 Ver o programa
