@@ -523,7 +523,7 @@ export default function AdesaoForm({
                 <dd>{d.name}</dd>
               </div>
               <div>
-                <dt>E-mail</dt>
+                <dt>{child ? "Contacto" : "E-mail"}</dt>
                 <dd>{child ? "Através do responsável legal" : d.email}</dd>
               </div>
               <div className="ca-adesao__wide">
