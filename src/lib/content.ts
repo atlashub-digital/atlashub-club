@@ -1,12 +1,13 @@
 import type { IconName } from "@/components/ui/Icon";
 import type { Status } from "@/components/ui/primitives";
-import { price } from "./offers";
+import { earlyAccess, price } from "./offers";
 
 /**
  * Conteúdo público do Club Atlas.
  * Regras: sem preços, sem métricas inventadas, sem anunciar vagas ou inscrições não confirmadas.
  * Datas de referência (docs/DECISIONS.md): Club introdutório em nov/2026, estreia formal em dez/2026,
  * Genesis Turma 01 em 09/01/2027 (sábado, previsto), Enterprise Lab em 28/11/2026.
+ * Genesis Early Access: interesse até 30/11/2026; 2 ateliers extras em dezembro sem data publicada.
  */
 
 export const navigation = [
@@ -77,7 +78,7 @@ export const startSteps: { n: string; title: string; detail: string; status: Sta
   { n: "01", title: "Entre gratuitamente", detail: "Escolha o Club grátis no formulário de adesão. As contas abrem quando privacidade e segurança estiverem validadas.", status: "prep", statusLabel: "Prévia do formulário" },
   { n: "02", title: "Conte seus objetivos", detail: "Um onboarding curto: área de estudo, interesses e equipamento disponível (até só um celular).", status: "prep", statusLabel: "Em preparação" },
   { n: "03", title: "Missão 001 — O meu primeiro agente", detail: "Quatro etapas guiadas para criar, ensinar e testar seu primeiro agente, com evidências reais.", status: "prep", statusLabel: "Em preparação" },
-  { n: "04", title: "Participe e construa", detail: "Fóruns abertos, desafios, Build Nights e, em janeiro, a pré-candidatura ao Genesis.", status: "planned", statusLabel: "A partir de nov/2026" },
+  { n: "04", title: "Participe e construa", detail: `Fóruns abertos, desafios e Build Nights. Quer ir mais longe? Registre interesse no Genesis até ${earlyAccess.deadline} e receba o convite do Early Access para os ateliers de dezembro.`, status: "planned", statusLabel: "A partir de nov/2026" },
 ];
 
 export const mission001: { icon: IconName; step: string; title: string; detail: string }[] = [
@@ -107,6 +108,7 @@ export const events: ClubEvent[] = [
   { day: "16", month: "NOV", date: "16 NOV", title: "Clínica de Ideias", detail: "Complemento online do workshop executivo AtlasHub.SI.", format: "ONLINE", state: "PREVISTO", status: "external", kind: "b2b" },
   { day: "28", month: "NOV", date: "28 NOV", title: "Enterprise Lab — E-commerce e Operações Vivas", detail: "Laboratório empresarial AtlasHub.SI · Anápolis, presencial.", format: "PRESENCIAL", state: "PREVISTO", status: "external", kind: "b2b" },
   { day: "DEZ", month: "2026", date: "DEZ • 2026", title: "Estreia oficial do Club Atlas", detail: "Lançamento formal da comunidade e das primeiras missões.", format: "HÍBRIDO", state: "EM PREPARAÇÃO", status: "prep", kind: "club" },
+  { day: "DEZ", month: "2026", date: "DEZ • 2026", title: "Genesis Early Access — 2 ateliers extras", detail: `Um atelier híbrido (Anápolis + online) e um online de preparação dos projetos. Gratuitos para quem registrar interesse até ${earlyAccess.deadline}, sujeitos a confirmação e capacidade. Datas a confirmar.`, format: "HÍBRIDO + ONLINE", state: "A CONFIRMAR", status: "prep", kind: "genesis" },
   { day: "09", month: "JAN", date: "09 JAN 2027", title: "Genesis — Turma 01", detail: "Abertura prevista (sábado) · Anápolis + online. Oito semanas, 24 ateliers.", format: "HÍBRIDO", state: "PREVISTO", status: "planned", kind: "genesis" },
 ];
 
@@ -134,7 +136,7 @@ export const faq = [
   { q: "O Club Atlas é pago?", a: "Não. A entrada no Club é gratuita e não depende de comprar nada: comunidade, fóruns abertos, guias livres e a Missão 001. O Genesis é um programa opcional, à parte." },
   { q: "Preciso saber programar?", a: "Não. Você não precisa saber programar; precisa começar. As missões partem do zero e explicam cada passo. Quem já programa encontra desafios para ir mais longe." },
   { q: "Só tenho celular. Consigo participar?", a: "Sim. Comunidade, conteúdos e a primeira missão funcionam no celular. Algumas atividades avançadas de laboratório podem exigir computador ou recursos remotos — avisaremos sempre antes." },
-  { q: "Quando começa?", a: "Sessões introdutórias a partir de novembro de 2026 e estreia formal em dezembro. A Turma 01 do Genesis tem abertura prevista para 09/01/2027." },
+  { q: "Quando começa?", a: `Sessões introdutórias a partir de novembro de 2026 e estreia formal em dezembro. A Turma 01 do Genesis tem abertura prevista para 09/01/2027. Quem registrar interesse no Genesis até ${earlyAccess.deadline} entra no Early Access: convite antecipado para 2 ateliers extras em dezembro (datas a confirmar).` },
   { q: "Quanto custa o Genesis?", a: `Valor padrão ${price.genesisStandard}. Para estudantes elegíveis, ${price.genesisStudent}, depois de validada a condição de estudante. Nenhuma cobrança acontece nesta fase: as condições finais são confirmadas antes da abertura, sem vagas, parcelamentos ou taxas anunciados. Ninguém fica fora da comunidade por falta de dinheiro.` },
   { q: "Os mentores são pessoas reais?", a: "Sérgio Monteiro é uma pessoa real. Atlas, Lucas, Marta e Bia são personagens digitais, sempre identificados como tais, e não tomam decisões sobre você sem supervisão humana." },
   { q: "Como meus dados serão tratados?", a: "Coletamos o mínimo necessário, com consentimento explícito, em conformidade com a LGPD. Você poderá pedir acesso, correção ou exclusão a qualquer momento. Veja o aviso de privacidade." },
