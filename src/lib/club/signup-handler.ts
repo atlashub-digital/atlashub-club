@@ -50,7 +50,7 @@ export async function handleSignup(
   if (!parsed.ok) return { status: 400, body: { message: "Verifique os dados.", errors: parsed.errors } };
 
   const v = parsed.value;
-  const emailHit = limiters.email.hit(sha(v.email));
+  const emailHit = v.email ? limiters.email.hit(sha(v.email)) : { allowed: true, retryAfterS: 0 };
   // Resposta neutra por email para não permitir enumeração de contas.
   if (!emailHit.allowed) return { status: 202, body: { dryRun: true } };
 
@@ -58,7 +58,7 @@ export async function handleSignup(
 
   // Menores: nenhuma conta, perfil, consentimento ou CRM antes da revisão manual do responsável.
   // Adolescente (12–17): só um pedido de revisão com contacto mínimo e prazo de expiração.
-  // Criança (<12): o e-mail da criança é descartado; a equipa pede o contacto do responsável.
+  // Criança (<12): o e-mail nem é aceite pelo validador; a equipa pede o contacto do responsável.
   if (outcome.reviews.guardian) {
     const child = v.ageBand === "child";
     return {
@@ -76,13 +76,13 @@ export async function handleSignup(
               `age_band=${v.ageBand}`,
               "plan",
               "student_intent",
-              child ? "contact_email=null (descartado; pedir contacto do responsável)" : "contact_email",
+              child ? "contact_email=null (não recolhido; a equipa pede o contacto do responsável)" : "contact_email",
               "expires_at=+30d",
             ],
           },
         ],
         withheld: ["auth.users", "club.club_profiles", "club.club_consent_events", "club.club_crm_outbox", "club.club_genesis_applications"],
-        ...(child ? {} : { emailHash: sha(v.email) }),
+        ...(v.email ? { emailHash: sha(v.email) } : {}),
       },
     };
   }
@@ -111,7 +111,7 @@ export async function handleSignup(
           : []),
         ...(v.marketingOptIn ? [{ table: "club.club_crm_outbox", note: "só com opt-in; sem dados pedagógicos" }] : []),
       ],
-      emailHash: sha(v.email),
+      emailHash: sha(v.email ?? ""),
     },
   };
 }

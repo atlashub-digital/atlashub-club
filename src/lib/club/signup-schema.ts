@@ -36,7 +36,8 @@ export type SignupInput = {
   /** Intenção declarada; só vale após revisão humana (PR2C). */
   studentIntent: boolean;
   displayName: string;
-  email: string;
+  /** Ausente para crianças (<12): o contacto é sempre o do responsável. */
+  email?: string;
   /** Menores não são bloqueados: seguem para `pending_guardian_review` (decisão de 14/10/2026). */
   ageBand: AgeBand;
   area?: (typeof AREAS)[number];
@@ -65,11 +66,14 @@ export function validateSignup(raw: unknown): SignupResult {
   const displayName = str(b.displayName).replace(/\s+/g, " ");
   if (displayName.length < 2 || displayName.length > 60) errors.displayName = "invalid";
 
-  const email = str(b.email).toLowerCase();
-  if (email.length > 190 || !EMAIL.test(email)) errors.email = "invalid";
-
   const ageBand = str(b.ageBand);
   if (!has(AGE_BANDS, ageBand)) errors.ageBand = "invalid";
+
+  // Criança (<12): nenhum contacto direto é aceite — nem chega a ser transmitido.
+  const email = str(b.email).toLowerCase();
+  if (ageBand === "child") {
+    if ("email" in b) errors.email = "not_allowed_for_child";
+  } else if (email.length > 190 || !EMAIL.test(email)) errors.email = "invalid";
 
   const area = str(b.area);
   if (area && !has(AREAS, area)) errors.area = "invalid";
@@ -98,7 +102,7 @@ export function validateSignup(raw: unknown): SignupResult {
       plan: plan as SignupInput["plan"],
       studentIntent: plan === "genesis" && b.studentIntent === true,
       displayName,
-      email,
+      email: ageBand === "child" ? undefined : email,
       ageBand: ageBand as AgeBand,
       area: area ? (area as SignupInput["area"]) : undefined,
       interests: [...new Set(interests)] as SignupInput["interests"],
