@@ -22,6 +22,8 @@ const notices: Record<string, string> = {
 const genesisLabels: Record<string, string> = {
   interested: statusLabels.genesis_interest,
   student_pending: statusLabels.student_pending,
+  awaiting_payment: "Matrícula com pagamento pendente",
+  member: "Matriculado na Turma 01",
   withdrawn: "Pré-candidatura retirada",
 };
 
@@ -87,7 +89,11 @@ export default async function Conta({ searchParams }: { searchParams: Promise<Re
             {genesis.data?.status && (
               <>
                 <dt>Genesis</dt>
-                <dd>{genesisLabels[genesis.data.status as string] ?? "Em análise pela equipe"} · nenhum pagamento foi pedido</dd>
+                <dd>
+                  {genesisLabels[genesis.data.status as string] ?? "Em análise pela equipe"}
+                  {genesis.data.status === "member" ? "" : " · "}
+                  {genesis.data.status !== "member" && <Link href="/genesis/inscricao">ver matrícula</Link>}
+                </dd>
               </>
             )}
             <dt>Novidades por e-mail</dt>
