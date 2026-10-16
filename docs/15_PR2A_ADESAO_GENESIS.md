@@ -3,7 +3,7 @@
 **Origem:** issue #14 e Handoff v2.0 (`design/handoff/club-signup-genesis-v2/`). Implementado no mesmo branch/PR #11 (o ambiente só permite o branch designado), em commits separados e reversíveis.
 
 ## Entregue (PR2A — só interface)
-- `src/lib/offers.ts`: única fonte de preços de exibição (`club-free-v1` 0, `genesis-01-standard` 49000, `genesis-01-student` 19000 + `student_approved`), todos `pending_launch`.
+- `src/lib/offers.ts`: única fonte de preços de exibição (`club-free-v1` 0, `genesis-01-br` 49000, `genesis-01-student-br` 19000 (códigos do catálogo ARO) + `student_approved`), todos `pending_launch`.
 - Landing: CTAs "Entrar no Club gratuitamente" / "Conhecer o Genesis", secção de ofertas, pergunta final.
 - `/participar`: formulário de 4 etapas (percurso → dados mínimos → interesses → revisão/consentimentos). Club grátis por defeito; `?plan=genesis`; estudante = "pendente de validação"; marketing desmarcado; termos obrigatórios; menores avançam para `pending_guardian_review` (ver `docs/18_MENORES_REVISAO_RESPONSAVEL.md`); **sem envio**.
 - `/genesis`: página comercial (preço, programa semanal com 24 ateliers previstos, benefícios, FAQ de condições).

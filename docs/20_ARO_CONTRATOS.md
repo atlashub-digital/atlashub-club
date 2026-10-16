@@ -30,7 +30,9 @@ Configuração desejada versionada no repositório do projeto, revista e sincron
 | `atlashub-si` | `enterprise-lab-01-ecommerce-antecipado-br` / `-regular-br` | 99000 / 129000 BRL por empresa, 1 representante (idem) | `atlashub-si:workshop:enterprise-lab-01-ecommerce` |
 
 Convenção do catálogo ARO (exemplos de `atlashub-finance`): ofertas `<produto>-<mercado>` (p. ex. `course-a-br`) e direitos `<projeto>:<tipo>:<produto>` (p. ex. `academia-x:course:course-a`).
-Correspondência com a UI do Club (`src/lib/offers.ts`, só exibição): `genesis-01-standard` → `genesis-01-br`; `genesis-01-student` → `genesis-01-student-br`. Os identificadores da UI serão unificados com os do ARO no PR de implementação do checkout.
+**Identificadores unificados:** `src/lib/offers.ts` usa os mesmos códigos do catálogo (`genesis-01-br`, `genesis-01-student-br`) e o mesmo direito; `npm run content:check` falha se ids, valores ou direito divergirem de `aro.project.yaml`, ou se alguma oferta deixar de estar `draft`.
+
+**Consumidor preparado (fail-closed):** `src/lib/aro/client.ts` (criar sessão com `X-ARO-Public-Key` + `Idempotency-Key`; polling com `X-ARO-Checkout-Secret`; `entitlements/resolve` com a chave de servidor; só `ACTIVE` não expirado desbloqueia, qualquer erro nega) e `src/lib/aro/webhook.ts` + `POST /api/aro/webhook` (HMAC `v1=` sobre `timestamp.corpo`, janela de 300 s, comparação em tempo constante, id/projeto/tipo validados; 503 sem segredo). Sem configuração completa nada é chamado; o checkout exige ainda `ARO_PAYMENTS_ENABLED=yes`, que só se liga após a homologação E7 no EspelhoMeu e o GO comercial. Nenhuma rota de checkout está exposta neste PR. Testes: `npm run test:unit`.
 
 Notas:
 - **A oferta padrão do Genesis não exige elegibilidade estudantil;** só `genesis-01-student-br`. O ARO não conhece elegibilidade: o Club aplica a regra antes de criar o checkout (RFC `docs/19` §2) e, por isso, cria-o sempre a partir do servidor.
