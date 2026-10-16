@@ -105,16 +105,16 @@ export type ClubEvent = {
 };
 
 /**
- * Páginas comerciais dos workshops na AtlasHub.SI (atlashub-digital/AtlasHub.Si, PR #6, pré-lançamento).
+ * Páginas comerciais dos workshops na AtlasHub.SI (atlashub-digital/AtlasHub.Si #6, publicado em www.atlashub.si em pré-lançamento).
  * Mudar para true só depois de essas páginas estarem publicadas em atlashub.si, para não haver links quebrados.
  */
 export const atlashubWorkshopsLive = true;
 
 export const events: ClubEvent[] = [
   { day: "NOV", month: "2026", date: "NOV • 2026", title: "Fóruns Abertos do Club", detail: "Sessões introdutórias online: ideias, agentes e projetos. Horários a confirmar.", format: "ONLINE", state: "EM PREPARAÇÃO", status: "prep", kind: "club" },
-  { day: "14", month: "NOV", date: "14 NOV", title: "Empresa Aumentada 2027–2030", detail: "Workshop executivo pago da AtlasHub.SI · Anápolis, presencial, 14h–17h. Não faz parte do Club gratuito.", format: "PRESENCIAL", state: "PREVISTO", status: "external", kind: "b2b", href: "https://atlashub.si/workshops/empresa-aumentada-2027-2030" },
-  { day: "16", month: "NOV", date: "16 NOV", title: "Clínica de Ideias", detail: "Sessão online para quem participar do workshop executivo AtlasHub.SI de 14/11.", format: "ONLINE", state: "PREVISTO", status: "external", kind: "b2b", href: "https://atlashub.si/workshops/empresa-aumentada-2027-2030" },
-  { day: "28", month: "NOV", date: "28 NOV", title: "Enterprise Lab — E-commerce e Operações Vivas", detail: "Laboratório empresarial pago da AtlasHub.SI · Anápolis, presencial, 14h–19h. Não faz parte do Club gratuito.", format: "PRESENCIAL", state: "PREVISTO", status: "external", kind: "b2b", href: "https://atlashub.si/workshops/enterprise-lab-ecommerce" },
+  { day: "14", month: "NOV", date: "14 NOV", title: "Empresa Aumentada 2027–2030", detail: "Workshop executivo pago da AtlasHub.SI · Anápolis, presencial, 14h–17h. Não faz parte do Club gratuito.", format: "PRESENCIAL", state: "PREVISTO", status: "external", kind: "b2b", href: "https://www.atlashub.si/workshops/empresa-aumentada-2027-2030" },
+  { day: "16", month: "NOV", date: "16 NOV", title: "Clínica de Ideias", detail: "Sessão online para quem participar do workshop executivo AtlasHub.SI de 14/11.", format: "ONLINE", state: "PREVISTO", status: "external", kind: "b2b", href: "https://www.atlashub.si/workshops/empresa-aumentada-2027-2030" },
+  { day: "28", month: "NOV", date: "28 NOV", title: "Enterprise Lab — E-commerce e Operações Vivas", detail: "Laboratório empresarial pago da AtlasHub.SI · Anápolis, presencial, 14h–19h. Não faz parte do Club gratuito.", format: "PRESENCIAL", state: "PREVISTO", status: "external", kind: "b2b", href: "https://www.atlashub.si/workshops/enterprise-lab-ecommerce" },
   { day: "DEZ", month: "2026", date: "DEZ • 2026", title: "Estreia oficial do Club Atlas", detail: "Lançamento formal da comunidade e das primeiras missões.", format: "HÍBRIDO", state: "EM PREPARAÇÃO", status: "prep", kind: "club" },
   { day: "DEZ", month: "2026", date: "DEZ • 2026", title: "Genesis Early Access — 2 ateliers extras", detail: `Um atelier híbrido (Anápolis + online) e um online de preparação dos projetos. Gratuitos para quem registrar interesse até ${earlyAccess.deadline}, sujeitos a confirmação e capacidade. Datas a confirmar.`, format: "HÍBRIDO + ONLINE", state: "A CONFIRMAR", status: "prep", kind: "genesis" },
   { day: "09", month: "JAN", date: "09 JAN 2027", title: "Genesis — Turma 01", detail: "Abertura prevista (sábado) · Anápolis + online. Oito semanas, 24 ateliers.", format: "HÍBRIDO", state: "PREVISTO", status: "planned", kind: "genesis" },

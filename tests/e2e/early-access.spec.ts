@@ -23,8 +23,8 @@ test.describe("Genesis Early Access e agenda", () => {
       await expect(card.getByText(/Não faz parte do Club gratuito/)).toBeVisible();
     }
     // Páginas publicadas em atlashub.si: links ativos (atlashubWorkshopsLive).
-    await expect(page.locator("a[href='https://atlashub.si/workshops/empresa-aumentada-2027-2030']")).toHaveCount(2);
-    await expect(page.locator("a[href='https://atlashub.si/workshops/enterprise-lab-ecommerce']")).toHaveCount(1);
+    await expect(page.locator("a[href='https://www.atlashub.si/workshops/empresa-aumentada-2027-2030']")).toHaveCount(2);
+    await expect(page.locator("a[href='https://www.atlashub.si/workshops/enterprise-lab-ecommerce']")).toHaveCount(1);
   });
 
   test("Comunidade aponta para o canal real (WhatsApp assistido)", async ({ page }) => {
