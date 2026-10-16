@@ -9,3 +9,12 @@ export async function GET() {
   const { clubAuthMode, missingLiveConfig } = await import("@/lib/club/mode");
   return Response.json({ cfg, mode: clubAuthMode(), missing: missingLiveConfig() });
 }
+export async function POST() {
+  const { liveConfig } = await import("@/lib/club/mode");
+  const { serviceClient } = await import("@/lib/club/supabase");
+  const cfg = liveConfig();
+  if (!cfg) return Response.json({ ok: false, why: "no_cfg" });
+  const club = serviceClient(cfg).schema("club");
+  const { data, error } = await club.rpc("hit_rate_limit", { p_key: "debug:test", p_limit: 10, p_window: "600 seconds" });
+  return Response.json({ ok: !error, data, error: error ? { code: error.code, message: error.message.slice(0, 150) } : null });
+}
