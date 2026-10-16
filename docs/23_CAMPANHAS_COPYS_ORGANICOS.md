@@ -44,7 +44,7 @@ Em bio do Instagram/LinkedIn, usar a página (link único) e deixar o WhatsApp c
 ## Regras de texto (todas as peças)
 - PT-BR, linguagem simples; sem métricas, testemunhos, vagas, "últimas vagas", garantias nem promessas de rendimento.
 - Genesis: sempre "registrar interesse não é matrícula"; preços R$ 490 / R$ 190 (estudante elegível, após validação) só com a nota "sem cobrança nesta fase".
-- Workshops: **sem preço** até à aprovação comercial; "local e inscrições divulgados após confirmação".
+- Workshops: **sem preço** até à aprovação comercial; "Anápolis · local a divulgar"; nunca espaço reservado nem endereço.
 - Menores não são público-alvo; Atlas, Lucas, Marta e Bia identificados como personagens digitais; Sérgio é a única pessoa real retratada.
 - Hashtags com moderação: `#ClubAtlas #AtlasHub #InteligenciaArtificial #Anapolis` (escolher 2–4).
 
@@ -82,18 +82,18 @@ Em bio do Instagram/LinkedIn, usar a página (link único) e deixar o WhatsApp c
 **LinkedIn:**
 > O Genesis é o programa de 8 semanas do Club Atlas para quem quer ir do primeiro agente a uma equipe de agentes e a um projeto demonstrável. Turma 01 com início previsto em 09/01/2027. Early Access para quem registrar interesse até 30/11/2026. Detalhes: club.atlashub.si/genesis
 
-## 3. W01 Empresa Aumentada → www.atlashub.si/workshops/empresa-aumentada-2027-2030 *(página publicada em pré-lançamento; publicar peças após homologação)*
+## 3. W01 Empresa Aumentada → www.atlashub.si/workshops/empresa-aumentada-2027-2030 *(página em produção, pré-lançamento; peças no Pack Business/Enterprise, `docs/26`, para revisão do fundador)*
 **Criativo W1 (feed 1080×1350, Visual Pack AtlasHub.SI: navy/ciano):** "EMPRESA AUMENTADA 2027–2030"; "O futuro das operações começa hoje."; "Anápolis · sáb. 14/11 · 14h–17h"; selo "Pré-lançamento". Sem preço. *Alt:* texto integral.
 **Criativo W2 (carrossel, do Drive, revisto):** "Ter IA não é ser uma Empresa Aumentada" — 1 título · 2 "Bots e GPTs abriram possibilidades" · 3 "A mudança está em integrar pessoas, dados, processos e decisões" · 4 "3 horas presenciais + Clínica de Ideias a distância (16/11)" · 5 "Lista de interesse: atlashub.si/workshops".
 **LinkedIn (principal):**
 > A próxima transformação das empresas não cabe numa lista de ferramentas.
 > No dia 14 de novembro, em Anápolis, vamos conversar sobre como organizar uma empresa quando pessoas, sistemas, processos e capacidades inteligentes passam a trabalhar juntos.
 > Três horas presenciais, uma Clínica de Ideias a distância na segunda-feira (16/11) e uma comunidade moderada por 30 dias, com adesão voluntária.
-> Local e inscrições serão divulgados após confirmação. Entre na lista de interesse: www.atlashub.si/workshops/empresa-aumentada-2027-2030 (código W01-LI no WhatsApp).
+> Local e inscrições serão divulgados em breve. Entre na lista de interesse: www.atlashub.si/workshops/empresa-aumentada-2027-2030 (código W01-LI no WhatsApp).
 
 **Instagram:** versão curta do texto acima + "link na bio" (W01-IG). **Vídeo 45 s:** roteiro do Drive (`VIDEOS_ADS_E_BRIEF_VISUAL.md`), cartela final "Informações e lista de interesse: atlashub.si/workshops".
 
-## 4. EL01 E-commerce e Operações Vivas → www.atlashub.si/workshops/enterprise-lab-ecommerce *(página publicada em pré-lançamento; publicar peças após homologação)*
+## 4. EL01 E-commerce e Operações Vivas → www.atlashub.si/workshops/enterprise-lab-ecommerce *(página em produção, pré-lançamento; peças no Pack Business/Enterprise, `docs/26`, para revisão do fundador)*
 **Criativo E1 (feed):** "Você vende no Mercado Livre, na Shopee e no seu site?"; "E quem coordena a operação?"; "Enterprise Lab · Anápolis · sáb. 28/11 · 14h–19h"; selo "Pré-lançamento". *Alt:* texto integral.
 **Criativo E2 (carrossel dos 5 casos didáticos):** estoque reservado errado em dois canais · pagamento aprovado sem conciliação · rastreio desatualizado · mudança de regra do marketplace · campanha que vende e destrói a margem → "Mapeie, priorize e saia com um blueprint".
 **LinkedIn/Instagram:**

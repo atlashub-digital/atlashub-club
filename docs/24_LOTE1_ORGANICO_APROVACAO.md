@@ -1,8 +1,8 @@
-# Lote 1 orgânico — Club e Genesis · pacote para aprovação editorial
+# Pack Club/Genesis — lote 1 orgânico · para aprovação editorial
 
 **Estado:** pronto para validação do Sérgio, **num único lote**. Nada é publicado nem agendado automaticamente. Sem media paga.
 **Verificação (16/10/2026, 02h UTC):** `https://club.atlashub.si/` e `https://club.atlashub.si/genesis` → 200 (produção `dbbbf44`); os 10 links `CLUB-*` / `GEN-EA-*` abrem o WhatsApp oficial (+55 62 99190-3462) com o código correto no fim da mensagem.
-**Regras aplicadas:** nenhuma peça promete cadastro de membros nem Missão 001 ativos (PR2B #23 em NO-GO); Genesis sempre com "registrar interesse não é matrícula" e "sem cobrança nesta fase"; Sérgio é a única pessoa real; Lucas, Atlas, Marta e Bia identificados como personagens digitais; workshops fora deste lote.
+**Regras aplicadas:** nenhuma peça promete cadastro de membros nem Missão 001 ativos (PR2B #23 em NO-GO); Genesis sempre com "registrar interesse não é matrícula" e "sem cobrança nesta fase"; Sérgio é a única pessoa real; Lucas, Atlas, Marta e Bia identificados como personagens digitais; workshops fora deste pack (ver **Pack Business/Enterprise**, `docs/26_PACK_BUSINESS_ENTERPRISE.md`). Datas dos ateliers de dezembro nunca aparecem: só serão decididas depois de mais de cinco inscrições qualificadas.
 
 **Pendente antes da peça 1 (Helena/equipa):** responsável e horário do atendimento no WhatsApp; registo dos códigos no CRM (data, código, próximo passo, consentimento).
 
