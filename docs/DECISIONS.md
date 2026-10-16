@@ -10,3 +10,9 @@
 2026-10-14 — Logo institucional (AtlasMark, sem rosto) separado da mascote viva (AtlasAvatar, com rosto, reduced-motion).
 2026-10-14 — Revisão do Sérgio no PR #11: preferência editorial Sérgio · Lucas · Atlas · Marta · Bia (Clara Corporate mantém-se Clara; Bia evita colisão com LIA/LeveLab). UI atualizada; IDs/SOULs só após homologação (mapa em IDENTITY_DECISION §5). Landing ganha destaque do laboratório; CTAs de captação só com endpoint operativo.
 2026-10-14 — Issue #14: Club Atlas gratuito e independente; Genesis Turma 01 R$ 490 padrão / R$ 190 estudante elegível (após validação), início previsto 09/01/2027. Exibição na UI sem cobrança; Auth/CRM/elegibilidade/checkout só em PR2B/PR2C aprovados. Atlas companion MVP com guia pré-escrito; IA e voz fail-closed.
+
+## 2026-10-14 — PR2B separado (Auth/onboarding/CRM)
+- Aberto em branch próprio por diretiva do Sérgio; só rascunho SQL (não aplicado), código fail-closed e testes.
+- Recomendação técnica: projeto Supabase só do Club (Opção A). **Pendente** decisão com a Helena e aprovação do Sérgio antes de qualquer DDL (`docs/16_PR2B_AUTH_ONBOARDING_CRM.md` §2).
+
+2026-10-15 — ATL-D29 (Sérgio): o Club usa a **DB MASTER central `aakdyumavlzgyklbrsrw`** (AtlasHub) com **schema `club`** para separar das tabelas existentes; NÃO criar projeto Supabase dedicado. Live e inalterado: `club_interest` (RLS), Turnstile, env vars da Vercel, endpoint `/api/interesse`. Pagamentos ficam para o ARO; PR2B final (reconciliação #15 + #19) é draft, sem merge e sem produção.
