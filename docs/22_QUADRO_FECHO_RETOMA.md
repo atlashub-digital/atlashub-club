@@ -3,6 +3,17 @@
 **Data:** 15/10/2026, atualizado 16/10/2026 · **Dono e autoridade:** Sérgio Monteiro · **Cooperação técnica:** Helena · **Implementação:** Claude Code
 **Regra:** PRs pequenos em rascunho; sem merge, deploy, DDL produtiva, cobrança ou campanha paga sem aprovação do Sérgio.
 
+## Pós-merge — 16/10/2026, 06h UTC
+Integrados pelo proprietário: #26, #16, #28 (Club) e AtlasHub.Si#8. **Produção Club = `d032963`** (Vercel `dpl_6JQWTjPL33SuZtEEFR1BDspJazNw`, READY). Verificado em produção:
+- `/`, `/genesis`, `/eventos` → 200, `noindex`; a agenda liga às páginas `www.atlashub.si/workshops/…` (W01 e EL01).
+- `/catalogo.json` → 200, `X-Robots-Tag: noindex`, ofertas `CLUB`, `GEN-EA`, `W01`, `EL01`, `paymentRouting: indisponivel`.
+- ARO fail-closed: `POST /api/aro/webhook` → 503 (Club e AtlasHub.SI); `/api/aro/checkout` → 404.
+- `POST /api/interesse` → 503; `/api/club/signup` → 404 (registo real continua fora de produção).
+- Páginas de workshops AtlasHub.SI: sem `R$`, `noindex`.
+- #23 e #25 atualizados com `main` (`d032963`), sem conflitos; #23 com `verify` e Playwright verdes localmente.
+
+**Pendentes:** #23 (homologação Helena → GO executivo) e #25 (documentação). Bloqueios objetivos inalterados (tabela abaixo).
+
 ## Relatório final de homologação — 16/10/2026, 03h UTC (diretiva final de execução)
 **Produção:** Club `dbbbf44` (Vercel `dpl_EtTk5EnJEDiMB9Px9JXJswQ6SRbQ`, READY). AtlasHub.SI `dd853daf`: `/workshops`, `/workshops/empresa-aumentada-2027-2030` e `/workshops/enterprise-lab-ecommerce` → 200, `noindex`, sem `R$`, WhatsApp `W01-SITE` / `EL01-SITE`.
 
