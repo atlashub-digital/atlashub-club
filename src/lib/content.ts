@@ -100,13 +100,21 @@ export type ClubEvent = {
   status: Status;
   /** Club (comunidade) vs workshop executivo externo da AtlasHub.SI. */
   kind: "club" | "genesis" | "b2b";
+  /** Página externa (workshops AtlasHub.SI). Só aparece com `atlashubWorkshopsLive`. */
+  href?: string;
 };
+
+/**
+ * Páginas comerciais dos workshops na AtlasHub.SI (atlashub-digital/AtlasHub.Si, PR #6, pré-lançamento).
+ * Mudar para true só depois de essas páginas estarem publicadas em atlashub.si, para não haver links quebrados.
+ */
+export const atlashubWorkshopsLive = false;
 
 export const events: ClubEvent[] = [
   { day: "NOV", month: "2026", date: "NOV • 2026", title: "Fóruns Abertos do Club", detail: "Sessões introdutórias online: ideias, agentes e projetos. Horários a confirmar.", format: "ONLINE", state: "EM PREPARAÇÃO", status: "prep", kind: "club" },
-  { day: "14", month: "NOV", date: "14 NOV", title: "Empresa Aumentada 2027–2030", detail: "Workshop executivo AtlasHub.SI · Anápolis, presencial. Não faz parte do Club.", format: "PRESENCIAL", state: "PREVISTO", status: "external", kind: "b2b" },
-  { day: "16", month: "NOV", date: "16 NOV", title: "Clínica de Ideias", detail: "Complemento online do workshop executivo AtlasHub.SI.", format: "ONLINE", state: "PREVISTO", status: "external", kind: "b2b" },
-  { day: "28", month: "NOV", date: "28 NOV", title: "Enterprise Lab — E-commerce e Operações Vivas", detail: "Laboratório empresarial AtlasHub.SI · Anápolis, presencial.", format: "PRESENCIAL", state: "PREVISTO", status: "external", kind: "b2b" },
+  { day: "14", month: "NOV", date: "14 NOV", title: "Empresa Aumentada 2027–2030", detail: "Workshop executivo pago da AtlasHub.SI · Anápolis, presencial, 14h–17h. Não faz parte do Club gratuito.", format: "PRESENCIAL", state: "PREVISTO", status: "external", kind: "b2b", href: "https://atlashub.si/workshops/empresa-aumentada-2027-2030" },
+  { day: "16", month: "NOV", date: "16 NOV", title: "Clínica de Ideias", detail: "Sessão online para quem participar do workshop executivo AtlasHub.SI de 14/11.", format: "ONLINE", state: "PREVISTO", status: "external", kind: "b2b", href: "https://atlashub.si/workshops/empresa-aumentada-2027-2030" },
+  { day: "28", month: "NOV", date: "28 NOV", title: "Enterprise Lab — E-commerce e Operações Vivas", detail: "Laboratório empresarial pago da AtlasHub.SI · Anápolis, presencial, 14h–19h. Não faz parte do Club gratuito.", format: "PRESENCIAL", state: "PREVISTO", status: "external", kind: "b2b", href: "https://atlashub.si/workshops/enterprise-lab-ecommerce" },
   { day: "DEZ", month: "2026", date: "DEZ • 2026", title: "Estreia oficial do Club Atlas", detail: "Lançamento formal da comunidade e das primeiras missões.", format: "HÍBRIDO", state: "EM PREPARAÇÃO", status: "prep", kind: "club" },
   { day: "DEZ", month: "2026", date: "DEZ • 2026", title: "Genesis Early Access — 2 ateliers extras", detail: `Um atelier híbrido (Anápolis + online) e um online de preparação dos projetos. Gratuitos para quem registrar interesse até ${earlyAccess.deadline}, sujeitos a confirmação e capacidade. Datas a confirmar.`, format: "HÍBRIDO + ONLINE", state: "A CONFIRMAR", status: "prep", kind: "genesis" },
   { day: "09", month: "JAN", date: "09 JAN 2027", title: "Genesis — Turma 01", detail: "Abertura prevista (sábado) · Anápolis + online. Oito semanas, 24 ateliers.", format: "HÍBRIDO", state: "PREVISTO", status: "planned", kind: "genesis" },
@@ -123,7 +131,7 @@ export const channels: { icon: IconName; title: string; detail: string; status: 
   { icon: "chat", title: "Fóruns do Club", detail: "Perguntas, apresentações, projetos e ajuda técnica, com moderação humana.", status: "prep", statusLabel: "Em preparação" },
   { icon: "users", title: "Discord", detail: "Servidor da comunidade com canais por tema e Build Nights.", status: "soon", statusLabel: "Planejado" },
   { icon: "sparkle", title: "Desafios semanais", detail: "Pequenas missões práticas para aprender fazendo, sozinho ou em equipe.", status: "prep", statusLabel: "Em preparação" },
-  { icon: "phone", title: "WhatsApp", detail: "Só com adesão voluntária e integração oficial. Ainda em estudo.", status: "soon", statusLabel: "Em estudo" },
+  { icon: "phone", title: "WhatsApp", detail: "Contato assistido pelo WhatsApp oficial da AtlasHub já disponível. Grupos da comunidade só com adesão voluntária.", status: "new", statusLabel: "Contato assistido ativo" },
 ];
 
 export const universes = [
@@ -148,6 +156,6 @@ export type CardItem = { title: string; detail: string; tag: string; href?: stri
 export const library = [
   { title: "Empresa Aumentada", category: "ATLAS EDITIONS", description: "Fundamentos da transformação empresarial e do futuro das operações.", access: "REFERÊNCIA EDITORIAL", status: "EDITORIAL EM PREPARAÇÃO" },
   { title: "O E-commerce Aumentado", category: "ATLAS EDITIONS", description: "O comércio digital como uma operação integrada entre pessoas, dados e sistemas.", access: "REFERÊNCIA EDITORIAL", status: "PREVIEW EDITORIAL" },
-  { title: "O teu primeiro agente", category: "CLUB ATLAS", description: "Guia introdutório: contexto, objetivos, limites e primeira experiência.", access: "FUTURO FREE", status: "CONTEÚDO A PRODUZIR" },
+  { title: "Seu primeiro agente", category: "CLUB ATLAS", description: "Guia introdutório: contexto, objetivos, limites e primeira experiência.", access: "GRATUITO · FUTURO", status: "CONTEÚDO A PRODUZIR" },
   { title: "Genesis: Da semente ao ecossistema", category: "ATLAS LAB", description: "Percurso progressivo de oito semanas e desafios colaborativos.", access: "TURMA GENESIS", status: "PROGRAMA EM PREPARAÇÃO" },
 ];

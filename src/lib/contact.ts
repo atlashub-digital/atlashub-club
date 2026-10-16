@@ -6,5 +6,18 @@ const phone = "5562991903462";
 function contactUrl(message: string): string {
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 }
-export const clubWhatsAppUrl = contactUrl("Olá! Quero conhecer a comunidade gratuita Club Atlas. Pode me orientar?");
-export const genesisWhatsAppUrl = contactUrl("Olá! Tenho interesse na Turma 01 do Genesis. Quero entender as condições antes da pré-inscrição.");
+/**
+ * Código de captação no fim da mensagem (docs/21_CAMPANHAS_RETOMA.md): permite contar, no atendimento,
+ * de que frente e canal veio cada contacto, sem cookies nem dados do formulário.
+ * Formato: <FRENTE>-<CANAL>, p. ex. CLUB-SITE, GEN-EA-IG.
+ */
+export type CampaignFront = "CLUB" | "GEN-EA";
+const baseMessage: Record<CampaignFront, string> = {
+  CLUB: "Olá! Quero conhecer a comunidade gratuita Club Atlas. Pode me orientar?",
+  "GEN-EA": "Olá! Tenho interesse na Turma 01 do Genesis e no Early Access. Quero entender as condições antes da pré-inscrição.",
+};
+export function campaignWhatsAppUrl(front: CampaignFront, channel = "SITE"): string {
+  return contactUrl(`${baseMessage[front]} (código ${front}-${channel.toUpperCase()})`);
+}
+export const clubWhatsAppUrl = campaignWhatsAppUrl("CLUB");
+export const genesisWhatsAppUrl = campaignWhatsAppUrl("GEN-EA");

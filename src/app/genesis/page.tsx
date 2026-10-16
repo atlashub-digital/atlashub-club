@@ -5,7 +5,7 @@ import Icon, { type IconName } from "@/components/ui/Icon";
 import { IconBox, LinkButton, SectionHeading, StatusTag } from "@/components/ui/primitives";
 import { ClubOfferCard, GenesisOfferCard } from "@/components/landing/OffersSection";
 import { genesisPhases } from "@/lib/content";
-import { earlyAccess, genesisFacts, price, priceNotes } from "@/lib/offers";
+import { earlyAccess, earlyAccessAteliers, genesisFacts, genesisTimeline, price, priceNotes } from "@/lib/offers";
 import { genesisWhatsAppUrl } from "@/lib/contact";
 
 export const metadata: Metadata = {
@@ -110,7 +110,7 @@ export default function Genesis() {
             <p className="ca-offer__note">{priceNotes.student}</p>
             <p className="ca-offer__note">
               <strong>Early Access:</strong> registre interesse até {earlyAccess.deadline} e receba convite para 2 ateliers
-              extras e gratuitos em dezembro (datas a confirmar).
+              extras e gratuitos em dezembro (datas a confirmar). <a href="#early-access">Saiba mais</a>
             </p>
             <StatusTag status="prep" dot>
               Sem cobrança nesta fase
@@ -125,6 +125,41 @@ export default function Genesis() {
             placeholder="blur"
             className="ca-hero__img"
           />
+        </div>
+      </section>
+
+      <section className="ca-section ca-container" aria-labelledby="early-access-title" id="early-access">
+        <SectionHeading
+          id="early-access-title"
+          eyebrow={`Early Access · até ${earlyAccess.deadline}`}
+          gold
+          title="Comece antes da Turma 01."
+          lead={`${earlyAccess.summary} Se você já falou com a equipe pelo WhatsApp oficial sobre o Genesis, seu interesse já conta.`}
+        />
+        <ul className="ca-grid ca-grid--2">
+          {earlyAccessAteliers.map((a) => (
+            <li key={a.title} className="ca-card ca-card--gold">
+              <StatusTag status="prep" dot>
+                {a.format} · data a confirmar
+              </StatusTag>
+              <h3>{a.title}</h3>
+              <p>{a.detail}</p>
+            </li>
+          ))}
+        </ul>
+        <ol className="ca-grid ca-grid--4" aria-label="Linha do tempo do Genesis Turma 01" style={{ marginTop: "1.5rem" }}>
+          {genesisTimeline.map((t) => (
+            <li key={t.when} className="ca-card">
+              <p className="ca-eyebrow ca-eyebrow--gold">{t.when}</p>
+              <p>{t.what}</p>
+            </li>
+          ))}
+        </ol>
+        <p className="ca-offer__note" style={{ marginTop: "1rem" }}>{earlyAccess.fine}</p>
+        <div className="ca-hero__actions">
+          <LinkButton href={genesisWhatsAppUrl} variant="gold" external>
+            Registrar interesse pelo WhatsApp
+          </LinkButton>
         </div>
       </section>
 

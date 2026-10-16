@@ -1,4 +1,4 @@
-import type { ClubEvent } from "@/lib/content";
+import { atlashubWorkshopsLive, type ClubEvent } from "@/lib/content";
 import { StatusTag } from "../ui/primitives";
 
 /** Cartão de evento (board secção 10). Workshops B2B identificados como AtlasHub.SI, não Club. */
@@ -21,6 +21,11 @@ export default function EventCard({ event }: { event: ClubEvent }) {
           {event.title}
         </h3>
         <p>{event.detail}</p>
+        {event.href && atlashubWorkshopsLive && (
+          <a className="ca-linkbtn" href={event.href} target="_blank" rel="noopener noreferrer">
+            Programa e inscrição na AtlasHub.SI <span aria-hidden="true">↗</span>
+          </a>
+        )}
       </div>
     </article>
   );
