@@ -10,3 +10,18 @@
 2026-10-14 — Logo institucional (AtlasMark, sem rosto) separado da mascote viva (AtlasAvatar, com rosto, reduced-motion).
 2026-10-14 — Revisão do Sérgio no PR #11: preferência editorial Sérgio · Lucas · Atlas · Marta · Bia (Clara Corporate mantém-se Clara; Bia evita colisão com LIA/LeveLab). UI atualizada; IDs/SOULs só após homologação (mapa em IDENTITY_DECISION §5). Landing ganha destaque do laboratório; CTAs de captação só com endpoint operativo.
 2026-10-14 — Issue #14: Club Atlas gratuito e independente; Genesis Turma 01 R$ 490 padrão / R$ 190 estudante elegível (após validação), início previsto 09/01/2027. Exibição na UI sem cobrança; Auth/CRM/elegibilidade/checkout só em PR2B/PR2C aprovados. Atlas companion MVP com guia pré-escrito; IA e voz fail-closed.
+
+## 2026-10-14 — PR2B separado (Auth/onboarding/CRM)
+- Aberto em branch próprio por diretiva do Sérgio; só rascunho SQL (não aplicado), código fail-closed e testes.
+- Recomendação técnica: projeto Supabase só do Club (Opção A). **Pendente** decisão com a Helena e aprovação do Sérgio antes de qualquer DDL (`docs/16_PR2B_AUTH_ONBOARDING_CRM.md` §2).
+
+## 2026-10-15 — ATL-D29: Club na DB Master AtlasHub
+- Decidido: o Club usa a DB Master `aakdyumavlzgyklbrsrw`, schema `club` (Opção B). Não criar projeto Supabase dedicado.
+- Adaptações no PR #19: escrita direta do `authenticated` no schema `club` retirada (003); dados do formulário fora do `user_metadata` (`club.club_pending_signups`, por hash); modelos de e-mail globais intocados (PKCE); termos aceites pelo dono do e-mail em `/conta/concluir`; a purga nunca apaga `auth.users`.
+- Migrações 002/003 só depois de testadas num ambiente isolado preparado pela Helena e aprovadas pelo Sérgio.
+
+## 2026-10-15 — PR2B canónico (retoma operacional do Sérgio)
+- #15 (base auditável), #19 (modo live na Master) e #20 (reconciliação) consolidados num único PR a partir do #19, que já continha o #15 e a correção do e-mail de criança; integrada a `main` atual (WhatsApp assistido e Early Access intactos).
+- **Não adotado do #20:** o "modo lead" do formulário (envio para `/api/interesse`), porque a escrita nesse endpoint está suspensa em produção pela Helena e recolheria dados (incluindo de menores) fora do fluxo com conta e consentimento. O formulário fica em demonstração ou em modo live; o WhatsApp assistido mantém-se.
+- Acrescentado o último passo do percurso: interesse Genesis a partir da conta (`004_club_genesis_interest.sql`, `/api/club/genesis-interest`).
+- Pagamentos do Genesis e dos workshops: só pelo ARO (Atlas Revenue Operations), sem checkout paralelo.
