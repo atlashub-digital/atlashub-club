@@ -1,20 +1,63 @@
 # Quadro de fecho — retoma operacional (Club + Genesis + Workshops + ARO + Campanhas)
 
-**Data:** 15/10/2026 · **Dono e autoridade:** Sérgio Monteiro · **Cooperação técnica:** Helena · **Implementação:** Claude Code
+**Data:** 15/10/2026, atualizado 16/10/2026 · **Dono e autoridade:** Sérgio Monteiro · **Cooperação técnica:** Helena · **Implementação:** Claude Code
 **Regra:** PRs pequenos em rascunho; sem merge, deploy, DDL produtiva, cobrança ou campanha paga sem aprovação do Sérgio.
 
-## Estado real verificado (15/10/2026, 17h UTC)
-- **Produção Club = `dab885c`** (Vercel `dpl_6PWUYKyGmTb9z2yGzPnMdeFaSyeV`, READY). **`dc07f91` não está em produção**: não existe deployment Vercel para `5ed90b8` nem `dc07f91`, provavelmente bloqueado pela quota de builds na altura. Consequência: o **Early Access (#21) ainda não aparece em club.atlashub.si** (verificado no HTML de `/genesis`). A produção tem os segredos rodados e a escrita de `/api/interesse` suspensa.
-- Rollback disponível: `dpl_EUbCwyJEHv8CcFqGGXPWSDzQiqkh` (`85453eb`).
+## Pós-merge — 16/10/2026, 06h UTC
+Integrados pelo proprietário: #26, #16, #28 (Club) e AtlasHub.Si#8. **Produção Club = `d032963`** (Vercel `dpl_6JQWTjPL33SuZtEEFR1BDspJazNw`, READY). Verificado em produção:
+- `/`, `/genesis`, `/eventos` → 200, `noindex`; a agenda liga às páginas `www.atlashub.si/workshops/…` (W01 e EL01).
+- `/catalogo.json` → 200, `X-Robots-Tag: noindex`, ofertas `CLUB`, `GEN-EA`, `W01`, `EL01`, `paymentRouting: indisponivel`.
+- ARO fail-closed: `POST /api/aro/webhook` → 503 (Club e AtlasHub.SI); `/api/aro/checkout` → 404.
+- `POST /api/interesse` → 503; `/api/club/signup` → 404 (registo real continua fora de produção).
+- Páginas de workshops AtlasHub.SI: sem `R$`, `noindex`.
+- #23 e #25 atualizados com `main` (`d032963`), sem conflitos; #23 com `verify` e Playwright verdes localmente.
+
+**Pendentes:** #23 (homologação Helena → GO executivo) e #25 (documentação). Bloqueios objetivos inalterados (tabela abaixo).
+
+## Relatório final de homologação — 16/10/2026, 03h UTC (diretiva final de execução)
+**Produção:** Club `dbbbf44` (Vercel `dpl_EtTk5EnJEDiMB9Px9JXJswQ6SRbQ`, READY). AtlasHub.SI `dd853daf`: `/workshops`, `/workshops/empresa-aumentada-2027-2030` e `/workshops/enterprise-lab-ecommerce` → 200, `noindex`, sem `R$`, WhatsApp `W01-SITE` / `EL01-SITE`.
+
+| Frente | PR | Estado técnico (verificado) | Bloqueios objetivos |
+|---|---|---|---|
+| PR2B registo real | #23 (único; CI `verify` + `sql-draft` verdes em `513351c`) | Percurso completo em código e testes. A reconciliação da Master (002 aplicado → 003+004) está provada em CI: auditoria só de leitura, transação com pré/pós-condições, reversão (`docs/sql/drafts/RECONCILIACAO_MASTER.md`). `CLUB_AUTH_MODE` fica `off`. | 1. Aplicar a reconciliação num ambiente isolado e depois na Master (Helena). 2. Auth: Confirm email, Redirect URL `/entrar/confirmar`, SMTP com SPF/DKIM. 3. Variáveis do modo live na Vercel (`docs/17` §3); `SUPABASE_ANON_KEY` está em falta. 4. Matriz de aceitação real ponta a ponta (`docs/17` §6) com evidências. 5. Homologação da Helena, que é a condição do GO executivo para merge e `live`. |
+| Links da agenda para workshops | #26 (CI verde, preview READY) | Os links apontam para as rotas confirmadas em produção. | Confirmação da Helena (AtlasHub.Si#7) e autorização de merge. |
+| ARO: ids e consumidores | #16 (Club, CI verde) · AtlasHub.Si#8 | Ids da UI = catálogo, garantido por um guarda no `content:check`. Cliente com checkout, polling e direitos; webhook HMAC. Tudo fail-closed: sem rota de checkout e sem provedores diretos. | Projetos `atlas-club` e `atlashub-si` registados no ARO e chaves emitidas; homologação E7 no EspelhoMeu; políticas de venda publicadas; GO comercial. |
+| Clara WhatsApp | #28 | `/catalogo.json`: 4 ofertas, códigos, links, guardrails e campos de CRM; QA em `docs/25`. | Configuração da Clara no Atendimento.Center (Helena); responsável e horário do atendimento; registo dos códigos no CRM. |
+| Campanhas | #25 | Dois packs para revisão: Club/Genesis (`docs/24`, 8 peças) e Business/Enterprise (`docs/26`, 8 peças). | Revisão e aprovação peça a peça pelo fundador. Campanha paga exige GO. |
+| Genesis | — | 09/01/2027, 8 semanas, 24 ateliers, R$ 490/190. Early Access até 30/11. Nenhuma data em dezembro. | Datas dos ateliers de dezembro só depois de mais de cinco inscrições qualificadas. Condições definitivas antes de abrir matrículas. |
+| Workshops | AtlasHub.Si#8 | Capacidade-alvo 25 pessoas (W01) / 12 empresas (EL01). Local "a divulgar". Sem preço publicado. | Decisão comercial do W01 (20/10). Regras de adiamento, cancelamento e reembolso publicadas antes de vender. |
+
+**Ordem de merge sugerida:**
+1. #26, depois da confirmação da Helena.
+2. #28 e AtlasHub.Si#8 (não mudam o comportamento visível nem fazem cobrança).
+3. #16.
+4. #23, só depois da homologação da Helena.
+5. #25 (documentação).
+
+## Estado real verificado (histórico 15/10)
+**Atualização 15/10/2026, 19h UTC (decisão operacional do Sérgio, ponto 1):** #22 e #24 integrados num só merge (`dbbbf44`), com um único build de produção.
+- **Produção Club = `dbbbf44`** · Vercel `dpl_EtTk5EnJEDiMB9Px9JXJswQ6SRbQ` · READY · club.atlashub.si.
+- Homologado em club.atlashub.si:
+  - Early Access visível em `/genesis#early-access`, com o prazo de 30/11/2026;
+  - "Atelier extra 1" (híbrido, Anápolis + online) e "Atelier extra 2" (online), ambos gratuitos e com data a confirmar;
+  - início a 09/01/2027; R$ 490 / R$ 190 mostrados com "não é matrícula";
+  - WhatsApp operativo com o código `GEN-EA-SITE`;
+  - `POST /api/interesse` → 503;
+  - `/api/club/signup` → 404 (o registo real não está em produção); `/participar` em "Modo demonstração";
+  - `/api/atlas/turn` → 503;
+  - `noindex, nofollow` mantido;
+  - nenhum link para atlashub.si/workshops ainda.
+- Rollback: `dpl_6PWUYKyGmTb9z2yGzPnMdeFaSyeV` (`dab885c`).
+- Histórico: até esta data a produção estava em `dab885c` (não havia deploy de `5ed90b8`/`dc07f91`).
 
 ## PRs desta retoma
 | PR | Repo | Âmbito | Estado |
 |---|---|---|---|
 | #23 | atlashub-club | PR2B canónico (substitui #15, #19, #20) + interesse Genesis pela conta | rascunho, testes locais verdes |
 | #16 | atlashub-club | PR2C RFC + contratos ARO (só docs) | rascunho, CI verde no SHA anterior |
-| este PR | atlashub-club | Early Access completo, páginas Club alinhadas, campanhas, este quadro | rascunho |
+| #24 | atlashub-club | Early Access completo, páginas Club alinhadas, campanhas, este quadro | **integrado** (`dbbbf44`) e em produção |
 | AtlasHub.Si #6 | AtlasHub.Si | páginas dos 2 workshops + secção Workshops na home | rascunho |
-| #22 | atlashub-club | ajuste editorial do Early Access ("participação gratuita") — outra sessão | aberto; compatível com este PR |
+| #22 | atlashub-club | ajuste editorial do Early Access ("participação gratuita") | **integrado** via #24 |
 
 ---
 
@@ -35,7 +78,7 @@
 |---|---|---|---|---|
 | Valores R$ 490 / R$ 190, 09/01/2027, 8 semanas, 24 ateliers | ✅ preservados (`src/lib/offers.ts`) | Claude Code | — | `content:check` impede outros valores/datas |
 | Early Access: interesse até 30/11; 2 ateliers gratuitos em dezembro (híbrido Anápolis + online; online) | ✅ secção `/genesis#early-access` | Claude Code | produção desatualizada (M1) | visível em produção após redeploy aprovado |
-| Datas, horários e local dos ateliers de dezembro | ⏳ | Sérgio / equipa | logística | datas publicadas só após confirmação; convites aos interessados |
+| Datas, horários e local dos ateliers de dezembro | ⏳ | Sérgio / equipa | mais de cinco inscrições qualificadas | datas decididas só depois desse limiar; convites aos interessados |
 | Condições definitivas (pagamento, cancelamento, reembolso) | ⏳ | Sérgio + jurídico | — | publicadas antes da abertura de matrículas |
 | Integração futura com ARO | ✅ contratos (#16) | Claude Code / dono do ARO | M4 | ids unificados com o catálogo (`genesis-01-br`/`genesis-01-student-br`) |
 | Pagamento | 🔒 desligado | — | ARO + EspelhoMeu | nenhuma cobrança até autorização específica |
