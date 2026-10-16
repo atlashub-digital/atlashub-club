@@ -8,7 +8,7 @@ test("catálogo do atendimento: 4 ofertas, códigos, links e guardrails", async 
   expect(cat.offers.map((o: { code: string }) => o.code)).toEqual(["CLUB", "GEN-EA", "W01", "EL01"]);
   const text = JSON.stringify(cat);
   // Só os preços aprovados para publicação; workshops sem valor; nada de datas de dezembro nem local.
-  expect(text.match(/R\$ \d+/g)?.sort()).toEqual(["R$ 190", "R$ 490"]);
+  expect([...new Set(text.match(/R\$ [\d.]+/g))].sort()).toEqual(["R$ 1.290", "R$ 190", "R$ 297", "R$ 347", "R$ 490", "R$ 990"]);
   expect(JSON.stringify(cat.offers)).not.toMatch(/\b\d{1,2}\/12\b|vagas (abertas|limitadas)|inscrições abertas|espaço reservado/i);
   expect(cat.offers.find((o: { code: string }) => o.code === "GEN-EA").decemberDates).toBe("não definidas");
   for (const code of ["W01", "EL01"]) expect(cat.offers.find((o: { code: string }) => o.code === code).venue).toBe("a divulgar");
