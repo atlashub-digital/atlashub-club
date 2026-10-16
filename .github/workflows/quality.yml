@@ -54,3 +54,10 @@ jobs:
           PGPORT: "5432"
           PGUSER: postgres
           PGPASSWORD: postgres
+      - name: Reconciliação da Master (002 aplicado → 003+004)
+        run: scripts/test-sql-master-reconcile.sh
+        env:
+          PGHOST: localhost
+          PGPORT: "5432"
+          PGUSER: postgres
+          PGPASSWORD: postgres

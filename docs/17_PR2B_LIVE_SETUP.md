@@ -23,6 +23,7 @@ Fluxo:
 8. Interessados já recebidos (`public.club_interest`, `/api/interesse`) e o WhatsApp assistido ficam como estão; o PR2B não os lê nem os altera.
 
 ## 2. Supabase — DB Master (Helena; nada disto foi feito)
+0. **Master já com o 002 (auditoria de 15/10):** seguir `docs/sql/drafts/RECONCILIACAO_MASTER.md` (diagnóstico de leitura → `reconcile/apply_003_004.sql`); não reaplicar o 002.
 1. **Ambiente isolado primeiro** (branch Supabase ou cópia, preparado pela Helena): aplicar `docs/sql/drafts/002_club_auth_onboarding.sql`, depois `docs/sql/drafts/003_club_signup_live.sql` e `docs/sql/drafts/004_club_genesis_interest.sql`; correr o Security Advisor. Só depois, com aprovação do Sérgio, na Master. Localmente: `scripts/test-sql-draft.sh` (Postgres descartável) corre os testes RLS e do modo live.
 2. **Settings → API → Exposed schemas:** acrescentar `club` (as tabelas ficam fechadas por RLS; o membro só lê o que é seu).
 3. **Authentication → Providers → Email:** ativo e "Confirm email" ligado. **Decisão Helena/Sérgio:** se "Allow new users to sign up" estiver desligado na Master, o cadastro devolve 503 até ser ligado.
