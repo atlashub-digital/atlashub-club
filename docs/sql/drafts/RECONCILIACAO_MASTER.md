@@ -15,6 +15,9 @@
 4. **Master:** só depois do passo 3 verde e com aprovação do Sérgio, repetir o passo 2 na Master e o passo 1 para provar o resultado.
 5. Seguir `docs/17_PR2B_LIVE_SETUP.md` §2–§6 (Auth: Confirm email, Redirect URL `/entrar/confirmar`, SMTP com SPF/DKIM; env vars; homologação ponta a ponta). `CLUB_AUTH_MODE` continua `off` até ao relatório GO.
 
+## Matrícula Genesis (005)
+Depois de 003/004 aplicados e auditados: `psql "$DB" -f docs/sql/drafts/005_club_genesis_checkout.sql` (reexecutável; vendas fechadas por defeito em `club_cohorts`).
+
 ## Reversão
 `psql "$DB" -f docs/sql/drafts/reconcile/rollback_003_004.sql` remove apenas os objetos novos do 003/004 (funções, `club_pending_signups`, coluna `claimed_at`, índice do outbox). **Não** volta a dar `INSERT` ao `authenticated` — reabrir essa escrita seria regressão de segurança. Reversão funcional imediata: `CLUB_AUTH_MODE=off` na Vercel.
 

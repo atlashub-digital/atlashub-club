@@ -14,3 +14,7 @@ psql -q -v ON_ERROR_STOP=1 -d "$db" -f docs/sql/drafts/003_club_signup_live.sql
 psql -q -v ON_ERROR_STOP=1 -d "$db" -f docs/sql/drafts/tests/003_live_test.sql
 psql -q -v ON_ERROR_STOP=1 -d "$db" -f docs/sql/drafts/004_club_genesis_interest.sql
 psql -q -v ON_ERROR_STOP=1 -d "$db" -f docs/sql/drafts/tests/004_genesis_interest_test.sql
+psql -q -v ON_ERROR_STOP=1 -d "$db" -f docs/sql/drafts/005_club_genesis_checkout.sql
+psql -q -v ON_ERROR_STOP=1 -d "$db" -f docs/sql/drafts/005_club_genesis_checkout.sql   # reexecutável
+psql -q -v ON_ERROR_STOP=1 -d "$db" -f docs/sql/drafts/tests/005_genesis_checkout_test.sql
+GENESIS_TEST_DB="postgres://${PGUSER:-postgres}${PGPASSWORD:+:$PGPASSWORD}@${PGHOST_TCP:-localhost}:${PGPORT:-5432}/$db" npx tsx scripts/test-genesis-integration.mts

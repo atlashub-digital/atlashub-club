@@ -79,3 +79,10 @@ Checkout criado · instrução de pagamento visível · `PENDING` visível · pa
 3. Preços e políticas aprovados pelo Sérgio (workshops: decisão comercial W01 a 20/10/2026).
 4. Teste de pagamento controlado.
 5. Aprovação comercial explícita antes de qualquer cobrança.
+
+## Implementação da matrícula Genesis (#29)
+- Base: `docs/sql/drafts/005_club_genesis_checkout.sql` (depois de 002–004; reexecutável). Elegibilidade de estudante com decisão humana (`club.decide_student_eligibility`, evidência + revisor + validade), matrícula viva única por membro, limite de turma opcional (`club_cohorts.capacity`), deduplicação de eventos, RLS só leitura do próprio membro.
+- Percurso: `/genesis/inscricao` (membro com conta; condições `src/lib/genesis/policy.ts` aceites e versionadas) → `POST /api/genesis/checkout` (oferta validada no servidor; `Idempotency-Key` = matrícula + oferta; valor do ARO tem de bater com `offers.ts`) → `/genesis/inscricao/<id>` (QR + Copia e Cola; segredo em cookie httpOnly) → **`member` só com ARO APPROVED + `atlas-club:course:genesis-01` ACTIVE re-resolvido** (polling ou webhook) → reembolso/estorno/revogação devolvem a `interested`.
+- Pedido de validação de estudante: `POST /api/genesis/student` (sem upload). A equipe decide em `club.decide_student_eligibility` (SQL/service_role).
+- Interruptores (todos necessários): Club `live`, `ARO_*` com `ARO_PAYMENTS_ENABLED=yes`, `GENESIS_SALES_OPEN=yes`, `club_cohorts.sales_open = true`. Reversão: qualquer um deles a desligado.
+- Testes: `docs/sql/drafts/tests/005_genesis_checkout_test.sql`, `scripts/test-genesis-integration.mts` (percurso real contra as funções SQL, ARO simulado), e2e `genesis-matricula.spec.ts` (fechado sem live/ARO).
