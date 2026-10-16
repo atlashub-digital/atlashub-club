@@ -7,7 +7,14 @@
  * "pending_launch". O preço cobrado no futuro virá de uma cotação assinada no servidor —
  * nunca deste ficheiro nem de um valor enviado pelo browser.
  */
-export type OfferId = "club-free-v1" | "genesis-01-standard" | "genesis-01-student";
+/**
+ * Os ids das ofertas pagas são os códigos de oferta do catálogo ARO (`aro.project.yaml`, projeto `atlas-club`,
+ * convenção `<produto>-<mercado>`). `npm run content:check` falha se ids ou valores divergirem do manifesto.
+ * `club-free-v1` não existe no ARO: o Club gratuito nunca passa por cobrança.
+ */
+export type OfferId = "club-free-v1" | "genesis-01-br" | "genesis-01-student-br";
+
+export const aroProject = "atlas-club";
 
 export type Offer = {
   id: OfferId;
@@ -15,17 +22,26 @@ export type Offer = {
   availability: "pending_launch";
   eligibilityRequired?: "student_approved";
   durationWeeks?: number;
+  /** Direito ARO que a oferta concede (`<projeto>:<tipo>:<produto>`); só ofertas pagas. */
+  entitlement?: `${typeof aroProject}:${string}`;
 };
 
 export const offers: Record<OfferId, Offer> = {
   "club-free-v1": { id: "club-free-v1", priceMinor: 0, availability: "pending_launch" },
-  "genesis-01-standard": { id: "genesis-01-standard", priceMinor: 49000, availability: "pending_launch", durationWeeks: 8 },
-  "genesis-01-student": {
-    id: "genesis-01-student",
+  "genesis-01-br": {
+    id: "genesis-01-br",
+    priceMinor: 49000,
+    availability: "pending_launch",
+    durationWeeks: 8,
+    entitlement: "atlas-club:course:genesis-01",
+  },
+  "genesis-01-student-br": {
+    id: "genesis-01-student-br",
     priceMinor: 19000,
     availability: "pending_launch",
     eligibilityRequired: "student_approved",
     durationWeeks: 8,
+    entitlement: "atlas-club:course:genesis-01",
   },
 };
 
@@ -37,8 +53,8 @@ export function formatBRL(minor: number): string {
 
 export const price = {
   club: "Grátis",
-  genesisStandard: formatBRL(offers["genesis-01-standard"].priceMinor),
-  genesisStudent: formatBRL(offers["genesis-01-student"].priceMinor),
+  genesisStandard: formatBRL(offers["genesis-01-br"].priceMinor),
+  genesisStudent: formatBRL(offers["genesis-01-student-br"].priceMinor),
 };
 
 export const genesisFacts = {

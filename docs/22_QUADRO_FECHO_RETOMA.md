@@ -69,7 +69,7 @@
 | Early Access: interesse até 30/11; 2 ateliers gratuitos em dezembro (híbrido Anápolis + online; online) | ✅ secção `/genesis#early-access` | Claude Code | produção desatualizada (M1) | visível em produção após redeploy aprovado |
 | Datas, horários e local dos ateliers de dezembro | ⏳ | Sérgio / equipa | mais de cinco inscrições qualificadas | datas decididas só depois desse limiar; convites aos interessados |
 | Condições definitivas (pagamento, cancelamento, reembolso) | ⏳ | Sérgio + jurídico | — | publicadas antes da abertura de matrículas |
-| Integração futura com ARO | ✅ contratos (#16) | Claude Code / dono do ARO | M4 | `genesis-01-standard`/`-student` no ARO |
+| Integração futura com ARO | ✅ contratos (#16) | Claude Code / dono do ARO | M4 | ids unificados com o catálogo (`genesis-01-br`/`genesis-01-student-br`) |
 | Pagamento | 🔒 desligado | — | ARO + EspelhoMeu | nenhuma cobrança até autorização específica |
 
 ## Missão 3 — Workshops empresariais
