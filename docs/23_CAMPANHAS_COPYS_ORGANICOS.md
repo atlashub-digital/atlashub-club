@@ -8,8 +8,8 @@
 |---|---|---|---|
 | Club gratuito | https://club.atlashub.si/ | sim | **sim** |
 | Genesis Early Access | https://club.atlashub.si/genesis#early-access | sim (`dbbbf44`, `dpl_EtTk5EnJEDiMB9Px9JXJswQ6SRbQ`, homologado a 15/10) | **sim** |
-| W01 Empresa Aumentada | https://atlashub.si/workshops/empresa-aumentada-2027-2030 | **não** (AtlasHub.Si #6 em preparação) | só depois de a página estar no ar |
-| EL01 E-commerce | https://atlashub.si/workshops/enterprise-lab-ecommerce | **não** (idem) | só depois de a página estar no ar |
+| W01 Empresa Aumentada | https://www.atlashub.si/workshops/empresa-aumentada-2027-2030 | publicada em pré-lançamento (AtlasHub.Si #6, verificada a 16/10: 200, noindex, sem preço) | depois da homologação da Helena e da validação do Sérgio |
+| EL01 E-commerce | https://www.atlashub.si/workshops/enterprise-lab-ecommerce | idem | idem |
 
 ## Códigos de origem
 `<FRENTE>-<CANAL>`; canais: `IG` (Instagram feed/reels), `ST` (stories), `FB` (Facebook), `LI` (LinkedIn), `WA` (partilha por WhatsApp/parceiros); no site: `-SITE`.
@@ -82,25 +82,25 @@ Em bio do Instagram/LinkedIn, usar a página (link único) e deixar o WhatsApp c
 **LinkedIn:**
 > O Genesis é o programa de 8 semanas do Club Atlas para quem quer ir do primeiro agente a uma equipe de agentes e a um projeto demonstrável. Turma 01 com início previsto em 09/01/2027. Early Access para quem registrar interesse até 30/11/2026. Detalhes: club.atlashub.si/genesis
 
-## 3. W01 Empresa Aumentada → atlashub.si/workshops/empresa-aumentada-2027-2030 *(publicar só com a página no ar)*
+## 3. W01 Empresa Aumentada → www.atlashub.si/workshops/empresa-aumentada-2027-2030 *(página publicada em pré-lançamento; publicar peças após homologação)*
 **Criativo W1 (feed 1080×1350, Visual Pack AtlasHub.SI: navy/ciano):** "EMPRESA AUMENTADA 2027–2030"; "O futuro das operações começa hoje."; "Anápolis · sáb. 14/11 · 14h–17h"; selo "Pré-lançamento". Sem preço. *Alt:* texto integral.
 **Criativo W2 (carrossel, do Drive, revisto):** "Ter IA não é ser uma Empresa Aumentada" — 1 título · 2 "Bots e GPTs abriram possibilidades" · 3 "A mudança está em integrar pessoas, dados, processos e decisões" · 4 "3 horas presenciais + Clínica de Ideias a distância (16/11)" · 5 "Lista de interesse: atlashub.si/workshops".
 **LinkedIn (principal):**
 > A próxima transformação das empresas não cabe numa lista de ferramentas.
 > No dia 14 de novembro, em Anápolis, vamos conversar sobre como organizar uma empresa quando pessoas, sistemas, processos e capacidades inteligentes passam a trabalhar juntos.
 > Três horas presenciais, uma Clínica de Ideias a distância na segunda-feira (16/11) e uma comunidade moderada por 30 dias, com adesão voluntária.
-> Local e inscrições serão divulgados após confirmação. Entre na lista de interesse: atlashub.si/workshops/empresa-aumentada-2027-2030 (código W01-LI no WhatsApp).
+> Local e inscrições serão divulgados após confirmação. Entre na lista de interesse: www.atlashub.si/workshops/empresa-aumentada-2027-2030 (código W01-LI no WhatsApp).
 
 **Instagram:** versão curta do texto acima + "link na bio" (W01-IG). **Vídeo 45 s:** roteiro do Drive (`VIDEOS_ADS_E_BRIEF_VISUAL.md`), cartela final "Informações e lista de interesse: atlashub.si/workshops".
 
-## 4. EL01 E-commerce e Operações Vivas → atlashub.si/workshops/enterprise-lab-ecommerce *(publicar só com a página no ar)*
+## 4. EL01 E-commerce e Operações Vivas → www.atlashub.si/workshops/enterprise-lab-ecommerce *(página publicada em pré-lançamento; publicar peças após homologação)*
 **Criativo E1 (feed):** "Você vende no Mercado Livre, na Shopee e no seu site?"; "E quem coordena a operação?"; "Enterprise Lab · Anápolis · sáb. 28/11 · 14h–19h"; selo "Pré-lançamento". *Alt:* texto integral.
 **Criativo E2 (carrossel dos 5 casos didáticos):** estoque reservado errado em dois canais · pagamento aprovado sem conciliação · rastreio desatualizado · mudança de regra do marketplace · campanha que vende e destrói a margem → "Mapeie, priorize e saia com um blueprint".
 **LinkedIn/Instagram:**
 > As vendas atravessam canais. A operação precisa acompanhar.
 > No Enterprise Lab de 28/11, em Anápolis, sellers e gestores de e-commerce mapeiam o fluxo de um pedido, identificam gargalos e comparam processo, automação, IA assistiva e agentes supervisionados — saindo com uma matriz de gargalos e um blueprint de melhoria.
 > Exercícios com dados sintéticos: nunca pedimos acesso às suas contas.
-> Lista de interesse: atlashub.si/workshops/enterprise-lab-ecommerce (código EL01-LI).
+> Lista de interesse: www.atlashub.si/workshops/enterprise-lab-ecommerce (código EL01-LI).
 
 Comunicação própria a partir de 17–19/11 e mais intensa a partir de 23/11; **sem campanha massiva no feriado de 20/11**.
 
