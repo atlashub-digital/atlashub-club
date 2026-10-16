@@ -9,14 +9,14 @@
 |---|---|---|---|
 | `CLUB-*` | Club Atlas gratuito | pré-lançamento; cadastro **fechado** | apresentar; registar interesse com consentimento; quando o cadastro abrir, enviar só o link `/participar` |
 | `GEN-EA-*` | Genesis Turma 01 + Early Access | interesse aberto, matrícula fechada | explicar 09/01/2027, 8 semanas, 24 ateliers, R$ 490 / R$ 190 (estudante após validação); registar interesse até 30/11 (data/hora e código no CRM) |
-| `W01-*` | Workshop 01, 14/11, Anápolis | pré-lançamento | registar pedido de participação ou lista de espera; preço "a confirmar na abertura" |
-| `EL01-*` | Enterprise Lab 01, 28/11, Anápolis | pré-lançamento | idem, por empresa (1 representante) |
+| `W01-*` | Workshop 01, 14/11, Anápolis | preços publicados; vendas abrem com o ARO | R$ 297/347 por pessoa; enviar o link da página com `?origem=W01-WA`; inscrição e PIX só na página |
+| `EL01-*` | Enterprise Lab 01, 28/11, Anápolis | idem | R$ 990/1.290 por empresa (1 representante); `?origem=EL01-WA` |
 
 ## Proibições (campo `guardrails` do JSON)
 Não anunciar vagas, urgência, datas ou local dos ateliers de dezembro (só são decididos depois de mais de cinco inscrições qualificadas), local exato dos workshops ou espaço reservado. Não aceitar nem confirmar pagamentos; não pedir cartão/CPF; não declarar "pago" sem confirmação ARO. Não dizer que o cadastro, a área de membros ou a Missão 001 estão operacionais; não criar contas. Menores só com responsável. Opt-out imediato. Fora do catálogo → humano.
 
-## Valores de planeamento dos workshops
-R$ 297/347 (W01) e R$ 990/1.290 (EL01) **não estão no catálogo**: são base de planeamento, ainda sem condições de venda publicadas (local a divulgar, prazo de comunicação, cancelamento/reembolso — AtlasHub.Si#7). A Clara responde "a confirmar na abertura das inscrições". Passam para o JSON só por decisão do Sérgio, com as políticas publicadas.
+## Preços dos workshops (definitivos, AtlasHub.Si#9)
+R$ 297/347 (W01, por pessoa) e R$ 990/1.290 (EL01, por empresa) estão publicados nas páginas, com as condições (`#condicoes`). A Clara informa os valores e envia o link da página; **nunca** recebe pagamento nem confirma inscrição — a confirmação só existe depois de o ARO aprovar o PIX (bilhete na página e no e-mail).
 
 ## CRM
 Campos, consentimentos separados e regra de deduplicação no campo `crm` do JSON. Relatório semanal = contagem por código extraída do CRM, sem estimativas. O CRM regista interesse; **não** é inscrição de membro (essa só pelo fluxo de Auth do Club, PR2B) nem matrícula paga.

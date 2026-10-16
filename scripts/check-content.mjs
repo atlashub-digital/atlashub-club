@@ -28,7 +28,11 @@ for (const file of roots.flatMap(walk)) {
   readFileSync(file, "utf8")
     .split("\n")
     .forEach((line, i) => {
-      for (const r of rules) if (r.re.test(line)) problems.push(`${file}:${i + 1} — ${r.why}\n    ${line.trim().slice(0, 140)}`);
+      for (const r of rules) {
+        // Preços aprovados dos workshops AtlasHub.SI (AtlasHub.Si#9) só no catálogo da Clara.
+        if (file.endsWith("lib/catalog.ts") && r.re.source.startsWith("R\\$") && !/R\$\s?(?!297\b|347\b|990\b|1\.290\b|490\b|190\b)\d/.test(line)) continue;
+        if (r.re.test(line)) problems.push(`${file}:${i + 1} — ${r.why}\n    ${line.trim().slice(0, 140)}`);
+      }
     });
 }
 // Ofertas da UI = catálogo ARO (aro.project.yaml): mesmos códigos, valores e direito; todas em draft.
