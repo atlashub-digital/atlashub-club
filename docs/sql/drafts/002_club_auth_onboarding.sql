@@ -1,8 +1,8 @@
 -- ============================================================================
 -- RASCUNHO PR2B — NÃO APLICAR.
--- Destino: projeto Supabase do Club (Opção A, recomendada) ou schema `club` num projeto
--- partilhado sob governação da Helena (Opção B). A decisão é tomada com a Helena e aprovada
--- pelo Sérgio ANTES de qualquer DDL (docs/16_PR2B_AUTH_ONBOARDING_CRM.md §2).
+-- Destino decidido (ATL-D29): DB Master AtlasHub, schema `club`. Aplicar sempre com a 003,
+-- que fecha a escrita direta do `authenticated` (partilhado com outras apps). Testar num
+-- ambiente isolado preparado pela Helena e só aplicar na Master com aprovação do Sérgio.
 -- Nunca executar na base do AI Workforce nem do app.atlashub.si.
 -- Sem dados reais, sem utilizadores reais nesta fase.
 -- ============================================================================
