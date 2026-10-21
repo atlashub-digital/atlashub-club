@@ -222,6 +222,20 @@ test.describe("PR2B live · conclusão depois de confirmar o e-mail", () => {
     expect(await loadPendingSignup(fakeService({ get_pending_signup: pending }).service, user(false))).toBeNull();
   });
 
+  test("repetir conclusão com perfil existente não exige dados pendentes nem grava novamente", async () => {
+    const { service, rpcs } = fakeService({}, true);
+    expect(await completeSignup(service, user(), { termsAccepted: true, marketingOptIn: false })).toBe("existing");
+    expect(rpcs).toEqual([]);
+  });
+
+  test("metadata antiga nunca substitui os dados pendentes do servidor", async () => {
+    const account = user();
+    account.user_metadata = { club_signup: pending };
+    const { service, rpcs } = fakeService();
+    expect(await completeSignup(service, account, { termsAccepted: true, marketingOptIn: true })).toBe("no_signup_data");
+    expect(rpcs.map((r) => r.fn)).toEqual(["get_pending_signup"]);
+  });
+
   test("perfil existente é detetado pelo servidor", async () => {
     expect(await hasClubProfile(fakeService({}, true).service, user().id)).toBe(true);
     expect(await hasClubProfile(fakeService({}, false).service, user().id)).toBe(false);

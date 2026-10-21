@@ -35,6 +35,8 @@ export async function completeSignup(
 ): Promise<CompleteResult> {
   if (!verified(user)) return "invalid";
   if (!choices.termsAccepted) return "terms_required";
+  // Repetir o POST depois da transação não depende do cadastro pendente já removido.
+  if (await hasClubProfile(service, user.id)) return "existing";
   const pending = await loadPendingSignup(service, user);
   if (!pending) return "no_signup_data";
 
