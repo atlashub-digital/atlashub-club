@@ -15,7 +15,9 @@
     "test:unit": "node --test tests/unit/*.test.mjs",
     "content:check": "node scripts/check-content.mjs",
     "test:e2e": "playwright test",
-    "screenshots": "node scripts/screenshots.mjs"
+    "screenshots": "node scripts/screenshots.mjs",
+    "test": "npm run test:unit",
+    "lint": "npm run content:check && git diff --check"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",

@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Entrar na conta", robots: { index: f
 export const dynamic = "force-dynamic";
 
 const errors: Record<string, string> = {
-  link: "Este link já foi usado ou expirou. Peça um novo abaixo.",
+  link: "Este link já foi usado, expirou ou foi aberto noutro navegador. Peça um novo abaixo, neste navegador.",
 };
 
 export default async function Entrar({ searchParams }: { searchParams: Promise<{ erro?: string }> }) {

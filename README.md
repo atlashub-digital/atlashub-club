@@ -46,3 +46,4 @@ A captação de leads está **desativada por defeito**, até existir Supabase, a
 Material interno em revisão, publicado num repo público: consultar direitos de imagem, de marca e de conteúdo antes de republicar. Não existe licença de exploração de material terceiro implícita. Personagens virtuais devem ser identificadas como tal.
 
 © AtlasHub — People | Technology | Results.
+
