@@ -620,7 +620,7 @@ function GuardianNote({ child, genesis }: { child: boolean; genesis: boolean }) 
       <Icon name="sparkle" size={18} />
       <span>
         <strong>Que bom ter você aqui!</strong> O Club Atlas é para quem está aprendendo, em qualquer idade. Você pode
-        continuar a explorar e terminar esta pré-inscrição. Alguns passos — como criar a conta, usar dados pessoais
+        continuar a explorar e terminar esta inscrição. Alguns passos — como criar a conta, usar dados pessoais
         {genesis ? ", entrar no Genesis ou qualquer pagamento" : " ou participar de atividades com inscrição"} — vão
         precisar da autorização de um responsável. A nossa equipe revisa cada caso com cuidado antes de ativar algo.
         {child && " Para menores de 12 anos, o responsável participa desde o início do registro."}

@@ -3,8 +3,7 @@
  * Origem: decisão do Sérgio (issue #14, 14/10/2026) e contrato candidato
  * design/handoff/club-signup-genesis-v2/04_CONTRATOS_EVENTOS_CANDIDATOS.json.
  *
- * IMPORTANTE: isto é apenas EXIBIÇÃO. Nenhuma cobrança existe; `availability` é
- * "pending_launch". O preço cobrado no futuro virá de uma cotação assinada no servidor —
+ * IMPORTANTE: isto é apenas EXIBIÇÃO. O preço cobrado vem de uma cotação assinada no servidor —
  * nunca deste ficheiro nem de um valor enviado pelo browser.
  */
 /**
@@ -19,29 +18,29 @@ export const aroProject = "atlas-club";
 export type Offer = {
   id: OfferId;
   priceMinor: number; // centavos BRL
-  availability: "pending_launch";
-  eligibilityRequired?: "student_approved";
+  availability: "active";
+  eligibilityRequired?: "student_self_declared";
   durationWeeks?: number;
   /** Direito ARO que a oferta concede (`<projeto>:<tipo>:<produto>`); só ofertas pagas. */
   entitlement?: `${typeof aroProject}:${string}`;
 };
 
 export const offers: Record<OfferId, Offer> = {
-  "club-free-v1": { id: "club-free-v1", priceMinor: 0, availability: "pending_launch" },
+  "club-free-v1": { id: "club-free-v1", priceMinor: 0, availability: "active" },
   "genesis-01-br": {
     id: "genesis-01-br",
     priceMinor: 49000,
-    availability: "pending_launch",
+    availability: "active",
     durationWeeks: 8,
-    entitlement: "atlas-club:course:genesis-01",
+    entitlement: "atlas-club:genesis-01",
   },
   "genesis-01-student-br": {
     id: "genesis-01-student-br",
     priceMinor: 19000,
-    availability: "pending_launch",
-    eligibilityRequired: "student_approved",
+    availability: "active",
+    eligibilityRequired: "student_self_declared",
     durationWeeks: 8,
-    entitlement: "atlas-club:course:genesis-01",
+    entitlement: "atlas-club:genesis-01",
   },
 };
 
@@ -97,6 +96,7 @@ export const earlyAccessAteliers: { title: string; format: string; detail: strin
 
 /** Linha do tempo pública do Genesis Turma 01 (sem datas não decididas). */
 export const genesisTimeline: { when: string; what: string }[] = [
+  { when: "Agora", what: "Inscrições abertas para a Turma 01 — pagamento via checkout ARO (PIX)." },
   { when: `Até ${earlyAccessDeadline}`, what: "Registro de interesse no Genesis (WhatsApp oficial hoje; pela conta do Club quando o cadastro abrir)." },
   { when: "Dezembro de 2026", what: "2 ateliers extras e gratuitos do Early Access, com datas confirmadas por convite." },
   { when: "Antes da abertura", what: "Publicação das condições definitivas: pagamento, cancelamento e reembolso. Só então há matrícula." },
@@ -105,7 +105,7 @@ export const genesisTimeline: { when: string; what: string }[] = [
 
 /** Avisos obrigatórios que acompanham sempre um preço. */
 export const priceNotes = {
-  student: "Condição para estudantes elegíveis, sujeita a validação antes de qualquer pagamento.",
-  noCharge: "Nenhuma cobrança nesta fase. Condições comerciais finais serão confirmadas antes da abertura.",
-  noInstallments: "Sem parcelamento, taxas ou vagas anunciadas até homologação.",
+  student: "Condição para estudantes elegíveis (declaração no ato da inscrição).",
+  noCharge: "Inscrições abertas. Condições comerciais: pagamento único, cancelamento conforme política publicada.",
+  noInstallments: "Sem parcelamento. Taxas e política de reembolso publicadas antes da matrícula.",
 };

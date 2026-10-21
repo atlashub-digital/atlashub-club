@@ -68,9 +68,14 @@ export function GenesisOfferCard({ compact = false }: { compact?: boolean }) {
       <p className="ca-offer__meta">
         Início previsto <time dateTime={genesisFacts.startIso}>{genesisFacts.start}</time> · {genesisFacts.format}
       </p>
-      <LinkButton href="/genesis" variant="gold" className="ca-offer__cta">
-        Descobrir o Genesis
-      </LinkButton>
+      <div className="ca-offer__actions">
+        <LinkButton href="/participar?plan=genesis" variant="gold" className="ca-offer__cta">
+          Inscrições abertas
+        </LinkButton>
+        <LinkButton href="/genesis" variant="outline" className="ca-offer__cta">
+          Ver o programa
+        </LinkButton>
+      </div>
       <p className="ca-offer__fine">{priceNotes.noCharge}</p>
     </article>
   );

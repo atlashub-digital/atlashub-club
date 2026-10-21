@@ -65,7 +65,7 @@ export default async function AreaMembro({ searchParams }: { searchParams: Promi
               </p>
               <div className="ca-dash__status">
                 <StatusTag status="free">Club grátis</StatusTag>
-                {genesisInterest && <StatusTag status="soon">Genesis: pré-inscrição ainda não aberta</StatusTag>}
+                {genesisInterest && <StatusTag status="new">Genesis: inscrições abertas — <a href="/participar?plan=genesis" className="ca-tag__link">Inscrever-se</a></StatusTag>}
               </div>
             </div>
             <LinkButton href="#missao">Começar a Missão 001</LinkButton>

@@ -41,11 +41,11 @@ const faq = [
   },
   {
     q: "Como funciona a condição de estudante?",
-    a: `Quem é estudante pode pedir o valor de ${price.genesisStudent}. A condição só vale depois de validada (comprovativo mínimo, analisado antes de qualquer pagamento). Se não for aprovada, você escolhe entre o valor padrão de ${price.genesisStandard} ou continuar só no Club grátis — sem cobrança automática.`,
+    a: `Quem é estudante pode pedir o valor de ${price.genesisStudent}. A condição é declarativa no ato da inscrição (sem comprovativo, sem análise documental, sem aprovação manual). Se não for elegível, você escolhe entre o valor padrão de ${price.genesisStandard} ou continuar só no Club grátis — sem cobrança automática.`,
   },
   {
     q: "Já posso pagar ou reservar vaga?",
-    a: "Ainda não. Não há checkout, reservas nem vagas anunciadas. As condições comerciais finais (pagamento, cancelamento e reembolso) serão publicadas antes da abertura.",
+    a: "Sim. As inscrições estão abertas. O pagamento é processado via checkout hospedado ARO (PIX). As condições comerciais (pagamento, cancelamento e reembolso) estão publicadas no momento da matrícula. A condição de estudante é declarativa no ato da inscrição.",
   },
   {
     q: "Preciso do Genesis para entrar no Club?",
@@ -80,7 +80,7 @@ export default function Genesis() {
                 Falar com a equipe sobre Genesis
               </LinkButton>
               <LinkButton href="/participar?plan=genesis" variant="outline">
-                Pré-inscrição (prévia)
+                Inscrições abertas
               </LinkButton>
               <LinkButton href="#programa" variant="outline">
                 Ver o programa
@@ -139,7 +139,7 @@ export default function Genesis() {
         <ul className="ca-grid ca-grid--2">
           {earlyAccessAteliers.map((a) => (
             <li key={a.title} className="ca-card ca-card--gold">
-              <StatusTag status="prep" dot>
+              <StatusTag status="new" dot>
                 {a.format} · data a confirmar
               </StatusTag>
               <h3>{a.title}</h3>
@@ -157,8 +157,11 @@ export default function Genesis() {
         </ol>
         <p className="ca-offer__note" style={{ marginTop: "1rem" }}>{earlyAccess.fine}</p>
         <div className="ca-hero__actions">
-          <LinkButton href={genesisWhatsAppUrl} variant="gold" external>
-            Registrar interesse pelo WhatsApp
+          <LinkButton href="/participar?plan=genesis" variant="gold" external>
+            Inscrições abertas
+          </LinkButton>
+          <LinkButton href={genesisWhatsAppUrl} variant="outline" external>
+            Falar com a equipe
           </LinkButton>
         </div>
       </section>
