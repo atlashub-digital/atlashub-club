@@ -18,8 +18,9 @@
 O formulário `/participar` só envia quando o servidor está em modo `live`; sem configuração continua "Prévia concluída — nada foi enviado." Configuração e testes de staging: `docs/17_PR2B_LIVE_SETUP.md`.
 
 ## 2. Decisão a tomar com a Helena antes de qualquer DDL
-> **DECIDIDO (ATL-D29, Founder):** adotada uma variante da opção B — o Club usa a **DB MASTER central `aakdyumavlzgyklbrsrw`** (AtlasHub), com **schema `club`** para separar das tabelas existentes. NÃO criar projeto Supabase dedicado. O que já está live e não muda: tabela `club_interest` (com RLS), Turnstile, env vars da Vercel e o endpoint `/api/interesse`. Tabela original da decisão, para contexto:
-| | **Opção A — projeto Supabase só do Club (recomendada)** | Opção B — reutilização governada (adotada em ATL-D29, schema `club` na master `aakdyumavlzgyklbrsrw`) |
+> **Decidido (ATL-D29, 15/10/2026): Opção B na DB Master AtlasHub, schema `club`.** As salvaguardas para `auth.users` partilhado estão em `docs/17_PR2B_LIVE_SETUP.md` §1.
+
+| | **Opção A — projeto Supabase só do Club (recomendada)** | Opção B — reutilização governada |
 |---|---|---|
 | Isolamento | total: Auth, chaves, backups, logs separados da Holding | schema `club` num projeto existente; depende de disciplina de grants |
 | Risco de mistura pedagógico × B2B | nulo por construção | mitigado por RLS/grants; erro humano possível |
@@ -67,7 +68,7 @@ O Sérgio autorizou o desenvolvimento técnico **em staging**, em coordenação 
 |---|---|---|---|---|
 | S0 | Decisão Supabase A (projeto Club) ou B (schema `club` em projeto existente) + quem detém `service_role` | Helena → Sérgio aprova | Registo em `docs/DECISIONS.md` | tudo |
 | S1 | Criar projeto/branch **staging** (sem dados reais), SMTP de teste, Turnstile de teste; envs só no ambiente *Preview* da Vercel | Helena | Lista de envs (nomes, sem valores), screenshot do painel sem segredos | S2 |
-| S2 | Aplicar `002_club_auth_onboarding.sql` **em staging** e repetir os 22 testes RLS contra staging (`scripts/test-sql-draft.sh` adaptado, só leitura de resultados) + advisor de segurança Supabase | Claude Code prepara; Helena executa ou autoriza | Log dos testes + output do advisor | S3 |
+| S2 | Aplicar `002_club_auth_onboarding.sql`, `003_club_signup_live.sql` e `004_club_genesis_interest.sql` **em staging** e repetir os 22 testes RLS contra staging (`scripts/test-sql-draft.sh` adaptado, só leitura de resultados) + advisor de segurança Supabase | Claude Code prepara; Helena executa ou autoriza | Log dos testes + output do advisor | S3 |
 | S3 | Implementar modo `live` **só para staging**: `signUp` com verificação de e-mail, callback que grava perfil/consentimentos, `club_guardian_reviews` para menores, rate limit SQL | Claude Code (PR próprio) | Testes e2e contra staging com contas `@example.test` | S4 |
 | S4 | Área de membros protegida (sessão Supabase, middleware), perfil, onboarding de interesses/objetivos, escolha Club/Genesis, pré-candidatura | Claude Code | Preview com login de teste; nenhum dado real | S5 |
 | S5 | Ponte CRM: contrato de escrita aprovado (RPC/Edge Function/fila), `source='club'`, só opt-in, `crm_suppression` no opt-out | Helena define interface; Claude Code implementa o worker | Teste com CRM de staging; amostra de payload sem dados pedagógicos | S6 |
