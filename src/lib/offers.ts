@@ -18,7 +18,7 @@ export const aroProject = "atlas-club";
 export type Offer = {
   id: OfferId;
   priceMinor: number; // centavos BRL
-  availability: "active";
+  availability: "active" | "pending_launch";
   eligibilityRequired?: "student_self_declared";
   durationWeeks?: number;
   /** Direito ARO que a oferta concede (`<projeto>:<tipo>:<produto>`); só ofertas pagas. */
@@ -30,14 +30,14 @@ export const offers: Record<OfferId, Offer> = {
   "genesis-01-br": {
     id: "genesis-01-br",
     priceMinor: 49000,
-    availability: "active",
+    availability: "pending_launch",
     durationWeeks: 8,
     entitlement: "atlas-club:genesis-01",
   },
   "genesis-01-student-br": {
     id: "genesis-01-student-br",
     priceMinor: 19000,
-    availability: "active",
+    availability: "pending_launch",
     eligibilityRequired: "student_self_declared",
     durationWeeks: 8,
     entitlement: "atlas-club:genesis-01",
@@ -96,7 +96,7 @@ export const earlyAccessAteliers: { title: string; format: string; detail: strin
 
 /** Linha do tempo pública do Genesis Turma 01 (sem datas não decididas). */
 export const genesisTimeline: { when: string; what: string }[] = [
-  { when: "Agora", what: "Inscrições abertas para a Turma 01 — pagamento via checkout ARO (PIX)." },
+  { when: "Agora", what: "Registre interesse no Early Access até 30/11/2026. Isso não é matrícula; o checkout ARO ainda não está disponível." },
   { when: `Até ${earlyAccessDeadline}`, what: "Registro de interesse no Genesis (WhatsApp oficial hoje; pela conta do Club quando o cadastro abrir)." },
   { when: "Dezembro de 2026", what: "2 ateliers extras e gratuitos do Early Access, com datas confirmadas por convite." },
   { when: "Antes da abertura", what: "Publicação das condições definitivas: pagamento, cancelamento e reembolso. Só então há matrícula." },
@@ -106,6 +106,6 @@ export const genesisTimeline: { when: string; what: string }[] = [
 /** Avisos obrigatórios que acompanham sempre um preço. */
 export const priceNotes = {
   student: "Condição para estudantes elegíveis (declaração no ato da inscrição).",
-  noCharge: "Inscrições abertas. Condições comerciais: pagamento único, cancelamento conforme política publicada.",
-  noInstallments: "Sem parcelamento. Taxas e política de reembolso publicadas antes da matrícula.",
+  noCharge: "Oferta em preparação: checkout ARO ainda não disponível. Registrar interesse não é matrícula nem reserva de vaga.",
+  noInstallments: "Condições de pagamento, cancelamento e reembolso serão apresentadas antes da abertura do checkout.",
 };

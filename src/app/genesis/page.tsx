@@ -45,7 +45,7 @@ const faq = [
   },
   {
     q: "Já posso pagar ou reservar vaga?",
-    a: "Sim. As inscrições estão abertas. O pagamento é processado via checkout hospedado ARO (PIX). As condições comerciais (pagamento, cancelamento e reembolso) estão publicadas no momento da matrícula. A condição de estudante é declarativa no ato da inscrição.",
+    a: "Não. As ofertas continuam em preparação e o checkout ARO ainda não está disponível. Nesta página você pode apenas registrar interesse; isso não é matrícula, reserva de vaga nem pagamento. As condições finais serão apresentadas antes da abertura do checkout.",
   },
   {
     q: "Preciso do Genesis para entrar no Club?",
@@ -80,7 +80,7 @@ export default function Genesis() {
                 Falar com a equipe sobre Genesis
               </LinkButton>
               <LinkButton href="/participar?plan=genesis" variant="outline">
-                Inscrições abertas
+                Registrar interesse
               </LinkButton>
               <LinkButton href="#programa" variant="outline">
                 Ver o programa
@@ -158,7 +158,7 @@ export default function Genesis() {
         <p className="ca-offer__note" style={{ marginTop: "1rem" }}>{earlyAccess.fine}</p>
         <div className="ca-hero__actions">
           <LinkButton href="/participar?plan=genesis" variant="gold" external>
-            Inscrições abertas
+            Registrar interesse
           </LinkButton>
           <LinkButton href={genesisWhatsAppUrl} variant="outline" external>
             Falar com a equipe
