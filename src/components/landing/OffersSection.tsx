@@ -70,7 +70,7 @@ export function GenesisOfferCard({ compact = false }: { compact?: boolean }) {
       </p>
       <div className="ca-offer__actions">
         <LinkButton href="/participar?plan=genesis" variant="gold" className="ca-offer__cta">
-          Inscrições abertas
+          Registrar interesse
         </LinkButton>
         <LinkButton href="/genesis" variant="outline" className="ca-offer__cta">
           Ver o programa

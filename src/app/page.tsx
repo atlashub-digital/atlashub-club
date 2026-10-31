@@ -223,7 +223,7 @@ export default function Home() {
                 Ver o programa
               </LinkButton>
               <LinkButton href="/participar?plan=genesis" variant="outline" icon={null}>
-                Inscrições abertas
+                Registrar interesse
               </LinkButton>
             </div>
           </div>
