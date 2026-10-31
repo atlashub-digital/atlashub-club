@@ -1,3 +1,38 @@
-import type {Metadata} from "next";import Link from "next/link";import {clubWhatsAppUrl} from "@/lib/contact";
-export const metadata:Metadata={title:"Comunidade"};
-export default function Comunidade(){return <><section className="wrap subhero"><p className="kicker">JUNTOS, MAS COM ESPAÇO PARA CADA UM</p><h1>O Club vive nas conversas.</h1><p>Hoje, a entrada é assistida pelo WhatsApp oficial da AtlasHub. Em preparação: fóruns online três vezes por semana, servidor no Discord e grupos de WhatsApp com adesão voluntária. O bot Atlas começa em ensaios fechados no Telegram. Nenhum convite público para grupos foi publicado ainda.</p><div className="actions"><a className="button primary" href={clubWhatsAppUrl} target="_blank" rel="noopener noreferrer">Falar com a equipe no WhatsApp ↗</a><Link className="button outline" href="/participar">Ver o cadastro (prévia)</Link></div></section><section className="wrap content-grid"><article className="glass content-card"><span className="mini-tag">DISCORD</span><h3>Oficina e troca</h3><p>Salas de boas-vindas, anúncios, fóruns, projetos, desafios e laboratório.</p><span className="status">Servidor ainda em preparação</span></article><article className="glass content-card"><span className="mini-tag">WHATSAPP</span><h3>Conexão próxima</h3><p>Contato assistido com a equipe já disponível. Nos grupos, a participação é voluntária e os números podem ficar visíveis aos participantes.</p><span className="status">Contato ativo · grupos em preparação</span></article><article className="glass content-card"><span className="mini-tag">TELEGRAM</span><h3>Sérgio & Atlas</h3><p>Primeira integração operacional do agente SI em grupo privado e supervisionado.</p><span className="status">Integração em planejamento</span></article></section></>;}
+import type { Metadata } from "next";
+import { LinkButton } from "@/components/ui/primitives";
+import "../free-content.css";
+
+export const metadata: Metadata = {
+  title: "Comunidade — propostas de conversa",
+  description: "Temas e regras para preparar futuras conversas do Atlas Club, com exemplos fictícios e respeito.",
+  robots: { index: false, follow: false },
+  alternates: { canonical: "/comunidade" },
+};
+
+export default function Comunidade() {
+  return <div className="ca-container ca-section free-stack">
+    <header className="free-stack">
+      <span className="ca-eyebrow">Propostas de conversa</span>
+      <h1>Aprender, experimentar e construir com IA</h1>
+      <p>Estes são temas para preparar conversas: os espaços de postagem e a moderação ainda não estão ativos neste portal. Não há envio de respostas nesta página nem convite para grupos externos.</p>
+    </header>
+    <article className="ca-card free-stack">
+      <h2>Boas-vindas ao Atlas Club</h2>
+      <p>Prepare uma apresentação curta: o que você faz ou estuda, o que gostaria de aprender e uma tarefa que quer melhorar. Guarde suas anotações localmente por enquanto.</p>
+      <h3>Regras para as futuras conversas</h3>
+      <p>Use exemplos fictícios ao falar de clientes ou empresas. Não compartilhe credenciais, documentos pessoais, conversas privadas ou informações confidenciais.</p>
+      <p>Discuta ideias com respeito, identifique publicidade e evite publicar o mesmo conteúdo repetidamente. Quando houver um canal de moderação disponível, sinalize por ele conteúdos que precisem de atenção.</p>
+    </article>
+    <article className="ca-card free-stack">
+      <h2>Conversa 1 — Qual tarefa merece seu primeiro agente?</h2>
+      <p>Escolha uma tarefa repetida, pequena e fácil de conferir. Reflita: o que a inicia, de que informação precisa e o que continuaria dependendo de você? Ainda não precisa saber qual ferramenta usar.</p>
+    </article>
+    <article className="ca-card free-stack">
+      <h2>Desafio 1 — Uma missão, um limite, uma prova</h2>
+      <p>Escreva três frases: “Meu assistente vai ajudar a…”, “Ele não pode…” e “Eu confirmo o resultado por meio de…”. Teste com dados fictícios e anote o que precisou corrigir.</p>
+      <p>Temas sugeridos para os futuros espaços: Apresentações · Dúvidas e descobertas · Projetos e desafios.</p>
+    </article>
+    <LinkButton href="/comecar">Preparar minha missão</LinkButton>
+    <LinkButton href="/radar" variant="outline">Explorar ideias no Radar Atlas</LinkButton>
+  </div>;
+}

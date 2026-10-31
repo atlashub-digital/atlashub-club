@@ -27,6 +27,13 @@ export default function Home() {
   return (
     <>
       <HeroCollage />
+      <section className="ca-section ca-container" aria-labelledby="free-content">
+        <SectionHeading id="free-content" eyebrow="Gratuito · sem login" title="Comece com uma tarefa pequena." lead="Lições originais, vídeos selecionados e um exercício local para preparar sua primeira missão com IA." />
+        <div className="ca-hero__actions">
+          <LinkButton href="/comecar">Comece aqui</LinkButton>
+          <LinkButton href="/radar" variant="outline">Explorar o Radar Atlas</LinkButton>
+        </div>
+      </section>
 
       {/* Pilares — rodapé da composição aprovada */}
       <section className="ca-pillars" aria-label="Pilares do Club Atlas">
