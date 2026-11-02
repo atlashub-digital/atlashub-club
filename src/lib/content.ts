@@ -12,6 +12,7 @@ import { earlyAccess, price } from "./offers";
 
 export const navigation = [
   { href: "/", label: "Início" },
+  { href: "/formacoes/arquitetura-superinteligencia-agentica", label: "Formação" },
   { href: "/comunidade", label: "Comunidade" },
   { href: "/genesis", label: "Genesis" },
   { href: "/biblioteca", label: "Biblioteca" },
