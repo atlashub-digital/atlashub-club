@@ -96,7 +96,7 @@ export const earlyAccessAteliers: { title: string; format: string; detail: strin
 
 /** Linha do tempo pública do Genesis Turma 01 (sem datas não decididas). */
 export const genesisTimeline: { when: string; what: string }[] = [
-  { when: "Agora", what: "Inscrições abertas para a Turma 01 — pagamento via checkout ARO (PIX)." },
+  { when: "Agora", what: "Conheça a Turma 01 e consulte a equipe sobre as condições de participação." },
   { when: `Até ${earlyAccessDeadline}`, what: "Registro de interesse no Genesis (WhatsApp oficial hoje; pela conta do Club quando o cadastro abrir)." },
   { when: "Dezembro de 2026", what: "2 ateliers extras e gratuitos do Early Access, com datas confirmadas por convite." },
   { when: "Antes da abertura", what: "Publicação das condições definitivas: pagamento, cancelamento e reembolso. Só então há matrícula." },
@@ -106,6 +106,6 @@ export const genesisTimeline: { when: string; what: string }[] = [
 /** Avisos obrigatórios que acompanham sempre um preço. */
 export const priceNotes = {
   student: "Condição para estudantes elegíveis (declaração no ato da inscrição).",
-  noCharge: "Inscrições abertas. Condições comerciais: pagamento único, cancelamento conforme política publicada.",
+  noCharge: "Consulte as condições de participação. Matrícula e cobrança dependem da publicação das condições comerciais e da ativação do checkout.",
   noInstallments: "Sem parcelamento. Taxas e política de reembolso publicadas antes da matrícula.",
 };

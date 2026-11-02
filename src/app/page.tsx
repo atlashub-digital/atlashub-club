@@ -215,8 +215,8 @@ export default function Home() {
               <LinkButton href="/genesis" variant="gold">
                 Ver o programa
               </LinkButton>
-              <LinkButton href="/participar?plan=genesis" variant="outline" icon={null}>
-                Inscrições abertas
+              <LinkButton href="/genesis" variant="outline" icon={null}>
+                Conhecer o Genesis
               </LinkButton>
             </div>
           </div>
