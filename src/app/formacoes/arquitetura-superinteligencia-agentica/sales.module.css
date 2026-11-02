@@ -1,4 +1,5 @@
 .page{color:var(--ca-text);padding-bottom:100px;background:radial-gradient(ellipse at 18% 0%,#11264480,transparent 26%)}
+:global(body):has(.page) :global(.ca-atlas),:global(body):has(.page) :global(.ca-atlas-pill){display:none}
 .hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(320px,.85fr);gap:clamp(28px,5vw,80px);padding-block:clamp(42px,6vw,84px);align-items:center}
 .eyebrow{color:var(--ca-gold);font-size:.73rem;line-height:1.7;font-weight:650;letter-spacing:.13em;text-transform:uppercase;margin:0 0 18px}
 .courseName{color:var(--ca-text-2);font-size:.96rem;line-height:1.6;margin:0 0 12px}

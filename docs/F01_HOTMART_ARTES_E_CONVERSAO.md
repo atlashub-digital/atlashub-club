@@ -52,7 +52,7 @@ Fonte: https://help.hotmart.com/pt-br/article/8805423463181/como-personalizar-o-
 
 ## Página de vendas
 
-Preparada nova apresentação com título orientado ao resultado, oferta visível no primeiro ecrã, três etapas de aprendizagem, programa, entregável, público, apresentador, FAQ e CTA fixo para a oferta. A arte institucional sem datas é usada como apoio, com textos de venda em HTML acessível. A página é renderizada no servidor, sem instalar rastreadores, cookies de marketing ou novos serviços.
+Preparada nova apresentação com título orientado ao resultado, oferta visível no primeiro ecrã, três etapas de aprendizagem, programa, entregável, público, apresentador, FAQ e CTA fixo para a oferta. A barra só aparece depois do hero e fica oculta enquanto a oferta está visível. O assistente flutuante é ocultado apenas nesta página, para não tapar o botão em telemóveis. A arte institucional sem datas é usada como apoio, com textos de venda em HTML acessível. A página é renderizada no servidor, sem instalar rastreadores, cookies de marketing ou novos serviços.
 
 Não foram inventados depoimentos, números de alunos, descontos, escassez, cronômetros ou garantias de faturação. Alta conversão é um objetivo a medir, não um resultado demonstrado. O checkout continua dependente da configuração já existente; nenhuma credencial foi alterada. Na ausência de confirmação comercial, conservar a versão publicada e levar a nova composição a uma prévia de revisão, sem promover datas e benefícios contraditórios.
 
