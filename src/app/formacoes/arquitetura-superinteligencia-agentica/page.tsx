@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { LinkButton } from "@/components/ui/primitives";
 import { architectureCourse as course, architecturePrice, architectureContactUrl } from "@/lib/courses/architecture";
 import styles from "./sales.module.css";
 import StickyOffer from "./StickyOffer";
@@ -30,27 +29,27 @@ export default function ArchitectureSalesPage() {
   const ctaLabel = "Quero participar do atelier";
   return (
     <HotmartCheckoutProvider checkoutUrl={ctaUrl} offerCode={course.offerCode}><div className={styles.page}>
+      <div className={styles.heroArtwork}><div className={styles.heroArtworkCrop}><Image src="/assets/formacoes/f01-hero-clean.png" width={1783} height={882} alt="Atelier A Arquitetura da Superinteligência Agêntica, com Sérgio Monteiro, a agente digital Architect Diana e a representação de uma empresa aumentada." priority sizes="(max-width: 1600px) 100vw, 1600px" /></div></div>
       <section id="course-intro" className={[styles.hero, "ca-container"].join(" ")} aria-labelledby="course-title">
         <div className={styles.heroCopy}>
           <p className={styles.eyebrow}>Atelier prático · F01 · Online</p>
           <p className={styles.courseName}>{course.title}</p>
-          <h1 id="course-title">Uma operação real.<br />O primeiro projeto com <span>agentes de IA.</span></h1>
-          <p className={styles.lead}>Entenda onde a IA pode ajudar, desenhe uma missão e prepare o primeiro piloto com supervisão humana. Comece com um processo do seu negócio, trabalho ou projeto.</p>
+          <h1 id="course-title">Da sua operação real<br />ao primeiro projeto com <span>agentes de IA.</span></h1>
+          <p className={styles.lead}>Mapeie um processo, desenhe a missão do seu agente e prepare um primeiro piloto com supervisão humana. Um atelier para transformar ideias em um plano prático.</p>
           <ul className={styles.badges}><li>3 lives de 90 minutos</li><li>6 cenários práticos</li><li>12 meses de AtlasClub</li><li>Sem programação no início</li></ul>
-          <div className={styles.actions}><LinkButton href="#inscricao" variant="gold">Conhecer a formação</LinkButton><a href="#programa">Explorar o programa ↓</a></div>
+          <div className={styles.actions}><HotmartCheckoutButton href={ctaUrl}>Quero começar</HotmartCheckoutButton><a href="#programa">Explorar o programa ↓</a></div>
           <p className={styles.people}>Com <strong>Sérgio Monteiro</strong> e a agente digital <strong>Architect Diana</strong></p>
         </div>
         <aside className={styles.heroOffer} aria-label="Formato e participação">
-          <p className={styles.eyebrow}>Da operação real à empresa aumentada</p>
-          <h2>Comece por um processo.<br />Saia com um desenho.</h2>
-          <ul className={styles.checkList}><li>Mapa da operação e diagnóstico inicial</li><li>Missão do agente, permissões e limites</li><li>Exercício prático e teste de falha</li><li>Seis cenários práticos de diferentes setores</li><li>12 meses de acesso ao AtlasClub</li></ul>
+          <p className={styles.eyebrow}>Sua próxima etapa começa aqui</p>
+          <h2>Atelier prático F01</h2>
+          <p className={styles.heroDates}>9, 12 e 19 de novembro de 2026<br /><span>19h às 20h30 · Horário de Brasília</span></p>
+          <ul className={styles.checkList}><li>3 encontros ao vivo de 90 minutos</li><li>6 cenários, prompts e exercícios</li><li>12 meses de acesso ao AtlasClub</li></ul>
           <p className={styles.price}>{architecturePrice}<span>pagamento único</span></p>
           <HotmartCheckoutButton href={ctaUrl}>{ctaLabel}</HotmartCheckoutButton>
           <p className={styles.micro}>Pagamento seguro pela Hotmart · Garantia de 7 dias</p>
         </aside>
       </section>
-
-      <div className="ca-container"><Image className={styles.courseBanner} src="/assets/formacoes/f01-atelier.png" width={1672} height={941} alt="Atelier F01: A Arquitectura da SuperInteligência Agêntica, com Sérgio Monteiro; três lives de 90 minutos, materiais e 12 meses de AtlasClub. Primeiro encontro em 9 de novembro." sizes="(max-width:800px) 100vw, 1240px" /></div>
 
       <div className={[styles.proofBar, "ca-container"].join(" ")} aria-label="Formato"><span><strong>3 encontros</strong> Aprender e aplicar</span><span><strong>4h30 ao vivo</strong> Horário de Brasília</span><span><strong>Um processo</strong> Seu ponto de partida</span><span><strong>Supervisão humana</strong> Do desenho ao teste</span></div>
 

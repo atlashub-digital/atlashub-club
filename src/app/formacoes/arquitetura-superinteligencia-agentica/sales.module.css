@@ -37,3 +37,51 @@
 .stickyOffer{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:40;display:flex;align-items:center;justify-content:space-between;gap:35px;width:min(620px,calc(100% - 32px));padding:13px 18px;border:1px solid #715b32;border-radius:16px;background:#0c1728f5;box-shadow:0 10px 40px #0007}.stickyOffer>div{display:flex;flex-direction:column;gap:4px}.stickyOffer strong{color:var(--ca-gold);font-size:1.15rem}.stickyOffer>div>span{font-size:.66rem;color:var(--ca-text-3)}.stickyOffer>a{background:var(--ca-gold);color:#171104;border-radius:9px;padding:13px 18px;font-size:.8rem;line-height:1.6;font-weight:700;text-decoration:none;text-align:center}.stickyOffer a:focus-visible{outline:3px solid var(--ca-cyan);outline-offset:4px}
 @media(max-width:900px){.hero{grid-template-columns:1fr}.heroCopy h1{max-width:760px}.heroOffer{max-width:620px;width:100%}.threeColumns{grid-template-columns:1fr}.chapter{margin-bottom:20px}.proofBar{grid-template-columns:repeat(2,minmax(0,1fr))}.deliverable,.offer{grid-template-columns:1fr;gap:24px}.offerAction{max-width:480px;width:100%}}
 @media(max-width:600px){.heroCopy h1{font-size:clamp(2.2rem,8.7vw,3rem)}.section{padding-top:42px}.audience{grid-template-columns:1fr;gap:4px}.prework{flex-direction:column;gap:18px;padding:24px}.actions{flex-direction:column;align-items:flex-start;gap:20px}.stickyOffer{gap:14px;bottom:10px;padding:11px 13px}.stickyOffer>div>span{max-width:130px;line-height:1.5}.stickyOffer>a{padding:11px 13px;font-size:.72rem}.badges{gap:10px 14px;font-size:.72rem}}
+
+/* White editorial surfaces, with the Atlas blue retained for the artwork and offers. */
+.page{--ca-text:#122640;--ca-text-2:#435973;--ca-text-3:#5b6e84;--ca-border:#dbe5ef;--ca-surface:#fff;--ca-cyan:#006c9e;color:var(--ca-text);background:linear-gradient(180deg,#edf4fb 0,#fff 1200px);padding-bottom:86px}
+.heroArtwork{background:#031427;border-bottom:4px solid #eec15b;overflow:hidden}
+.heroArtworkCrop{position:relative;max-width:1600px;aspect-ratio:4.12;margin:auto;overflow:hidden}
+.heroArtworkCrop img{display:block;width:100%;height:auto;position:absolute;inset:0 auto auto 0}
+.hero{padding-block:44px 48px;gap:clamp(28px,5vw,76px);align-items:center}
+.eyebrow{color:#926000;letter-spacing:.14em}
+.courseName{font-size:.86rem;margin-bottom:14px}
+.heroCopy h1{font-size:clamp(2.25rem,3.9vw,3.65rem);letter-spacing:-.045em;line-height:1.09}
+.heroCopy h1 span{color:#0564ba}
+.lead{font-size:1rem;line-height:1.8;max-width:620px}
+.badges{gap:12px 18px;margin-block:23px;color:#354f6b}
+.badges li::before{color:#007696}
+.actions{margin-block:24px}.actions>a:last-child{color:#31506e}
+.heroOffer,.offer,.deliverable{--ca-text:#f5f8fd;--ca-text-2:#d2dfed;--ca-text-3:#b8c9dc;--ca-border:#28445e;--ca-cyan:#6adaf2;color:var(--ca-text)}
+.heroOffer{background:linear-gradient(140deg,#153454,#071b31 76%);border:1px solid #284c6b;box-shadow:0 18px 46px #14385224;border-radius:20px;padding:28px 30px}
+.heroOffer .eyebrow,.offer .eyebrow{color:#ffcf70;font-size:.68rem;margin-bottom:12px}
+.heroOffer h2{font-size:1.5rem;margin-bottom:14px}
+.heroDates{font-size:.9rem;line-height:1.9;color:#eef5ff;margin:0 0 18px}.heroDates span{font-size:.78rem;color:#b8c9dc}
+.heroOffer .checkList{margin-block:16px}.heroOffer .checkList li{font-size:.82rem;margin-bottom:8px}
+.heroOffer .price{margin-block:20px;font-size:3.25rem}.heroOffer .micro{font-size:.7rem}
+.proofBar{padding:24px 28px;background:#fff;border:1px solid #dbe5ef;border-radius:16px;box-shadow:0 8px 24px #19375b06;margin-bottom:16px;gap:20px}
+.section{padding-block:60px 18px}
+.section h2{font-size:clamp(1.85rem,3vw,2.7rem)}
+.card{background:#fff;border:1px solid #dce5ee;box-shadow:0 8px 26px #18395805;border-radius:16px}
+.chapter{color:#0564ba;font-size:.78rem;font-weight:650}.cardResult{color:#006b88}
+.prework{background:#eaf3fd;border-color:#c8dff4}.moduleTag{color:#1f5e9c;border-color:#afcde8;background:#fff}
+.session{background:linear-gradient(145deg,#f1f7fd,#fff 65%)}.session time{color:#075fba;font-size:1.65rem;font-weight:600}
+.deliverable{background:radial-gradient(ellipse at 90% 0%,#18618350,transparent 75%),#0a243e;border-color:#285679;box-shadow:0 12px 36px #1438521a}
+.deliverable h2{color:#f5f8fd}.deliverable .eyebrow{color:#77d9ee}.blueprint>div{background:#071b30;border-color:#335775}
+.casesGrid{gap:16px}.caseCard{background:#f4f8fc;border-color:#dce5ee;padding:25px}.caseCard span{color:#0064b0;font-weight:650}.caseCard h3{font-weight:600}
+.audience>p{border-top-color:#70a7d9}.audience strong{color:#0b345a}
+.brandBanner{border-color:#ccdcea;box-shadow:0 12px 36px #14385212}
+.offer{background:radial-gradient(ellipse at 0% 0%,#245c8150,transparent 80%),#092139;border-color:#294c6e;box-shadow:0 16px 40px #14385220}
+.offer h2{color:#f5f8fd}
+.conditions{background:#f1f6fb;border-color:#d6e2ee}.conditions dt{color:#075fae}.conditions>a,.faq a{color:#0562b2}
+.faq details{padding-block:23px}.faq summary{color:#173652}.faq summary::marker{color:#0863b3}
+.organizer{margin-top:48px}
+.stickyOffer{background:#fffffff5;border-color:#d0deeb;box-shadow:0 8px 36px #09213926}.stickyOffer strong{color:#123858}.stickyOffer>div>span{color:#50677f}
+.page a:focus-visible{outline:3px solid #0a79dc;outline-offset:4px}
+:global(body):has(.checkoutDialog[open]){overflow:hidden}
+.checkoutDialog{width:min(880px,calc(100% - 32px));height:calc(100dvh - 32px);max-height:calc(100dvh - 32px);max-width:100%;margin:auto;overscroll-behavior:contain}
+.checkoutScroll{scrollbar-width:thin}.checkoutScroll iframe{display:block;border:0}
+.checkoutShell>header{padding:13px 18px}.checkoutShell>footer{padding:12px 16px}
+@media(max-width:360px){:global(body):has(.page) :global(.ca-header__cta){font-size:.65rem;padding:0 8px;min-height:40px}:global(body):has(.page) :global(.ca-header__brand) :global(.ca-logo--sm){font-size:.9rem}:global(body):has(.page) :global(.ca-header__inner){gap:8px}}
+@media(max-width:900px){.hero{gap:26px;padding-block:34px}.heroOffer{width:100%;max-width:none}.heroCopy h1{max-width:700px}.proofBar{padding:20px;gap:18px}.heroArtworkCrop{aspect-ratio:4.12}}
+@media(max-width:600px){.hero{padding-block:28px 32px}.heroCopy h1{font-size:clamp(2rem,8.2vw,2.7rem)}.heroCopy .eyebrow{font-size:.65rem;margin-bottom:12px}.courseName{font-size:.76rem}.lead{font-size:.94rem;line-height:1.75}.heroCopy .actions{flex-direction:row;align-items:center;gap:18px}.heroCopy .actions>a:last-child{font-size:.77rem}.people{font-size:.74rem}.heroOffer{padding:24px}.heroOffer .price{font-size:3rem}.section{padding-block:42px 12px}.card{padding:25px}.proofBar{border-radius:12px}.proofBar strong{font-size:.82rem}.proofBar>span{font-size:.7rem}.checkoutDialog{width:100%;height:100dvh;max-height:100dvh;border:0;border-radius:0;margin:0}.checkoutShell>header{padding:12px;gap:12px}.checkoutShell>header p{font-size:.7rem;max-width:240px}.checkoutShell>footer{padding:12px 10px max(12px,env(safe-area-inset-bottom));font-size:.75rem}.checkoutScroll{scrollbar-width:none}.checkoutScroll::-webkit-scrollbar{display:none}.stickyOffer{padding:10px 12px;gap:12px}.stickyOffer>a{padding:11px 12px}}
