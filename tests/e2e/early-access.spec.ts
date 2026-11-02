@@ -10,7 +10,7 @@ test.describe("Genesis Early Access e agenda", () => {
     await expect(ea.getByText("Online · data a confirmar", { exact: true })).toBeVisible();
     await expect(ea.getByText("09/01/2027").first()).toBeVisible();
     await expect(ea.getByText(/não é matrícula/)).toBeVisible();
-    await expect(ea.getByRole("link", { name: "Registrar interesse pelo WhatsApp" })).toHaveAttribute("href", /^https:\/\/wa\.me\//);
+    await expect(ea.getByRole("link", { name: "Consultar participação" })).toHaveAttribute("href", /^https:\/\/wa\.me\//);
     await expect(page.getByText("R$ 490").first()).toBeVisible();
     await expect(page.getByText("R$ 190").first()).toBeVisible();
   });
@@ -36,7 +36,7 @@ test.describe("Genesis Early Access e agenda", () => {
 
 test("links de WhatsApp levam código de captação verificável", async ({ page }) => {
   await page.goto("/genesis");
-  const href = await page.getByRole("link", { name: "Registrar interesse pelo WhatsApp" }).getAttribute("href");
+  const href = await page.getByRole("link", { name: "Falar com a equipe sobre Genesis" }).getAttribute("href");
   expect(decodeURIComponent(href!.split("text=")[1])).toContain("(código GEN-EA-SITE)");
   await page.goto("/comunidade");
   const club = await page.getByRole("link", { name: /Falar com a equipe no WhatsApp/ }).getAttribute("href");
