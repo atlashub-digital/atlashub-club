@@ -19,6 +19,7 @@ export function HotmartCheckoutProvider({ children, checkoutUrl, offerCode }: { 
   const trigger = useRef<HTMLAnchorElement | null>(null);
 
   function open(event: MouseEvent<HTMLAnchorElement>) {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
     if (!ready || !window.checkoutElements || !dialog.current || !mount.current) return;
     try {
       if (!instance.current) {
