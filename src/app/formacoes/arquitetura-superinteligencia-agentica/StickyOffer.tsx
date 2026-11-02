@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import styles from "./sales.module.css";
+import { HotmartCheckoutButton } from "./HotmartCheckout";
 
-export default function StickyOffer({ price }: { price: string }) {
+export default function StickyOffer({ price, checkoutUrl }: { price: string; checkoutUrl: string }) {
   const [visible, setVisible] = useState(false);
   useEffect(() => {
     const hero = document.getElementById("course-intro");
@@ -24,5 +25,5 @@ export default function StickyOffer({ price }: { price: string }) {
   }, []);
 
   if (!visible) return null;
-  return <nav className={styles.stickyOffer} aria-label="Participação no atelier"><div><strong>{price}</strong><span>Atelier F01 · pagamento único</span></div><a href="#inscricao">Conhecer a formação <span aria-hidden="true">↗</span></a></nav>;
+  return <nav className={styles.stickyOffer} aria-label="Participação no atelier"><div><strong>{price}</strong><span>Atelier F01 · pagamento único</span></div><HotmartCheckoutButton href={checkoutUrl}>Quero participar</HotmartCheckoutButton></nav>;
 }

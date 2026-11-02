@@ -1,3 +1,25 @@
+# F01 - oferta confirmada e checkout Hotmart
+
+## Decisões finais confirmadas por Sérgio em 02/11/2026
+
+- R$147 em pagamento único; lives de 9, 12 e 19/11/2026, das 19h às 20h30 BRT.
+- Seis cenários práticos incluídos, com materiais progressivos e Caderno do Arquiteto.
+- 12 meses de acesso ao AtlasClub para esta formação; outras formações mantêm direitos próprios. Não foi prometido acesso a todos os cursos futuros.
+- Sara Talia de Carvalho Campelo é sócia de Sérgio e responsável pela conta Hotmart. Essa identificação foi confirmada pelo proprietário e não é um bloqueio de publicação.
+- Produto Hotmart 8862881 ativo; garantia de 7 dias. O link público da página de produto confirmou o código de oferta kznxteem. Link de acesso pós-compra: https://club.hotmart.com/oauth/login?productId=8862881 . O link fornecido não expõe o slug da área; os módulos ainda não foram lidos pelo conector.
+
+## Integração publicada
+
+A F01 usa checkout nativo Hotmart, sem dependência do checkout/matrícula ARO ou Campus. Botões são links HTML reais para https://pay.hotmart.com/Y108296874J?off=kznxteem . Com a biblioteca disponível, abrem o Checkout Elements oficial em um dialog nativo acessível. Sem JavaScript/biblioteca, o link continua a navegar para o checkout. Há também alternativa direta visível, inclusive dentro do popup. Não há dados de comprador pré-preenchidos, callbacks de cobrança no nosso servidor ou recolha de dados de cartão pela AtlasHub. A abertura do popup não é confirmação de compra nem concessão de direitos no Campus.
+
+Biblioteca oficial: https://checkout.hotmart.com/lib/hotmart-checkout-elements.js . Documentação: https://developers.hotmart.com/docs/pt-BR/tutorials/checkout-elements/ . Utiliza inlineCheckout dentro de um dialog, com Escape/fechar e retorno do foco ao botão. O widget legado sugerido não foi usado: ele depende de jQuery/Fancybox e inclui uma função que remove os links Hotmart quando seu teste de rede falha. Não copiar esse comportamento para a página de vendas.
+
+A configuração legada ARCHITECTURE_CHECKOUT_READY/URL/TERMS_URL permanece disponível no utilitário para compatibilidade, mas não controla a F01 nativa. Não foram alteradas variáveis, credenciais, configurações ARO ou contas Hotmart.
+
+O banner F01 enviado pelo proprietário é utilizado sem modificar o arquivo, além do banner institucional. O PDF do Módulo 00 não foi publicado como download público. Para reversão, restaurar o deployment de produção anterior; vendas/matrículas da Hotmart não são apagadas. O prazo técnico de acesso na Hotmart e o percurso completo de compra/e-mail/aluno não foram alterados nem validados por transação nesta sessão.
+
+## Registo da revisão anterior (superado pelas decisões acima)
+
 # F01 - auditoria Hotmart, guia e direção de arte
 
 Verificação em 02/11/2026. Este documento é interno; não é conteúdo para os alunos. Não inclui senhas, dados de compradores nem alterações de configuração do ARO.

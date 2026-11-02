@@ -1,3 +1,5 @@
+> SUPERADO EM 02/11/2026: as condições e o checkout atuais estão em F01_HOTMART_ARTES_E_CONVERSAO.md. As datas de 5/11 e a separação dos seis cenários abaixo pertencem à entrega anterior. A F01 agora usa Hotmart nativo e 12 meses de AtlasClub, conforme decisão do proprietário.
+
 # Formação de arranque — publicação e matrícula
 
 Decisão de Sérgio: venda agora por R$147,00 em pagamento único; lives em 5, 12 e 19/11/2026, das 19h às 20h30 de Brasília. O programa ampliado de oito módulos e seis cases é separado. O acesso começa após confirmação do pagamento, ao material que estiver efetivamente publicado.
