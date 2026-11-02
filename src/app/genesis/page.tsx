@@ -79,8 +79,8 @@ export default function Genesis() {
               <LinkButton href={genesisWhatsAppUrl} variant="gold" external>
                 Falar com a equipe sobre Genesis
               </LinkButton>
-              <LinkButton href="/participar?plan=genesis" variant="outline">
-                Inscrições abertas
+              <LinkButton href={genesisWhatsAppUrl} variant="outline" external>
+                Consultar participação
               </LinkButton>
               <LinkButton href="#programa" variant="outline">
                 Ver o programa
@@ -157,8 +157,8 @@ export default function Genesis() {
         </ol>
         <p className="ca-offer__note" style={{ marginTop: "1rem" }}>{earlyAccess.fine}</p>
         <div className="ca-hero__actions">
-          <LinkButton href="/participar?plan=genesis" variant="gold" external>
-            Inscrições abertas
+          <LinkButton href={genesisWhatsAppUrl} variant="gold" external>
+            Consultar participação
           </LinkButton>
           <LinkButton href={genesisWhatsAppUrl} variant="outline" external>
             Falar com a equipe

@@ -14,7 +14,7 @@ function contactUrl(message: string): string {
 export type CampaignFront = "CLUB" | "GEN-EA";
 const baseMessage: Record<CampaignFront, string> = {
   CLUB: "Olá! Quero conhecer a comunidade gratuita Club Atlas. Pode me orientar?",
-  "GEN-EA": "Olá! Tenho interesse na Turma 01 do Genesis. Inscrições abertas — quero saber como me inscrever.",
+  "GEN-EA": "Olá! Tenho interesse na Turma 01 do Genesis. Quero conhecer o programa e as condições de participação.",
 };
 export function campaignWhatsAppUrl(front: CampaignFront, channel = "SITE"): string {
   return contactUrl(`${baseMessage[front]} (código ${front}-${channel.toUpperCase()})`);

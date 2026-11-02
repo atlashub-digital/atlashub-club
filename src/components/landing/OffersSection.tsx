@@ -1,6 +1,7 @@
 import Icon from "../ui/Icon";
 import { LinkButton, SectionHeading, StatusTag } from "../ui/primitives";
 import { genesisFacts, price, priceNotes } from "@/lib/offers";
+import { genesisWhatsAppUrl } from "@/lib/contact";
 
 /**
  * Comparação de ofertas (issue #14): Club grátis e independente + Genesis opcional.
@@ -69,8 +70,8 @@ export function GenesisOfferCard({ compact = false }: { compact?: boolean }) {
         Início previsto <time dateTime={genesisFacts.startIso}>{genesisFacts.start}</time> · {genesisFacts.format}
       </p>
       <div className="ca-offer__actions">
-        <LinkButton href="/participar?plan=genesis" variant="gold" className="ca-offer__cta">
-          Inscrições abertas
+        <LinkButton href={genesisWhatsAppUrl} variant="gold" className="ca-offer__cta" external>
+          Consultar participação
         </LinkButton>
         <LinkButton href="/genesis" variant="outline" className="ca-offer__cta">
           Ver o programa

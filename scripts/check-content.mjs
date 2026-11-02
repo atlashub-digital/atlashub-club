@@ -30,13 +30,13 @@ for (const file of roots.flatMap(walk)) {
     .forEach((line, i) => {
       for (const r of rules) {
         // Preços aprovados dos workshops AtlasHub.SI (AtlasHub.Si#9) só no catálogo da Clara.
-        if (file.endsWith("lib/catalog.ts") && r.re.source.startsWith("R\\$") && !/R\$\s?(?!297\b|347\b|990\b|1\.290\b|490\b|190\b)\d/.test(line)) continue;
+        if (file.replaceAll("\\", "/").endsWith("lib/catalog.ts") && r.re.source.startsWith("R\\$") && !/R\$\s?(?!297\b|347\b|990\b|1\.290\b|490\b|190\b)\d/.test(line)) continue;
         if (r.re.test(line)) problems.push(`${file}:${i + 1} — ${r.why}\n    ${line.trim().slice(0, 140)}`);
       }
     });
 }
 // Ofertas da UI = catálogo ARO (aro.project.yaml): mesmos códigos, valores e direito; todas em draft.
-const manifest = readFileSync("aro.project.yaml", "utf8");
+const manifest = readFileSync("aro.project.yaml", "utf8").replaceAll("\r\n", "\n");
 const offersTs = readFileSync("src/lib/offers.ts", "utf8");
 const aroOffers = [...manifest.matchAll(/- code: (\S+)\n(?:(?!\n  - code:)[\s\S])*?amount_minor: (\d+)(?:(?!\n  - code:)[\s\S])*?- (atlas-club:\S+)(?:(?!\n  - code:)[\s\S])*?status: (\w+)/g)].map(
   ([, code, amount, entitlement, status]) => ({ code, amount: Number(amount), entitlement, status }),
