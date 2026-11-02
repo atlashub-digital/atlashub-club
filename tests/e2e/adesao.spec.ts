@@ -13,7 +13,7 @@ test.describe("Ofertas", () => {
     await expect(offers.getByText("Grátis", { exact: true })).toBeVisible();
     await expect(offers.getByText("R$ 490", { exact: true })).toBeVisible();
     await expect(offers.getByText("R$ 190", { exact: true })).toBeVisible();
-    await expect(offers.getByText(/sujeita a validação antes de qualquer pagamento/)).toBeVisible();
+    await expect(offers.getByText(/Matrícula e cobrança dependem da publicação das condições comerciais/)).toBeVisible();
   });
 
   test("/genesis mostra preço padrão, estudante e ausência de cobrança", async ({ page }) => {
@@ -22,7 +22,7 @@ test.describe("Ofertas", () => {
     await expect(page.getByText("R$ 490").first()).toBeVisible();
     await expect(page.getByText("R$ 190").first()).toBeVisible();
     await expect(page.getByText("Sem cobrança nesta fase")).toBeVisible();
-    await expect(page.getByRole("link", { name: /Pré-inscrição/ }).first()).toHaveAttribute("href", "/participar?plan=genesis");
+    await expect(page.getByRole("link", { name: "Falar com a equipe sobre Genesis" })).toHaveAttribute("href", /^https:\/\/wa\.me\//);
   });
 });
 

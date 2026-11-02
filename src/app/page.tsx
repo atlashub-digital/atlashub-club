@@ -288,7 +288,7 @@ export default function Home() {
           id="ecossistema"
           eyebrow="Ecossistema AtlasHub"
           title="Três universos, papéis diferentes."
-          lead="O Club é a casa da comunidade e da aprendizagem. A empresa e a editora continuam com os seus próprios espaços."
+          lead="A AtlasHub.SI apresenta os serviços empresariais. O Club reúne formação e biblioteca; a Editions permanece como motor editorial e leitor dos livros."
         />
         <ul className="ca-grid ca-grid--3">
           {universes.map((u) => (

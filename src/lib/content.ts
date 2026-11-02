@@ -137,7 +137,7 @@ export const channels: { icon: IconName; title: string; detail: string; status: 
 
 export const universes = [
   { name: "AtlasHub.SI", tag: "Institucional e empresarial", detail: "Transformação empresarial, AI Workforce e workshops executivos.", href: "https://atlashub.si", cta: "Visitar AtlasHub.SI", external: true },
-  { name: "AtlasHub Editions", tag: "Conhecimento e publicações", detail: "Livros, guias e estudos de caso. O Club apresenta o catálogo; a Editions é a editora responsável.", href: "/biblioteca", cta: "Ver na Biblioteca", external: false },
+  { name: "Biblioteca · AtlasHub Editions", tag: "Livros e conhecimento no Club", detail: "Catálogo editorial, leituras e conteúdos de referência reunidos no Club; os leitores digitais permanecem alojados na Editions.", href: "/biblioteca", cta: "Explorar a Biblioteca", external: false },
   { name: "Club Atlas", tag: "Comunidade, aprendizagem e projetos", detail: "Estudantes e iniciantes, agentes pessoais, mentores, missões e o programa Genesis.", href: "/participar", cta: "Você está aqui", external: false, current: true },
 ];
 
@@ -154,8 +154,8 @@ export const faq = [
 /* ---- Compatibilidade com páginas existentes (PR2 irá migrá-las) ---- */
 export type CardItem = { title: string; detail: string; tag: string; href?: string; status?: string };
 
-export const library = [
-  { title: "Empresa Aumentada", category: "ATLAS EDITIONS", description: "Fundamentos da transformação empresarial e do futuro das operações.", access: "REFERÊNCIA EDITORIAL", status: "EDITORIAL EM PREPARAÇÃO" },
+export const library: { title: string; category: string; description: string; access: string; status: string; href?: string }[] = [
+  { title: "Empresa Aumentada", category: "ATLAS EDITIONS", description: "Da Inteligência Artificial à Organização Inteligente, de Sérgio Monteiro. Leia no leitor editorial externo da AtlasHub Editions.", access: "LEITURA ABERTA NA EDITIONS", status: "ACEDER AO LEITOR", href: "https://editions.atlashub.si/livros/empresa-aumentada/ler" },
   { title: "O E-commerce Aumentado", category: "ATLAS EDITIONS", description: "O comércio digital como uma operação integrada entre pessoas, dados e sistemas.", access: "REFERÊNCIA EDITORIAL", status: "PREVIEW EDITORIAL" },
   { title: "Seu primeiro agente", category: "CLUB ATLAS", description: "Guia introdutório: contexto, objetivos, limites e primeira experiência.", access: "GRATUITO · FUTURO", status: "CONTEÚDO A PRODUZIR" },
   { title: "Genesis: Da semente ao ecossistema", category: "ATLAS LAB", description: "Percurso progressivo de oito semanas e desafios colaborativos.", access: "TURMA GENESIS", status: "PROGRAMA EM PREPARAÇÃO" },
